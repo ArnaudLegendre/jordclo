@@ -53,27 +53,20 @@ async function dbLogin ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
 
             try {
                 if ( await argon2.verify( document[0].password, dbElem.password ) ) {
-
-                    msgSys.send( `User login "${ document[0]._id }"` )
-
-                    let userData = token.tokenList.add()
-                        .then(e => {
-                            let data = {
-                                'email': document[0].email,
-                                'firstname': document[0].firstname,
-                                'lastname': document[0].lastname,
-                                'address': document[0].address,
-                                'postalCode': document[0].postalCode,
-                                'town': document[0].town,
-                                'shipping_address': document[0].shipping_address,
-                                'shipping_postalCode': document[0].shipping_postalCode,
-                                'shipping_town': document[0].shipping_town,
-                                'token': e
-                            }
-                            return data
-                        })
-                    return userData
-
+                    await msgSys.send( `User login "${ document[0]._id }"` )
+                    let data = {
+                        'email': document[0].email,
+                        'firstname': document[0].firstname,
+                        'lastname': document[0].lastname,
+                        'address': document[0].address,
+                        'postalCode': document[0].postalCode,
+                        'town': document[0].town,
+                        'shipping_address': document[0].shipping_address,
+                        'shipping_postalCode': document[0].shipping_postalCode,
+                        'shipping_town': document[0].shipping_town,
+                        'token': await token.tokenList.add()
+                    }
+                    return data
                 } else {
                     return 'incorrect password'
                 }
