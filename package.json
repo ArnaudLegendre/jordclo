@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "description": "Minimal eShop Single Page Application system without framework or useless dependencies.",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "watch": "./compil.js --watch public/script.js & sass --watch src/sass:public/",
     "compil": "./compil.js --compress public/script.js; sass src/sass:public/ --style=compressed",

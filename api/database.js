@@ -1,41 +1,39 @@
-const mongoClient   = require( 'mongodb' ).MongoClient
-const argon2        = require( 'argon2' )
-const email         = require( '../server/email.js' )
-const token         = require( '../server/token.js' )
-const dateTime      = require( '../server/dateTime.js' )
-const msgSys        = require( '../server/msgSystem.js' )
+import mongodb      from 'mongodb'
+import argon2       from 'argon2'
+import Email        from '../server/email.js'
+import logSys       from '../server/msgSystem.js'
+import dateTime     from '../server/dateTime.js'
 
-msgSys.send( 'Database..............READY', 'success' )
+logSys( 'Database..............READY', 'success' )
 
 let client
 
-function dbConnect ( dbUser, dbPwd, dbName ) {
+async function dbConnect ( dbUser, dbPwd, dbName ) {
 
     const uri = `mongodb://${dbUser}:${dbPwd}@127.0.0.1:27017/?authSource=${dbName}&readPreference=primary&appname=MongoDB%20Compass&ssl=false`
 
-    client = new mongoClient(uri, {
+    let MongoClient = mongodb.MongoClient
+    client = new MongoClient(uri, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
+    await client.connect()
 
 }
 
 async function dbLoad ( dbUser, dbPwd, dbName, dbCollection ) {
 
-   dbConnect( dbUser, dbPwd, dbName )
+    dbConnect( dbUser, dbPwd, dbName )
 
     try {
-        await client.connect( )
-        msgSys.send( `Open connection to Database "${ dbName }" and get "${ dbCollection.name }"` )
+        logSys( `Open connection to Database "${ dbName }" and get "${ dbCollection.name }"` )
         const db = client.db( dbName )
         const collection = await db.collection( dbCollection.name ).find( ).toArray( )
 
         return collection
 
     } catch ( e ) {
-        msgSys.send( e, 'error' )
-    } finally {
-        await client.close()
+        logSys( e, 'error' )
     }
 
 }
@@ -45,7 +43,6 @@ async function dbLogin ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
     dbConnect( dbUser, dbPwd, dbName )
 
     try {
-        await client.connect()
         const db = client.db( dbName )
         const document = await db.collection( dbCollection ).find( { email: dbElem.email } ).toArray()
 
@@ -53,34 +50,35 @@ async function dbLogin ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
 
             try {
                 if ( await argon2.verify( document[0].password, dbElem.password ) ) {
-                    await msgSys.send( `User login "${ document[0]._id }"` )
+
+                    logSys( `User login "${ document[0]._id }"` )
                     let data = {
                         'email': document[0].email,
                         'firstname': document[0].firstname,
                         'lastname': document[0].lastname,
+                        'phone': document[0].phone,
                         'address': document[0].address,
                         'postalCode': document[0].postalCode,
                         'town': document[0].town,
                         'shipping_address': document[0].shipping_address,
                         'shipping_postalCode': document[0].shipping_postalCode,
                         'shipping_town': document[0].shipping_town,
-                        'token': await token.tokenList.add()
+                        'token': ''
                     }
                     return data
+
                 } else {
                     return 'incorrect password'
                 }
             } catch ( err ) {
-                msgSys.send( err, 'error' )
+                logSys( err, 'error' )
             }
         } else {
             return 'user not found'
         }
 
     } catch ( e ) {
-        msgSys.send( e, 'error' )
-    } finally {
-        await client.close( )
+        logSys( e, 'error' )
     }
 
 }
@@ -90,8 +88,6 @@ async function dbRegister ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
     dbConnect( dbUser, dbPwd, dbName )
 
     try {
-        await client.connect(  )
-
         const db = client.db( dbName )
         let document = await db.collection( dbCollection ).find( { email: dbElem.email } ).toArray()
 
@@ -107,6 +103,7 @@ async function dbRegister ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
             sendData['email'] = dbElem.email
             sendData['firstname'] = ''
             sendData['lastname'] = ''
+            sendData['phone'] = ''
             sendData['address'] = ''
             sendData['postalCode'] = ''
             sendData['town'] = ''
@@ -116,12 +113,13 @@ async function dbRegister ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
 
             db.collection( dbCollection ).insertOne( sendData, err => {
                 if ( err ) {
-                    msgSys.send( err, "error" )
+                    logSys( err, "error" )
                 }
-                msgSys.send( `New user register`, 'success' )
+                logSys( `New user register`, 'success' )
             })
 
-            email.email.send( {
+            let email = new Email
+            await email.send( {
                 email: dbElem.email,
                 subject: 'Votre inscription sur notre site',
                 textFile: 'confirmRegister',
@@ -132,9 +130,7 @@ async function dbRegister ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
         }
 
     } catch ( e ) {
-        msgSys.send( e, 'error' )
-    } finally {
-        await client.close( )
+        logSys( e, 'error' )
     }
 
 }
@@ -144,8 +140,6 @@ async function dbUpdateUser( dbUser, dbPwd, dbName, dbCollection, dbElem ){
     dbConnect( dbUser, dbPwd, dbName )
 
     try {
-        await client.connect(  )
-
         dbElem = JSON.parse( dbElem )
 
         const db = client.db( dbName )
@@ -153,6 +147,7 @@ async function dbUpdateUser( dbUser, dbPwd, dbName, dbCollection, dbElem ){
             'email': dbElem.email,
             'firstname': dbElem.firstname,
             'lastname': dbElem.lastname,
+            'phone': dbElem.phone,
             'address': dbElem.address,
             'postalCode': dbElem.postalCode,
             'town': dbElem.town,
@@ -161,15 +156,13 @@ async function dbUpdateUser( dbUser, dbPwd, dbName, dbCollection, dbElem ){
             'shipping_town': dbElem.shipping_town,
         }
         let document = await db.collection( dbCollection ).findOneAndUpdate(
-        { email: dbElem.email },
-        { $set: dataUser }
+            { email: dbElem.email },
+            { $set: dataUser }
         )
-        msgSys.send( `User edit profil "${document.value._id}"` )
+        logSys( `User edit profil "${document.value._id}"` )
         return dataUser
     } catch ( e ) {
-        msgSys.send( e, 'error' )
-    } finally {
-        await client.close( )
+        logSys( e, 'error' )
     }
 
 }
@@ -179,8 +172,6 @@ async function dbUpdatePassword ( dbUser, dbPwd, dbName, dbCollection, dbElem ) 
     dbConnect( dbUser, dbPwd, dbName )
 
     try {
-        await client.connect();
-
         const db = client.db( dbName )
         const document = await db.collection( dbCollection ).find( { email: dbElem.email } ).toArray()
 
@@ -193,23 +184,21 @@ async function dbUpdatePassword ( dbUser, dbPwd, dbName, dbCollection, dbElem ) 
                         { email: dbElem.email },
                         { $set: { 'password': passwordHash } }
                     )
-                    msgSys.send( `User edit password "${updateDocument.value._id}"` )
+                    logSys( `User edit password "${updateDocument.value._id}"` )
                     return 'password updated'
 
                 } else {
                     return 'incorrect password'
                 }
             } catch ( err ) {
-                msgSys.send( err, 'error' )
+                logSys( err, 'error' )
             }
         } else {
             return 'user not found'
         }
 
     } catch ( e ) {
-        msgSys.send( e, 'error' )
-    } finally {
-        await client.close( )
+        logSys( e, 'error' )
     }
 
 }
@@ -219,8 +208,6 @@ async function dbCart( dbUser, dbPwd, dbName, dbCollection, action, userEmail, d
     dbConnect( dbUser, dbPwd, dbName )
 
     try {
-        await client.connect(  )
-
         const db = client.db( dbName )
         if( action === 'saveCart' ){
 
@@ -245,9 +232,7 @@ async function dbCart( dbUser, dbPwd, dbName, dbCollection, action, userEmail, d
         }
 
     } catch ( e ) {
-        msgSys.send( e, 'error' )
-    } finally {
-        await client.close( )
+        logSys( e, 'error' )
     }
 
 }
@@ -257,8 +242,6 @@ async function dbOrders( dbUser, dbPwd, dbName, dbCollection, action, dbElem ) {
     dbConnect( dbUser, dbPwd, dbName )
 
     try {
-        await client.connect(  )
-
         const db = client.db( dbName )
         if( action === 'createOrders' ){
 
@@ -270,7 +253,7 @@ async function dbOrders( dbUser, dbPwd, dbName, dbCollection, action, dbElem ) {
             for ( let [ k, v ] of Object.entries( userInfo[0] ) )
                 k != 'password' && k != 'cart' ? infos[k] = v : null
 
-            let dateCreate = await dateTime.get( )
+            let dateCreate = await dateTime( )
             let order = {
                 'status': status,
                 'cart': cart,
@@ -281,14 +264,14 @@ async function dbOrders( dbUser, dbPwd, dbName, dbCollection, action, dbElem ) {
 
             let document = await db.collection( dbCollection ).insertOne( order, ( err, res ) => {
                 if ( err ) {
-                    msgSys.send( err, 'error' )
+                    logSys( err, 'error' )
                 }
 
-                msgSys.send( `User (${ userInfo[0]._id }) create an order "${ res.insertedId }"`, 'success' )
+                logSys( `User (${ userInfo[0]._id }) create an order "${ res.insertedId }"`, 'success' )
             } )
 
-
-            email.email.send( {
+            let email = new Email
+            await email.send( {
                 email: dbElem,
                 subject: 'Votre commande sur notre site',
                 textFile: 'orderInProgress',
@@ -303,14 +286,12 @@ async function dbOrders( dbUser, dbPwd, dbName, dbCollection, action, dbElem ) {
         }
 
     } catch ( e ) {
-        msgSys.send( e, 'error' )
-    } finally {
-        await client.close( )
+        logSys( e, 'error' )
     }
 
 }
 
-module.exports = {
+export{
     dbLoad,
     dbLogin,
     dbRegister,

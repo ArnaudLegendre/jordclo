@@ -1,12 +1,21 @@
-const msgSys        = require( './server/msgSystem.js' )
-const http2         = require( 'http2' )
-const fs            = require( 'fs' )
-const path          = require( 'path' )
-const dbQuery       = require( './api/database.js' )
-const config        = require( './public/assets/config.json' )
-const token         = require( './server/token.js' )
-const db            = require( './server/database.js' )
-const user          = require( './server/user.js' )
+import http2        from 'http2'
+import fs           from 'fs'
+import path         from 'path'
+import logSys       from './server/msgSystem.js'
+import { dbLoad,
+    dbLogin,
+    dbRegister,
+    dbUpdateUser,
+    dbUpdatePassword,
+    dbCart,
+    dbOrders }      from './api/database.js'
+import Token        from './server/token.js'
+let token =         new Token
+import User         from './server/user.js'
+// import Payment      from './server/payment.js'
+import Database     from './server/database.js'
+let db =            new Database( config.db.userRW, config.db.pwdRW, config.db.name )
+import { config }   from './public/assets/config.js'
 
 const port = '3001'
 
@@ -40,7 +49,6 @@ async function parseRequest( stream, headers, req, res ) {
     for await ( const chunk of stream )
         req.body += chunk
 
-
 }
 
 async function readFile( req, res ) {
@@ -64,80 +72,54 @@ async function readFile( req, res ) {
 }
 
 async function handleRequest( req, res ) {
-
     // GET COLLECTION
     if ( req.url.pathname.startsWith( '/api/get' ) ) {
 
         if ( req.param.name === 'products' || req.param.name === 'pages' ) {
 
-            const resp = await dbQuery.dbLoad( config.db.userR, config.db.pwdR, config.db.name, req.param )
+            const resp = await dbLoad( config.db.userR, config.db.pwdR, config.db.name, req.param )
             res.headers[ 'content-type' ] = 'application/json'
             res.data = JSON.stringify( resp )
 
         }
 
-    // TOKEN
+        // TOKEN
     }  else if ( req.url.pathname.startsWith( '/api/token' ) ) {
 
         if( req.param.action === 'verify' ){
-
-            const resp = await token.tokenList.check( req.param.token )
+            const resp = await token.check( req.param.token )
             res.headers[ 'content-type' ] = 'application/json'
             res.data = JSON.stringify( resp )
 
 
         } else if ( req.param.action === 'remove' ){
 
-            token.tokenList.del( req.param.token )
+            token.del( req.param.token )
 
         }
 
-    // LOGIN
+        // LOGIN
     } else if ( req.url.pathname.startsWith( '/api/login' ) ) {
 
-        const resp = await dbQuery.dbLogin( config.db.userR, config.db.pwdR, config.db.name, 'users', req.param )
+        let resp = await dbLogin( config.db.userR, config.db.pwdR, config.db.name, 'users', req.param )
+        typeof resp === 'object' ? resp.token = await token.add() : null
         res.headers[ 'content-type' ] = 'application/json'
         res.data = JSON.stringify( resp )
 
-    // REGISTER
+        // REGISTER
     } else if ( req.url.pathname.startsWith( '/api/register' ) ) {
 
-        const resp = await dbQuery.dbRegister( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.param )
+        const resp = await dbRegister( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.param )
         res.headers[ 'content-type' ] = 'application/json'
         res.data = JSON.stringify( resp )
 
-    // UPDATE USER
+        // UPDATE USER
     } else if ( req.url.pathname.startsWith( '/api/updateUser' ) ) {
-
-        const tokenResp = await token.tokenList.check( req.param.token )
-
-            if( tokenResp === true ){
-
-                const resp = await dbQuery.dbUpdateUser( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.body )
-                resp.token = req.param.token
-                res.headers[ 'content-type' ] = 'application/json'
-                res.data = JSON.stringify( resp )
-
-            } else {
-                res.headers[ 'content-type' ] = 'application/json'
-                res.data = JSON.stringify( false )
-            }
-
-    // UPDATE PASSWORD
-    } else if ( req.url.pathname.startsWith( '/api/updatePwd' ) ) {
-
-        const resp = await dbQuery.dbUpdatePassword( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.param )
-        res.headers[ 'content-type' ] = 'application/json'
-        res.data = JSON.stringify( resp )
-
-    // CART
-    } else if ( req.url.pathname.startsWith( '/api/cart' ) ) {
-
-        const tokenResp = await token.tokenList.check( req.param.token )
+        const tokenResp = await token.check( req.param.token )
 
         if( tokenResp === true ){
-
-            const resp = await dbQuery.dbCart( config.db.userRW, config.db.pwdRW, config.db.name, 'users',req.param.action ,req.param.email , req.body )
+            const resp = await dbUpdateUser( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.body )
+            resp.token = req.param.token
             res.headers[ 'content-type' ] = 'application/json'
             res.data = JSON.stringify( resp )
 
@@ -146,23 +128,49 @@ async function handleRequest( req, res ) {
             res.data = JSON.stringify( false )
         }
 
-    // ORDER
+        // UPDATE PASSWORD
+    } else if ( req.url.pathname.startsWith( '/api/updatePwd' ) ) {
+
+        const resp = await dbUpdatePassword( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.param )
+        res.headers[ 'content-type' ] = 'application/json'
+        res.data = JSON.stringify( resp )
+
+        // CART
+    } else if ( req.url.pathname.startsWith( '/api/cart' ) ) {
+        const tokenResp = await token.check( req.param.token )
+        if( tokenResp === true ){
+            const resp = await dbCart( config.db.userRW, config.db.pwdRW, config.db.name, 'users',req.param.action ,req.param.email , req.body )
+            res.headers[ 'content-type' ] = 'application/json'
+            res.data = JSON.stringify( resp )
+
+        } else {
+            res.headers[ 'content-type' ] = 'application/json'
+            res.data = JSON.stringify( false )
+        }
+
+        // ORDER
     } else if ( req.url.pathname.startsWith( '/api/orders' ) ) {
-
-        const tokenResp = await token.tokenList.check( req.param.token )
-            if( tokenResp === true ){
-                const resp = await dbQuery.dbOrders( config.db.userRW, config.db.pwdRW, config.db.name, 'orders',req.param.action , req.param.email )
-                res.headers[ 'content-type' ] = 'application/json'
-                res.data = JSON.stringify( resp )
-            } else {
-                res.headers[ 'content-type' ] = 'application/json'
-                res.data = JSON.stringify( false )
-            }
-
-    } else if ( req.url.pathname === '/docs' ) {
-
-        res.headers['Location'] = 'https://localhost:3000'
-        res.headers[':status'] = 302
+        const tokenResp = await token.check(req.param.token)
+        if (tokenResp === true) {
+            const resp = await dbOrders(config.db.userRW, config.db.pwdRW, config.db.name, 'orders', req.param.action, req.param.email)
+            res.headers['content-type'] = 'application/json'
+            res.data = JSON.stringify(resp)
+        } else {
+            res.headers['content-type'] = 'application/json'
+            res.data = JSON.stringify(false)
+        }
+        // PAYMENT Not ready yet
+    // } else if ( req.url.pathname.startsWith('/api/payment') ) {
+    //     const tokenResp = await token.check( req.param.token )
+    //     if (tokenResp === true) {
+    //         let payment = new Payment()
+    //         const resp = payment.checkOrder( req.body, req.param.email )
+    //         res.headers['content-type'] = 'application/json'
+    //         res.data = JSON.stringify( resp )
+    //     } else {
+    //         res.headers['content-type'] = 'application/json'
+    //         res.data = JSON.stringify(false)
+    //     }
 
     } else if ( path.extname( String( req.url ) ) === '' && String( req.url.pathname ) !== '/' ) {
 
@@ -178,9 +186,9 @@ async function handleRequest( req, res ) {
 
 async function executeRequest( stream, headers ) {
 
-    // msgSys.send( JSON.stringify(stream.session.socket.remoteAddress), 'debug' )
+    // logSys( JSON.stringify(stream.session.socket.remoteAddress), 'debug' )
 
-    stream.on('error', err => msgSys.send( err, 'error' ) )
+    stream.on('error', err => logSys( err, 'error' ) )
 
     const req = {
         headers: headers
@@ -243,17 +251,20 @@ async function executeRequest( stream, headers ) {
     }
 }
 
-
-
 const server = http2.createSecureServer( {
     key: fs.readFileSync( './localhost-privkey.pem' ),
     cert: fs.readFileSync( './localhost-cert.pem' )
 } )
 
-server.on( 'error', err => msgSys.send( err, 'error' ) )
+// const server = http2.createSecureServer( {
+//     key: fs.readFileSync( '/etc/letsencrypt/live/ovh.coprometal.com/privkey.pem' ),
+//     cert: fs.readFileSync( '/etc/letsencrypt/live/ovh.coprometal.com/fullchain.pem' )
+// } )
+
+server.on( 'error', err => logSys( err, 'error' ) )
 server.on( 'stream', executeRequest )
 
 server.listen( port );
 
-msgSys.send( `Server is lounch at https://localhost:${port}`, 'success' )
-msgSys.send( '------------------------------------' )
+logSys( `Server is lounch at https://localhost:${port}`, 'success' )
+logSys( '------------------------------------' )

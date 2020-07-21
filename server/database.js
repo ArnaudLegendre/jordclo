@@ -1,12 +1,11 @@
-const mongoClient   = require( 'mongodb' ).MongoClient
-const msgSys        = require( './msgSystem.js' )
-const config        = require( '../public/assets/config.json' )
+import mongodb      from 'mongodb'
+import logSys       from '../server/msgSystem.js'
 
 /**
  * Manage mongoDB database
  * @class
  */
-class Database {
+export default class Database {
     /**
      * Prepare mongoDB instance
      * @constructor
@@ -18,12 +17,13 @@ class Database {
         try {
             this.uri = `mongodb://${user}:${pwd}@127.0.0.1:27017/?authSource=${name}&readPreference=primary&appname=MongoDB%20Compass&ssl=false`
             this.name = name
-            this.client = new mongoClient( this.uri, {
+            let MongoClient = mongodb.MongoClient
+            this.client = new MongoClient( this.uri, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             } )
         } catch( error ) {
-            msgSys.send( error, 'error' )
+            logSys( error, 'error' )
             return error
         }
     }
@@ -38,7 +38,7 @@ class Database {
             await this.client.connect()
             this.db = this.client.db( this.name )
         } catch( error ) {
-            await msgSys.send( error, 'error' )
+            await logSys( error, 'error' )
             return error
         }
     }
@@ -61,10 +61,10 @@ class Database {
     async getCollection( collection ) {
         try {
             this.collection = await this.db.collection( collection ).find( ).toArray( )
-            await msgSys.send( `Open connection to Database "${ this.name }" and get "${ collection }"` )
+            await logSys( `Open connection to Database "${ this.name }" and get "${ collection }"` )
             return this.collection
         } catch ( error ) {
-            await msgSys.send( error, 'error' )
+            await logSys( error, 'error' )
             return error
         }
     }
@@ -85,14 +85,14 @@ class Database {
             } else {
                 await this.db.collection( collection ).insertOne( fields, error => {
                     if ( error ) {
-                        msgSys.send( error, 'error' )
+                        logSys( error, 'error' )
                     }
-                    msgSys.send( `Document ADD with success in ${collection}`, 'success' )
+                    logSys( `Document ADD with success in ${collection}`, 'success' )
                 })
                 return 'create document'
             }
         } catch ( error ) {
-            await msgSys.send( error, 'error' )
+            await logSys( error, 'error' )
             return error
         }
     }
@@ -108,10 +108,10 @@ class Database {
     async editDocument( collection, primaryKey, fields ) {
         try {
             await this.db.collection( collection ).findOneAndUpdate( primaryKey, {$set: fields} )
-            await msgSys.send( `Document EDIT with success in ${collection}`, 'success' )
+            await logSys( `Document EDIT with success in ${collection}`, 'success' )
             return 'edit document'
         } catch ( error ) {
-            await msgSys.send( error, 'error' )
+            await logSys( error, 'error' )
             return error
         }
     }
@@ -125,16 +125,13 @@ class Database {
      */
     async getDocument( collection, primaryKey ) {
         try {
-            this.document = await this.db.collection( collection ).find( primaryKey ).limit(1).toArray()
+            this.document = await this.db.collection( collection ).findOne( primaryKey )
             return this.document
         } catch( error ) {
-            await msgSys.send( error, 'error' )
+            await logSys( `Class = Database | Method = getDocument : ${error}`, 'error' )
             return error
         }
     }
 }
 
-let db = new Database( config.db.userRW, config.db.pwdRW, config.db.name )
-exports.db = db
-
-msgSys.send( 'Database..............READY', 'success' )
+logSys( 'Database..............READY', 'success' )

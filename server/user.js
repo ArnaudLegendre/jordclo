@@ -1,13 +1,15 @@
-const msgSys        = require( './msgSystem.js' )
-const db            = require( './database.js' )
-const argon2        = require( 'argon2' )
-const token         = require( './token.js' )
+import argon2       from 'argon2'
+import logSys       from '../server/msgSystem.js'
+import Token        from '../server/token.js'
+import Database     from './database.js'
+import { config }   from '../public/assets/config.js'
+let db =            new Database( config.db.userRW, config.db.pwdRW, config.db.name )
 
 /**
  * Manage User
  * @class
  */
-class User {
+export default class User {
     /**
      * Create new user
      * @method
@@ -16,14 +18,14 @@ class User {
      */
     async createUser( data ) {
         try {
-            await db.db.connection()
+            await db.connection()
             data.password = await argon2.hash( data.password )
-            await db.db.createDocument('users', { email: data.email }, data )
+            await db.createDocument('users', { email: data.email }, data )
         } catch ( error ) {
-            await msgSys.send( error, 'error' )
+            await logSys( error, 'error' )
             return error
         } finally {
-            await db.db.closeConnect()
+            await db.closeConnect()
         }
     }
 
@@ -36,15 +38,16 @@ class User {
      */
     async editUser( data, tokenUser ) {
         try {
-            await db.db.connection()
-            await token.tokenList.check( tokenUser )
-                ? await db.db.editDocument( 'users', { email: data.email }, data )
+            await db.connection()
+            let token = new Token
+            await token.check( tokenUser )
+                ? await db.editDocument( 'users', { email: data.email }, data )
                 : 'token invalid'
         } catch ( error ) {
-            await msgSys.send( error, 'error' )
+            await logSys( error, 'error' )
             return error
         } finally {
-            await db.db.closeConnect()
+            await db.closeConnect()
         }
     }
 
@@ -57,20 +60,21 @@ class User {
      */
     async editPwd( data, tokenUser ) {
         try {
-            await db.db.connection()
-            if( await token.tokenList.check( tokenUser ) ) {
-                this.document = await db.db.getDocument( 'users', { email: data.email } )
+            await db.connection()
+            let token = new Token
+            if( await token.check( tokenUser ) ) {
+                this.document = await db.getDocument( 'users', { email: data.email } )
                 await argon2.verify( this.document[0].password, data.oldPassword )
-                    ? await db.db.editDocument( 'users', { email: data.email }, { password: await argon2.hash( data.newPassword ) } )
+                    ? await db.editDocument( 'users', { email: data.email }, { password: await argon2.hash( data.newPassword ) } )
                     : 'old password invalid'
             } else {
                 return 'token invalid'
             }
         } catch ( error ) {
-            await msgSys.send( error, 'error' )
+            await logSys( error, 'error' )
             return error
         } finally {
-            await db.db.closeConnect()
+            await db.closeConnect()
         }
     }
 
@@ -82,24 +86,22 @@ class User {
      */
     async login( data ) {
         try {
-            await db.db.connection()
-            this.document = await db.db.getDocument( 'users', { email: data.email } )
+            await db.connection()
+            this.document = await db.getDocument( 'users', { email: data.email } )
             if( await argon2.verify( this.document[0].password, data.password ) ) {
-                this.token = token.tokenList.add()
+                let token = new Token
+                this.token = token.add()
                 return this.token
             } else {
                 return 'password incorrect'
             }
         } catch ( error ) {
-            await msgSys.send( error, 'error' )
+            await logSys( error, 'error' )
             return error
         } finally {
-            await db.db.closeConnect()
+            await db.closeConnect()
         }
     }
 
 
 }
-
-let user = new User()
-exports.user = user

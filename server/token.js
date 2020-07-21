@@ -1,10 +1,10 @@
-const msgSys = require( './msgSystem.js' )
+import logSys   from '../server/msgSystem.js'
 
 /**
  * Manage token auth, reset at server restart
  * @class
  */
-class Token {
+export default class Token {
 
     constructor() {
         this.tokenUserList = [ ]
@@ -46,8 +46,4 @@ class Token {
 
 }
 
-let tokenList = new Token()
-
-exports.tokenList = tokenList
-
-msgSys.send( 'Token Manage..............READY', 'success' )
+logSys( 'Token Manage..............READY', 'success' )

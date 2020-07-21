@@ -1,12 +1,12 @@
-const nodeMailer    = require( 'nodemailer' )
-const msgSys        = require( './msgSystem.js' )
-const config        = require( '../public/assets/config.json' )
+import nodeMailer   from 'nodemailer'
+import logSys       from './msgSystem.js'
+import { config }   from '../public/assets/config.js'
 
 /**
  * Manage email sending
  * @class
  */
-class Email {
+export default class Email {
 
     constructor() {
         this.transporter = nodeMailer.createTransport( {
@@ -26,33 +26,29 @@ class Email {
      * @returns {Promise<void>}
      */
     async send( data ){
-        await msgSys.send( 'EMAIL: Generate email' )
+        await logSys( 'EMAIL: Generate email' )
         this.message = {
             from: "ne-pas-repondre@jord.com",
             to: data.email,
             subject: data.subject,
-            text: ( { path: `./public/assets/views/email/${ data.textFile }.txt` } ),
-            html: ( { path: `./public/assets/views/email/${ data.textFile }.html` } )
+            text: ( { path: `./assets/views/email/${ data.textFile }.txt` } ),
+            html: ( { path: `./assets/views/email/${ data.textFile }.html` } )
         }
 
         await this.transporter.sendMail( this.message, function( err, res ) {
             if ( err ) {
-                msgSys.send( err, 'error' )
+                logSys( err, 'error' )
             } else {
-                msgSys.send( 'EMAIL: Email SEND', 'success' )
-                msgSys.send( `EMAIL: Response >> ${ res.response }`)
-                msgSys.send( `EMAIL: MessageID >> ${ res.messageId }` )
+                logSys( 'EMAIL: Email SEND', 'success' )
+                logSys( `EMAIL: Response >> ${ res.response }`)
+                logSys( `EMAIL: MessageID >> ${ res.messageId }` )
             }
         } )
 
     }
 }
 
-let email = new Email()
-
-exports.email = email
-
-msgSys.send('------------------------------------' )
-msgSys.send('---------- SERVER STARTUP ----------' )
-msgSys.send('------------------------------------' )
-msgSys.send('Sending Email..............READY', 'success' )
+logSys('------------------------------------' )
+logSys('---------- SERVER STARTUP ----------' )
+logSys('------------------------------------' )
+logSys('Sending Email..............READY', 'success' )

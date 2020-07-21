@@ -1,8 +1,8 @@
 // Find colors in https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
-const dateTime = require( './dateTime.js' )
 
-async function send( msg, type ) {
+import dateTime from './dateTime.js'
 
+export default function logSys( msg, type ) {
     let style
     switch ( type ) {
         case 'success':
@@ -26,10 +26,6 @@ async function send( msg, type ) {
 
     type = type === undefined ? '' : `[${ type }]`
 
-    await console.log( style, `[${ await dateTime.get( ) }]${ type } ${ msg }`, '\x1b[0m' )
+    console.log( style, `[${ dateTime() }]${ type } ${ msg }`, '\x1b[0m' )
 
-}
-
-module.exports = {
-    send,
 }
