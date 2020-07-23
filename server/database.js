@@ -79,8 +79,8 @@ export default class Database {
      */
     async createDocument( collection, primaryKey, fields ) {
         try {
-            this.document = await this.db.collection( collection ).find( primaryKey ).limit(1).toArray()
-            if ( this.document.length != 0 ) {
+            this.document = await this.db.collection( collection ).find( primaryKey )
+            if ( this.document.length !== 0 ) {
                 return 'already existing document'
             } else {
                 await this.db.collection( collection ).insertOne( fields, error => {
@@ -125,7 +125,7 @@ export default class Database {
      */
     async getDocument( collection, primaryKey ) {
         try {
-            this.document = await this.db.collection( collection ).findOne( primaryKey )
+            this.document = await this.db.collection( collection ).find( primaryKey )
             return this.document
         } catch( error ) {
             await logSys( `Class = Database | Method = getDocument : ${error}`, 'error' )
