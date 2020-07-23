@@ -111,11 +111,11 @@ async function dbRegister ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
             sendData['shipping_postalCode'] = ''
             sendData['shipping_town'] = ''
 
-            db.collection( dbCollection ).insertOne( sendData, err => {
-                if ( err ) {
-                    logSys( err, "error" )
+            await db.collection(dbCollection).insertOne(sendData, err => {
+                if (err) {
+                    logSys(err, "error")
                 }
-                logSys( `New user register`, 'success' )
+                logSys(`New user register`, 'success')
             })
 
             let email = new Email
