@@ -158,12 +158,16 @@ window.onpopstate = e => {
 document.addEventListener( 'pageReady', e => {
     buildProduct( )
     productsPage( )
+    getProductsByCat( )
+    enableFilters( )
     document.dispatchEvent( initWebsite )
 } )
 
 window.addEventListener( 'pageChange', e => {
     buildProduct( )
     productsPage( )
+    getProductsByCat( )
+    enableFilters( )
 } )
 
 let optionsList = { }
@@ -184,13 +188,13 @@ function buildProduct( ) {
             document.getElementById( 'ref' ).innerHTML = elt.ref
 
             let prodImg
-            elt.images[ 0 ] ? prodImg = elt.images[ 0 ] : prodImg = '/assets/images/aucune-image.png'
+            elt.images[ 0 ] ? prodImg = elt.images[ 0 ] : prodImg = 'assets/images/aucune-image.png'
             document.getElementById('productImg' ).src = prodImg
 
             // Calc price & write technical
             let totalVarPrice = 0
             let tableTech = document.getElementById( 'productTech' ).querySelector('tbody')
-            elt.tech != undefined ? tableTech.innerHTML = tableTech.innerHTML.concat( `<tr><td>${elt.tech}</td></tr>` ) : null
+            elt.tech !== undefined ? tableTech.innerHTML = tableTech.innerHTML.concat( `<tr><td>${elt.tech}</td></tr>` ) : null
 
             if( elt.variables ) {
                 for (const [key, value] of Object.entries( elt.variables ) ) {
@@ -205,7 +209,6 @@ function buildProduct( ) {
                         }
                     } )
                 }
-
             }
             let totalProdPrice = ( parseFloat( elt.price ) + totalVarPrice).toFixed(2)
             document.getElementById( 'price' ).innerHTML = productPrice = totalProdPrice
@@ -386,6 +389,83 @@ function productsPage( cat = 'all', count = -1 ) {
 
     }
 
+}
+
+function getProductsByCat( ) {
+
+    let cats = document.querySelectorAll('[data-cat]' )
+
+    cats.forEach(catNode => {
+
+        let productsList = JSON.parse( localStorage.getItem( 'products' ) )
+
+        let counter = 1
+        let count = parseInt( catNode.dataset.count )
+        let cat = catNode.dataset.cat
+
+        productsList.forEach( prod => {
+
+            let thisProd
+
+            cat !== 'all' && prod.category === cat && parseFloat( prod.access ) === 0 ? thisProd = prod : cat === 'all' ? thisProd = prod : null
+
+            if ( thisProd && ( counter <= count || count === -1 ) ) {
+                counter++
+                let prodCardHTML = document.createElement( 'span' )
+                prodCardHTML.innerHTML = productCardHTML
+                prodCardHTML.querySelector('.productCard' ).href = `#${ thisProd.slug }`
+                prodCardHTML.querySelector('.productCard' ).dataset.filters = `[${ JSON.stringify( thisProd.filters ) }]`
+                prodCardHTML.querySelector('.productName' ).innerHTML = thisProd.name
+
+                let prodImg
+                thisProd.images[ 0 ] ? prodImg = thisProd.images[ 0 ] : prodImg = '/assets/images/aucune-image.png'
+                prodCardHTML.querySelector('.productImg' ).src = prodImg
+
+                let totalVarPrice = 0
+                if( thisProd.variables ) {
+                    for (const [key, value] of Object.entries( thisProd.variables ) ) {
+                        let varPrice
+                        productsList.forEach( p => {
+                            if( p.ref === key ){
+                                varPrice = p.price * value
+                                totalVarPrice = totalVarPrice + varPrice
+                            }
+                        } )
+                    }
+
+                }
+                let totalProdPrice = (parseFloat(thisProd.price) + totalVarPrice).toFixed(2)
+                prodCardHTML.querySelector('.productPrice' ).innerHTML = `${totalProdPrice}€ TTC`
+                catNode.insertAdjacentHTML( 'beforeend', prodCardHTML.innerHTML )
+            }
+        } )
+    } )
+
+}
+
+function enableFilters( ) {
+
+    if( document.querySelector('.filters') ){
+        document.querySelector('.filters').addEventListener( 'click', ( e ) => {
+            if( e.target.hasAttribute( 'data-filter' ) ) {
+
+                let products = document.querySelectorAll( '[data-filters]' )
+                products.forEach( prod => prod.hidden = false )
+
+                document.querySelectorAll( '[data-filter]' ).forEach( filter => {
+                    if( filter.checked === false ) {
+                        let filterGroup = filter.closest('[data-filter-group]' ).attributes[ 'data-filter-group' ].nodeValue
+                        let filterValue = filter.attributes[ 'data-filter' ].nodeValue
+                        products.forEach( prod => {
+                            let filtersList = JSON.parse( prod.attributes[ 'data-filters' ].nodeValue )
+                            if ( filtersList[ 0 ][ `${filterGroup}` ] === filterValue )
+                                prod.hidden = true
+                        } )
+                    }
+                } )
+            }
+        } )
+    }
 }
 let userMenuHTML,
     loginLogoutFormHTML,
@@ -625,7 +705,6 @@ async function addCart( e ) {
     let data = [ ]
     let optionsList = [ ]
     let optionsName = [ ]
-    let variables = { }
 
     productAdd = {
         "ref"           : productElem.querySelector('#ref' ).innerHTML,
@@ -634,11 +713,18 @@ async function addCart( e ) {
         "qty"           : parseFloat( productElem.querySelector('#qty' ).children[ 'qtyInput' ].value )
     }
 
+    let prodVar = new Promise( resolve => {
+        productList.forEach(prod => {
+            prod.ref === productElem.querySelector('#ref').innerHTML ? resolve( prod.variables ) : null
+        } )
+    } )
+    Object.getOwnPropertyNames( await prodVar ).length > 0 ? productAdd.var = await prodVar : null
+
     if ( productElem.querySelector('#options' )  ) {
-        productElem.querySelectorAll('input' ).forEach(async opt => {
+        productElem.querySelectorAll('input' ).forEach( opt => {
             if( ( opt.selected === true || opt.checked === true ) && opt.value !== '' ) {
-                await optionsList.push( opt.value )
-                await optionsName.push( opt.dataset.name )
+                optionsList.push( opt.value )
+                optionsName.push( opt.dataset.name )
             }
         } )
         productAdd.options = optionsList
@@ -657,7 +743,7 @@ async function addCart( e ) {
         data = JSON.parse( localStorage.getItem( 'cartLocal' ) )
         let newItem = true
 
-        data.forEach( async e => {
+        data.forEach( e => {
             ( productAdd.ref === e.ref && String( productAdd.options ) === String( e.options ) ) ? ( e.qty += productAdd.qty, newItem = false ) : null;
         } )
         newItem ? ( data.push( productAdd ), localStorage.setItem( 'cartLocal', JSON.stringify( data ) ) ) : localStorage.setItem( 'cartLocal', JSON.stringify( data ) )
@@ -733,13 +819,12 @@ function getCart( ){
         }).then( data => {
         if ( data === false ){
             showPushNotification( 'error', "Session expirée" )
-        } else if( data != 'null' ) {
+        } else if( data !== 'null' ) {
             localStorage.setItem( 'cartLocal', data )
         }
     }).then( ( ) => refreshCart( ) )
 
 }
-
 document.addEventListener( 'initWebsite', function( ) {
 
     let userLocal = localStorage.getItem( 'userLocal' )
@@ -810,6 +895,7 @@ function getUserProfilPage( content ) {
                 'email':                userLocal.email,
                 'firstname':            document.getElementById('firstnameField').nextElementSibling.value,
                 'lastname':             document.getElementById('lastnameField').nextElementSibling.value,
+                'phone':                document.getElementById('phoneField').nextElementSibling.value,
                 'address':              document.getElementById('addressField').nextElementSibling.value,
                 'postalCode':           document.getElementById('postalcodeField').nextElementSibling.value,
                 'town':                 document.getElementById('townField').nextElementSibling.value,
@@ -842,9 +928,10 @@ function getUserProfilPage( content ) {
         if ( e.target.classList.contains( 'editPassword' ) ) {
 
             let newPass         = document.getElementById('newPassword' ).value
-            let confirmPass      = document.getElementById('confirmPassword' ).value
+            let confirmPass     = document.getElementById('confirmPassword' ).value
             let oldPass         = document.getElementById('oldPassword' ).value
             let email           = document.getElementById('emailField').innerHTML
+            let token           = userLocal.token
 
             const regexPatPwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%^&*()_+\-=]*.{8,25}$/
             const pwdCheck = regexPatPwd.test( newPass )
@@ -854,7 +941,7 @@ function getUserProfilPage( content ) {
             function editPassword( ){
                 if ( newPass === confirmPass ) {
 
-                    fetch( `/api/updatePwd?email=${email}&password=${oldPass}&newPassword=${newPass}` )
+                    fetch( `/api/updatePwd?email=${email}&password=${encodeURIComponent(oldPass)}&newPassword=${encodeURIComponent(newPass)}&token=${token}` )
                         .then( res => {
                             return res.json( )
                         } )
@@ -909,6 +996,7 @@ function writeData( ) {
     document.getElementById('emailField' ).innerHTML                 = userLocal.email
     document.getElementById('firstnameField' ).innerHTML             = document.getElementById('firstnameField' ).nextElementSibling.value            = userLocal.firstname
     document.getElementById('lastnameField' ).innerHTML              = document.getElementById('lastnameField' ).nextElementSibling.value             = userLocal.lastname
+    document.getElementById('phoneField' ).innerHTML                 = document.getElementById('phoneField' ).nextElementSibling.value                = userLocal.phone
     document.getElementById('addressField' ).innerHTML               = document.getElementById('addressField' ).nextElementSibling.value              = userLocal.address
     document.getElementById('postalcodeField' ).innerHTML            = document.getElementById('postalcodeField' ).nextElementSibling.value           = userLocal.postalCode
     document.getElementById('townField' ).innerHTML                  = document.getElementById('townField' ).nextElementSibling.value                 = userLocal.town
@@ -979,17 +1067,16 @@ function loginRegister( location ){
                 elt.preventDefault( )
                 let param = '?'
 
-                if( elt.target.monprenom.value === '' && elt.target.monadresse.value === 'ceci est mon adresse' ) {
+                if( elt.target.monprenom.value === '' & elt.target.monadresse.value === 'ceci est mon adresse' ) {
                     let data = new FormData( elt.target )
 
                     if ( buttonSubmit.classList.contains( 'loginSubmit' ) ) {
                         for ( var [key, value] of data.entries( ) ) {
-                            param = param.concat( `${key}=${value}&` )
+                            param = param.concat( `${key}=${encodeURIComponent(value)}&` )
                         }
-
                         param = param.slice( 0, -1 )
 
-                        fetch( `/api/login${param}` )
+                        fetch( `api/login${param}` )
                             .then( res => {
                                 return res.json( )
                             })
@@ -1011,7 +1098,7 @@ function loginRegister( location ){
 
                         for ( var [key, value] of data.entries( ) ) {
                             dataSend[key] = value
-                            param = param.concat( `${key}=${value}&` )
+                            param = param.concat( `${key}=${encodeURIComponent(value)}&` )
                         }
 
                         const regexPatPwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%^&*()_+\-=]*.{8,25}$/
@@ -1021,7 +1108,7 @@ function loginRegister( location ){
                         if ( pwdCheck && dataSend.password === dataSend.confirmPassword ){
                             param = param.slice( 0, -1 )
 
-                            fetch( `/api/register${param}` )
+                            fetch( `api/register${param}` )
                                 .then( res => {
                                     return res.json( )
                                 }).then( data => {

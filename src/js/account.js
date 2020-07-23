@@ -68,6 +68,7 @@ function getUserProfilPage( content ) {
                 'email':                userLocal.email,
                 'firstname':            document.getElementById('firstnameField').nextElementSibling.value,
                 'lastname':             document.getElementById('lastnameField').nextElementSibling.value,
+                'phone':                document.getElementById('phoneField').nextElementSibling.value,
                 'address':              document.getElementById('addressField').nextElementSibling.value,
                 'postalCode':           document.getElementById('postalcodeField').nextElementSibling.value,
                 'town':                 document.getElementById('townField').nextElementSibling.value,
@@ -100,9 +101,10 @@ function getUserProfilPage( content ) {
         if ( e.target.classList.contains( 'editPassword' ) ) {
 
             let newPass         = document.getElementById('newPassword' ).value
-            let confirmPass      = document.getElementById('confirmPassword' ).value
+            let confirmPass     = document.getElementById('confirmPassword' ).value
             let oldPass         = document.getElementById('oldPassword' ).value
             let email           = document.getElementById('emailField').innerHTML
+            let token           = userLocal.token
 
             const regexPatPwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%^&*()_+\-=]*.{8,25}$/
             const pwdCheck = regexPatPwd.test( newPass )
@@ -112,7 +114,7 @@ function getUserProfilPage( content ) {
             function editPassword( ){
                 if ( newPass === confirmPass ) {
 
-                    fetch( `/api/updatePwd?email=${email}&password=${oldPass}&newPassword=${newPass}` )
+                    fetch( `/api/updatePwd?email=${email}&password=${encodeURIComponent(oldPass)}&newPassword=${encodeURIComponent(newPass)}&token=${token}` )
                         .then( res => {
                             return res.json( )
                         } )
@@ -167,6 +169,7 @@ function writeData( ) {
     document.getElementById('emailField' ).innerHTML                 = userLocal.email
     document.getElementById('firstnameField' ).innerHTML             = document.getElementById('firstnameField' ).nextElementSibling.value            = userLocal.firstname
     document.getElementById('lastnameField' ).innerHTML              = document.getElementById('lastnameField' ).nextElementSibling.value             = userLocal.lastname
+    document.getElementById('phoneField' ).innerHTML                 = document.getElementById('phoneField' ).nextElementSibling.value                = userLocal.phone
     document.getElementById('addressField' ).innerHTML               = document.getElementById('addressField' ).nextElementSibling.value              = userLocal.address
     document.getElementById('postalcodeField' ).innerHTML            = document.getElementById('postalcodeField' ).nextElementSibling.value           = userLocal.postalCode
     document.getElementById('townField' ).innerHTML                  = document.getElementById('townField' ).nextElementSibling.value                 = userLocal.town
@@ -237,17 +240,16 @@ function loginRegister( location ){
                 elt.preventDefault( )
                 let param = '?'
 
-                if( elt.target.monprenom.value === '' && elt.target.monadresse.value === 'ceci est mon adresse' ) {
+                if( elt.target.monprenom.value === '' & elt.target.monadresse.value === 'ceci est mon adresse' ) {
                     let data = new FormData( elt.target )
 
                     if ( buttonSubmit.classList.contains( 'loginSubmit' ) ) {
                         for ( var [key, value] of data.entries( ) ) {
-                            param = param.concat( `${key}=${value}&` )
+                            param = param.concat( `${key}=${encodeURIComponent(value)}&` )
                         }
-
                         param = param.slice( 0, -1 )
 
-                        fetch( `/api/login${param}` )
+                        fetch( `api/login${param}` )
                             .then( res => {
                                 return res.json( )
                             })
@@ -269,7 +271,7 @@ function loginRegister( location ){
 
                         for ( var [key, value] of data.entries( ) ) {
                             dataSend[key] = value
-                            param = param.concat( `${key}=${value}&` )
+                            param = param.concat( `${key}=${encodeURIComponent(value)}&` )
                         }
 
                         const regexPatPwd = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9!@#$%^&*()_+\-=]*.{8,25}$/
@@ -279,7 +281,7 @@ function loginRegister( location ){
                         if ( pwdCheck && dataSend.password === dataSend.confirmPassword ){
                             param = param.slice( 0, -1 )
 
-                            fetch( `/api/register${param}` )
+                            fetch( `api/register${param}` )
                                 .then( res => {
                                     return res.json( )
                                 }).then( data => {

@@ -1,4 +1,7 @@
 @charset "UTF-8";
+/*
+ * RESTART [NPM RUN WATCH] WHEN YOU EDIT THIS FILE
+ */
 /*! Spectre.css v0.5.8 | MIT License | github.com/picturepan2/spectre */
 /* Manually forked from Normalize.css */
 /* normalize.css v5.0.0 | MIT License | github.com/necolas/normalize.css */
@@ -3519,6 +3522,30 @@ a.text-error:visited {
 #pushNotification .show {
   opacity: 1;
   transition: all 0.5s ease-in-out;
+}
+
+.justify-start {
+  justify-content: start;
+}
+
+.justify-end {
+  justify-content: end;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
+.justify-center {
+  justify-content: center;
 }
 
 /*# sourceMappingURL=app.css.map */
