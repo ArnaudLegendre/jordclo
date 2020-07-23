@@ -170,7 +170,6 @@ async function dbUpdatePassword ( dbUser, dbPwd, dbName, dbCollection, dbElem ) 
     try {
         const db = client.db( dbName )
         const document = await db.collection( dbCollection ).find( { email: dbElem.email } ).toArray()
-
         if ( document.length !== 0 ){
             try {
                 if ( await argon2.verify( document[0].password, dbElem.password ) ) {

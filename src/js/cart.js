@@ -102,7 +102,6 @@ async function addCart( e ) {
     let data = [ ]
     let optionsList = [ ]
     let optionsName = [ ]
-    let variables = { }
 
     productAdd = {
         "ref"           : productElem.querySelector('#ref' ).innerHTML,
@@ -111,11 +110,18 @@ async function addCart( e ) {
         "qty"           : parseFloat( productElem.querySelector('#qty' ).children[ 'qtyInput' ].value )
     }
 
+    let prodVar = new Promise( resolve => {
+        productList.forEach(prod => {
+            prod.ref === productElem.querySelector('#ref').innerHTML ? resolve( prod.variables ) : null
+        } )
+    } )
+    Object.getOwnPropertyNames( await prodVar ).length > 0 ? productAdd.var = await prodVar : null
+
     if ( productElem.querySelector('#options' )  ) {
-        productElem.querySelectorAll('input' ).forEach(async opt => {
+        productElem.querySelectorAll('input' ).forEach( opt => {
             if( ( opt.selected === true || opt.checked === true ) && opt.value !== '' ) {
-                await optionsList.push( opt.value )
-                await optionsName.push( opt.dataset.name )
+                optionsList.push( opt.value )
+                optionsName.push( opt.dataset.name )
             }
         } )
         productAdd.options = optionsList
@@ -134,7 +140,7 @@ async function addCart( e ) {
         data = JSON.parse( localStorage.getItem( 'cartLocal' ) )
         let newItem = true
 
-        data.forEach( async e => {
+        data.forEach( e => {
             ( productAdd.ref === e.ref && String( productAdd.options ) === String( e.options ) ) ? ( e.qty += productAdd.qty, newItem = false ) : null;
         } )
         newItem ? ( data.push( productAdd ), localStorage.setItem( 'cartLocal', JSON.stringify( data ) ) ) : localStorage.setItem( 'cartLocal', JSON.stringify( data ) )
@@ -210,7 +216,7 @@ function getCart( ){
         }).then( data => {
         if ( data === false ){
             showPushNotification( 'error', "Session expirée" )
-        } else if( data != 'null' ) {
+        } else if( data !== 'null' ) {
             localStorage.setItem( 'cartLocal', data )
         }
     }).then( ( ) => refreshCart( ) )
