@@ -6,3 +6,4 @@ package-lock.json
 /public/app.css
 /public/app.css.map
 /public/script.js
+.DS_Store
