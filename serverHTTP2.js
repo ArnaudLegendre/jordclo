@@ -266,5 +266,5 @@ server.on( 'stream', executeRequest )
 
 server.listen( port );
 
-logSys( `Server is lounch at https://localhost:${port}`, 'success' )
+logSys( `Server is launch at https://localhost:${port}`, 'success' )
 logSys( '------------------------------------' )
