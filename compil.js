@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-const msgSys    = require( './server/msgSystem.js' )
-const Terser    = require( 'terser' )
-const fs        = require( 'fs' )
+import logSys from './server/msgSystem.js'
+import Terser   from 'terser'
+import fs       from 'fs'
 
 const scripts = [
     'src/js/import.js',
@@ -32,11 +32,11 @@ let compil = ( curr, prev ) => {
 
     } catch ( e ) {
 
-        msgSys.send( e, 'error' )
+        logSys( e, 'error' )
 
     } finally {
 
-        msgSys.send('Compiling Javascript Done with success !', 'success')
+        logSys('Compiling Javascript Done with success !', 'success')
 
     }
 
@@ -44,17 +44,17 @@ let compil = ( curr, prev ) => {
 
 if ( process.argv.includes( '--watch' ) ){
 
-    msgSys.send( `Ready to compil files : `, 'info' )
-    msgSys.send( `---------------`, 'info' )
+    logSys( `Ready to compil files : `, 'info' )
+    logSys( `---------------`, 'info' )
     scripts.forEach( e => {
         fs.watchFile( e, compil)
-        msgSys.send( e, 'info')
+        logSys( e, 'info')
     } )
-    msgSys.send( `---------------`, 'info' )
-    msgSys.send( `Toward [${ destFile }]`, 'info' )
-    msgSys.send( 'First Javascript Compil' )
+    logSys( `---------------`, 'info' )
+    logSys( `Toward [${ destFile }]`, 'info' )
+    logSys( 'First Javascript Compil' )
     compil( )
-    msgSys.send( 'JS is now watching for Change...' )
+    logSys( 'JS is now watching for Change...' )
 
 } else {
 
