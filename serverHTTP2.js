@@ -116,7 +116,6 @@ async function handleRequest( req, res ) {
         // UPDATE USER
     } else if ( req.url.pathname.startsWith( '/api/updateUser' ) ) {
         const tokenResp = await token.check( req.param.token )
-
         if( tokenResp === true ){
             const resp = await dbUpdateUser( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.body )
             resp.token = req.param.token
@@ -130,10 +129,15 @@ async function handleRequest( req, res ) {
 
         // UPDATE PASSWORD
     } else if ( req.url.pathname.startsWith( '/api/updatePwd' ) ) {
-
-        const resp = await dbUpdatePassword( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.param )
-        res.headers[ 'content-type' ] = 'application/json'
-        res.data = JSON.stringify( resp )
+        const tokenResp = await token.check( req.param.token )
+        if( tokenResp === true ){
+            const resp = await dbUpdatePassword( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.param )
+            res.headers[ 'content-type' ] = 'application/json'
+            res.data = JSON.stringify( resp )
+        } else {
+            res.headers[ 'content-type' ] = 'application/json'
+            res.data = JSON.stringify( false )
+        }
 
         // CART
     } else if ( req.url.pathname.startsWith( '/api/cart' ) ) {
@@ -266,5 +270,5 @@ server.on( 'stream', executeRequest )
 
 server.listen( port );
 
-logSys( `Server is lounch at https://localhost:${port}`, 'success' )
+logSys( `Server is launch at https://localhost:${port}`, 'success' )
 logSys( '------------------------------------' )
