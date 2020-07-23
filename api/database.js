@@ -1,8 +1,8 @@
-import mongodb      from 'mongodb'
-import argon2       from 'argon2'
-import Email        from '../server/email.js'
-import logSys       from '../server/msgSystem.js'
-import dateTime     from '../server/dateTime.js'
+import mongodb from 'mongodb'
+import argon2 from 'argon2'
+import Email from '../server/email.js'
+import logSys from '../server/msgSystem.js'
+import dateTime from '../server/dateTime.js'
 
 logSys( 'Database..............READY', 'success' )
 
@@ -23,14 +23,12 @@ async function dbConnect ( dbUser, dbPwd, dbName ) {
 
 async function dbLoad ( dbUser, dbPwd, dbName, dbCollection ) {
 
-    dbConnect( dbUser, dbPwd, dbName )
+    await dbConnect(dbUser, dbPwd, dbName)
 
     try {
         logSys( `Open connection to Database "${ dbName }" and get "${ dbCollection.name }"` )
         const db = client.db( dbName )
-        const collection = await db.collection( dbCollection.name ).find( ).toArray( )
-
-        return collection
+        return await db.collection(dbCollection.name).find().toArray()
 
     } catch ( e ) {
         logSys( e, 'error' )
@@ -40,19 +38,19 @@ async function dbLoad ( dbUser, dbPwd, dbName, dbCollection ) {
 
 async function dbLogin ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
 
-    dbConnect( dbUser, dbPwd, dbName )
+    await dbConnect(dbUser, dbPwd, dbName)
 
     try {
         const db = client.db( dbName )
         const document = await db.collection( dbCollection ).find( { email: dbElem.email } ).toArray()
 
-        if ( document.length != 0 ){
+        if ( document.length !== 0 ){
 
             try {
                 if ( await argon2.verify( document[0].password, dbElem.password ) ) {
 
                     logSys( `User login "${ document[0]._id }"` )
-                    let data = {
+                    return {
                         'email': document[0].email,
                         'firstname': document[0].firstname,
                         'lastname': document[0].lastname,
@@ -65,7 +63,6 @@ async function dbLogin ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
                         'shipping_town': document[0].shipping_town,
                         'token': ''
                     }
-                    return data
 
                 } else {
                     return 'incorrect password'
@@ -85,21 +82,20 @@ async function dbLogin ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
 
 async function dbRegister ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
 
-    dbConnect( dbUser, dbPwd, dbName )
+    await dbConnect(dbUser, dbPwd, dbName)
 
     try {
         const db = client.db( dbName )
         let document = await db.collection( dbCollection ).find( { email: dbElem.email } ).toArray()
 
-        if ( document.length != 0 ){
+        if ( document.length !== 0 ){
 
             return 'email already use'
 
         } else {
 
             let sendData = {}
-            let passwordHash = await argon2.hash( dbElem.password )
-            sendData['password'] = passwordHash
+            sendData['password'] = await argon2.hash(dbElem.password)
             sendData['email'] = dbElem.email
             sendData['firstname'] = ''
             sendData['lastname'] = ''
@@ -111,11 +107,11 @@ async function dbRegister ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
             sendData['shipping_postalCode'] = ''
             sendData['shipping_town'] = ''
 
-            db.collection( dbCollection ).insertOne( sendData, err => {
-                if ( err ) {
-                    logSys( err, "error" )
+            await db.collection(dbCollection).insertOne(sendData, err => {
+                if (err) {
+                    logSys(err, "error")
                 }
-                logSys( `New user register`, 'success' )
+                logSys(`New user register`, 'success')
             })
 
             let email = new Email
@@ -137,7 +133,7 @@ async function dbRegister ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
 
 async function dbUpdateUser( dbUser, dbPwd, dbName, dbCollection, dbElem ){
 
-    dbConnect( dbUser, dbPwd, dbName )
+    await dbConnect(dbUser, dbPwd, dbName)
 
     try {
         dbElem = JSON.parse( dbElem )
@@ -169,13 +165,13 @@ async function dbUpdateUser( dbUser, dbPwd, dbName, dbCollection, dbElem ){
 
 async function dbUpdatePassword ( dbUser, dbPwd, dbName, dbCollection, dbElem ) {
 
-    dbConnect( dbUser, dbPwd, dbName )
+    await dbConnect(dbUser, dbPwd, dbName)
 
     try {
         const db = client.db( dbName )
         const document = await db.collection( dbCollection ).find( { email: dbElem.email } ).toArray()
 
-        if ( document.length != 0 ){
+        if ( document.length !== 0 ){
             try {
                 if ( await argon2.verify( document[0].password, dbElem.password ) ) {
 
@@ -205,7 +201,7 @@ async function dbUpdatePassword ( dbUser, dbPwd, dbName, dbCollection, dbElem ) 
 
 async function dbCart( dbUser, dbPwd, dbName, dbCollection, action, userEmail, dbElem ){
 
-    dbConnect( dbUser, dbPwd, dbName )
+    await dbConnect(dbUser, dbPwd, dbName)
 
     try {
         const db = client.db( dbName )
@@ -224,7 +220,7 @@ async function dbCart( dbUser, dbPwd, dbName, dbCollection, action, userEmail, d
         } else if( action === 'getCart' ){
 
             let document = await db.collection( dbCollection ).find( { email: userEmail } ).toArray( )
-            if( document[0].cart != 'null' ) {
+            if( document[0].cart !== 'null' ) {
                 return JSON.stringify( document[0].cart )
             } else {
                 return 'cart empty'
@@ -239,7 +235,7 @@ async function dbCart( dbUser, dbPwd, dbName, dbCollection, action, userEmail, d
 
 async function dbOrders( dbUser, dbPwd, dbName, dbCollection, action, dbElem ) {
 
-    dbConnect( dbUser, dbPwd, dbName )
+    await dbConnect(dbUser, dbPwd, dbName)
 
     try {
         const db = client.db( dbName )
@@ -251,7 +247,7 @@ async function dbOrders( dbUser, dbPwd, dbName, dbCollection, action, dbElem ) {
             let cart = userInfo[0].cart
             let infos = { }
             for ( let [ k, v ] of Object.entries( userInfo[0] ) )
-                k != 'password' && k != 'cart' ? infos[k] = v : null
+                k !== 'password' && k !== 'cart' ? infos[k] = v : null
 
             let dateCreate = await dateTime( )
             let order = {
