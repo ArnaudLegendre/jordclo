@@ -1,12 +1,16 @@
 document.addEventListener( 'pageReady', e => {
     buildProduct( )
     productsPage( )
+    getProductsByCat( )
+    enableFilters( )
     document.dispatchEvent( initWebsite )
 } )
 
 window.addEventListener( 'pageChange', e => {
     buildProduct( )
     productsPage( )
+    getProductsByCat( )
+    enableFilters( )
 } )
 
 let optionsList = { }
@@ -27,13 +31,13 @@ function buildProduct( ) {
             document.getElementById( 'ref' ).innerHTML = elt.ref
 
             let prodImg
-            elt.images[ 0 ] ? prodImg = elt.images[ 0 ] : prodImg = '/assets/images/aucune-image.png'
+            elt.images[ 0 ] ? prodImg = elt.images[ 0 ] : prodImg = 'assets/images/aucune-image.png'
             document.getElementById('productImg' ).src = prodImg
 
             // Calc price & write technical
             let totalVarPrice = 0
             let tableTech = document.getElementById( 'productTech' ).querySelector('tbody')
-            elt.tech != undefined ? tableTech.innerHTML = tableTech.innerHTML.concat( `<tr><td>${elt.tech}</td></tr>` ) : null
+            elt.tech !== undefined ? tableTech.innerHTML = tableTech.innerHTML.concat( `<tr><td>${elt.tech}</td></tr>` ) : null
 
             if( elt.variables ) {
                 for (const [key, value] of Object.entries( elt.variables ) ) {
@@ -48,7 +52,6 @@ function buildProduct( ) {
                         }
                     } )
                 }
-
             }
             let totalProdPrice = ( parseFloat( elt.price ) + totalVarPrice).toFixed(2)
             document.getElementById( 'price' ).innerHTML = productPrice = totalProdPrice
@@ -229,4 +232,81 @@ function productsPage( cat = 'all', count = -1 ) {
 
     }
 
+}
+
+function getProductsByCat( ) {
+
+    let cats = document.querySelectorAll('[data-cat]' )
+
+    cats.forEach(catNode => {
+
+        let productsList = JSON.parse( localStorage.getItem( 'products' ) )
+
+        let counter = 1
+        let count = parseInt( catNode.dataset.count )
+        let cat = catNode.dataset.cat
+
+        productsList.forEach( prod => {
+
+            let thisProd
+
+            cat !== 'all' && prod.category === cat && parseFloat( prod.access ) === 0 ? thisProd = prod : cat === 'all' ? thisProd = prod : null
+
+            if ( thisProd && ( counter <= count || count === -1 ) ) {
+                counter++
+                let prodCardHTML = document.createElement( 'span' )
+                prodCardHTML.innerHTML = productCardHTML
+                prodCardHTML.querySelector('.productCard' ).href = `#${ thisProd.slug }`
+                prodCardHTML.querySelector('.productCard' ).dataset.filters = `[${ JSON.stringify( thisProd.filters ) }]`
+                prodCardHTML.querySelector('.productName' ).innerHTML = thisProd.name
+
+                let prodImg
+                thisProd.images[ 0 ] ? prodImg = thisProd.images[ 0 ] : prodImg = '/assets/images/aucune-image.png'
+                prodCardHTML.querySelector('.productImg' ).src = prodImg
+
+                let totalVarPrice = 0
+                if( thisProd.variables ) {
+                    for (const [key, value] of Object.entries( thisProd.variables ) ) {
+                        let varPrice
+                        productsList.forEach( p => {
+                            if( p.ref === key ){
+                                varPrice = p.price * value
+                                totalVarPrice = totalVarPrice + varPrice
+                            }
+                        } )
+                    }
+
+                }
+                let totalProdPrice = (parseFloat(thisProd.price) + totalVarPrice).toFixed(2)
+                prodCardHTML.querySelector('.productPrice' ).innerHTML = `${totalProdPrice}€ TTC`
+                catNode.insertAdjacentHTML( 'beforeend', prodCardHTML.innerHTML )
+            }
+        } )
+    } )
+
+}
+
+function enableFilters( ) {
+
+    if( document.querySelector('.filters') ){
+        document.querySelector('.filters').addEventListener( 'click', ( e ) => {
+            if( e.target.hasAttribute( 'data-filter' ) ) {
+
+                let products = document.querySelectorAll( '[data-filters]' )
+                products.forEach( prod => prod.hidden = false )
+
+                document.querySelectorAll( '[data-filter]' ).forEach( filter => {
+                    if( filter.checked === false ) {
+                        let filterGroup = filter.closest('[data-filter-group]' ).attributes[ 'data-filter-group' ].nodeValue
+                        let filterValue = filter.attributes[ 'data-filter' ].nodeValue
+                        products.forEach( prod => {
+                            let filtersList = JSON.parse( prod.attributes[ 'data-filters' ].nodeValue )
+                            if ( filtersList[ 0 ][ `${filterGroup}` ] === filterValue )
+                                prod.hidden = true
+                        } )
+                    }
+                } )
+            }
+        } )
+    }
 }
