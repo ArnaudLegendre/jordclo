@@ -31,8 +31,8 @@ export default class Email {
             from: "ne-pas-repondre@jord.com",
             to: data.email,
             subject: data.subject,
-            text: ( { path: `./assets/views/email/${ data.textFile }.txt` } ),
-            html: ( { path: `./assets/views/email/${ data.textFile }.html` } )
+            text: ( { path: `./public/assets/views/email/${ data.textFile }.txt` } ),
+            html: ( { path: `./public/assets/views/email/${ data.textFile }.html` } )
         }
 
         await this.transporter.sendMail( this.message, function( err, res ) {
