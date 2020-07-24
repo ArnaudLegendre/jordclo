@@ -39,7 +39,7 @@ function purchase( step ){
         allLabelSpan.forEach(elt => {
             labelSpanArray.push( elt.innerHTML.length )
         } )
-        labelSpanArray.every( isNotEmpty ) ? purchase( 'step4' ) : showPushNotification( 'error', "Veuillez remplir tous les champs" )
+        labelSpanArray.every( isNotEmpty ) ? createOrders() : showPushNotification( 'error', "Veuillez remplir tous les champs" )
     } else if ( step === 'step4' ){
 
         content.innerHTML = shippingHTML
@@ -87,7 +87,7 @@ function createOrders( ) {
         .then( res => {
             return res.json( )
         } ).then( data => {
-        data === 'order created' ? purchase( 'step4' ) : showPushNotification( 'error', "Une erreur est survenue, merci de contacter l'adminitrateur" )
+        data === 'create document' ? purchase( 'step4' ) : showPushNotification( 'error', "Une erreur est survenue, merci de contacter l'adminitrateur" )
     } )
 
 }

@@ -81,7 +81,7 @@ export default class Database {
     async createDocument( collection, primaryKey, fields ) {
         try {
             this.document = await this.db.collection( collection ).find( primaryKey )
-            if ( this.document.length !== 0 ) {
+            if ( this.document.length !== undefined ) {
                 return 'already existing document'
             } else {
                 await this.db.collection( collection ).insertOne( fields, error => {
@@ -126,7 +126,7 @@ export default class Database {
     async getDocument( collection, primaryKey ) {
         try {
             this.document = await this.db.collection( collection ).find( primaryKey ).toArray()
-            return this.document[0] === undefined ? 'document not found' : this.document
+            return this.document[0] === undefined ? 'document not found' : this.document[0]
         } catch( error ) {
             await logSys( error, 'error' )
         }

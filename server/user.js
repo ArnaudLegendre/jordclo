@@ -49,7 +49,7 @@ export default class User {
     async editPwd( data ) {
         try {
             this.document = await db.getDocument( 'users', { email: data.email } )
-            return await argon2.verify( this.document[0].password, data.password )
+            return await argon2.verify( this.document.password, data.password )
                 ? await db.editDocument( 'users', { email: data.email }, { password: await argon2.hash( data.newPassword ) } )
                 : 'old password invalid'
         } catch ( error ) {
@@ -64,24 +64,23 @@ export default class User {
      * @param {object} [data] email & password
      * @returns {Promise<string|*>} token or error message
      */
-    // TODO: Fix error at login with incorrect infos
     async login( data ) {
         try {
             this.document = await db.getDocument( 'users', { email: data.email } )
             if( typeof this.document === 'object' ){
-                if( await argon2.verify( this.document[0].password, data.password ) ) {
-                    logSys( `User login "${ this.document[0]._id }"` )
+                if( await argon2.verify( this.document.password, data.password ) ) {
+                    logSys( `User login "${ this.document._id }"` )
                     return {
-                        'email': this.document[0].email,
-                        'firstname': this.document[0].firstname,
-                        'lastname': this.document[0].lastname,
-                        'phone': this.document[0].phone,
-                        'address': this.document[0].address,
-                        'postalCode': this.document[0].postalCode,
-                        'town': this.document[0].town,
-                        'shipping_address': this.document[0].shipping_address,
-                        'shipping_postalCode': this.document[0].shipping_postalCode,
-                        'shipping_town': this.document[0].shipping_town,
+                        'email': this.document.email,
+                        'firstname': this.document.firstname,
+                        'lastname': this.document.lastname,
+                        'phone': this.document.phone,
+                        'address': this.document.address,
+                        'postalCode': this.document.postalCode,
+                        'town': this.document.town,
+                        'shipping_address': this.document.shipping_address,
+                        'shipping_postalCode': this.document.shipping_postalCode,
+                        'shipping_town': this.document.shipping_town,
                         'token': ''
                     }
                 } else

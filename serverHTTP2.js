@@ -2,11 +2,10 @@ import http2        from 'http2'
 import fs           from 'fs'
 import path         from 'path'
 import logSys       from './server/msgSystem.js'
-import { dbCart,
-    dbOrders }      from './api/database.js'
 import Token        from './server/token.js'
 let token =         new Token
 import User         from './server/user.js'
+import Shop         from './server/shop.js'
 // import Payment      from './server/payment.js'
 import Database     from './server/database.js'
 let db =            new Database( config.db.userRW, config.db.pwdRW, config.db.name )
@@ -136,9 +135,9 @@ async function handleRequest( req, res ) {
 
         // CART
     } else if ( req.url.pathname.startsWith( '/api/cart' ) ) {
-        const tokenResp = await token.check( req.param.token )
-        if( tokenResp === true ){
-            const resp = await dbCart( config.db.userRW, config.db.pwdRW, config.db.name, 'users',req.param.action ,req.param.email , req.body )
+        if( await token.check( req.param.token ) ){
+            let shop = new Shop()
+            const resp = await shop.cart( req.param.action, {email: req.param.email}, JSON.parse( req.body ) )
             res.headers[ 'content-type' ] = 'application/json'
             res.data = JSON.stringify( resp )
 
@@ -149,9 +148,10 @@ async function handleRequest( req, res ) {
 
         // ORDER
     } else if ( req.url.pathname.startsWith( '/api/orders' ) ) {
-        const tokenResp = await token.check(req.param.token)
+        const tokenResp = await token.check( req.param.token )
         if (tokenResp === true) {
-            const resp = await dbOrders(config.db.userRW, config.db.pwdRW, config.db.name, 'orders', req.param.action, req.param.email)
+            let shop = new Shop()
+            const resp = await shop.order( { email: req.param.email } )
             res.headers['content-type'] = 'application/json'
             res.data = JSON.stringify(resp)
         } else {
@@ -204,7 +204,6 @@ async function executeRequest( stream, headers ) {
 
     try {
 
-        // Build request object
         await parseRequest(stream, headers, req, res)
 
         await handleRequest(req, res, headers)
