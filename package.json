@@ -1,13 +1,14 @@
 {
   "name": "jord",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Minimal eShop Single Page Application system without framework or useless dependencies.",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "watch": "./compil.js --watch public/script.js & sass --watch src/sass:public/",
-    "compil": "./compil.js --compress public/script.js; sass src/sass:public/ --style=compressed",
+    "prod": "./compil.js --compress public/script.js; sass src/sass:public/ --style=compressed",
     "server": "node --trace-warnings ./serverHTTP2.js",
+    "serverHttp": "node --trace-warnings ./serverHTTP.js",
     "serverTest": "node --trace-warnings ./server.js",
     "cloc": "cloc ./ --exclude-dir=.idea,node_modules",
     "docs": "docsify serve ./docs"

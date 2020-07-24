@@ -17,11 +17,7 @@ export default class Database {
         try {
             this.uri = `mongodb://${user}:${pwd}@127.0.0.1:27017/?authSource=${name}&readPreference=primary&appname=MongoDB%20Compass&ssl=false`
             this.name = name
-            let MongoClient = mongodb.MongoClient
-            this.client = new MongoClient( this.uri, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            } )
+            this.connection()
         } catch( error ) {
             logSys( error, 'error' )
             return error
@@ -35,6 +31,11 @@ export default class Database {
      */
     async connection() {
         try {
+            let MongoClient = mongodb.MongoClient
+            this.client = new MongoClient( this.uri, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            } )
             await this.client.connect()
             this.db = this.client.db( this.name )
         } catch( error ) {
@@ -80,7 +81,7 @@ export default class Database {
     async createDocument( collection, primaryKey, fields ) {
         try {
             this.document = await this.db.collection( collection ).find( primaryKey )
-            if ( this.document.length !== 0 ) {
+            if ( this.document.length !== undefined ) {
                 return 'already existing document'
             } else {
                 await this.db.collection( collection ).insertOne( fields, error => {
@@ -107,12 +108,11 @@ export default class Database {
      */
     async editDocument( collection, primaryKey, fields ) {
         try {
-            await this.db.collection( collection ).findOneAndUpdate( primaryKey, {$set: fields} )
+            await this.db.collection( collection ).updateOne( primaryKey, {$set: fields} )
             await logSys( `Document EDIT with success in ${collection}`, 'success' )
-            return 'edit document'
+            return 'edited document'
         } catch ( error ) {
             await logSys( error, 'error' )
-            return error
         }
     }
 
@@ -125,11 +125,10 @@ export default class Database {
      */
     async getDocument( collection, primaryKey ) {
         try {
-            this.document = await this.db.collection( collection ).find( primaryKey )
-            return this.document
+            this.document = await this.db.collection( collection ).find( primaryKey ).toArray()
+            return this.document[0] === undefined ? 'document not found' : this.document[0]
         } catch( error ) {
-            await logSys( `Class = Database | Method = getDocument : ${error}`, 'error' )
-            return error
+            await logSys( error, 'error' )
         }
     }
 }
