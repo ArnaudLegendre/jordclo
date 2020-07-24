@@ -1,16 +1,16 @@
-document.addEventListener( 'pageReady', e => {
-    buildProduct( )
-    productsPage( )
-    getProductsByCat( )
-    enableFilters( )
+document.addEventListener( 'pageReady', () => {
+    buildProduct()
+    productsPage()
+    getProductsByCat()
+    enableFilters()
     document.dispatchEvent( initWebsite )
 } )
 
-window.addEventListener( 'pageChange', e => {
-    buildProduct( )
-    productsPage( )
-    getProductsByCat( )
-    enableFilters( )
+window.addEventListener( 'pageChange', () => {
+    buildProduct()
+    productsPage()
+    getProductsByCat()
+    enableFilters()
 } )
 
 let optionsList = { }

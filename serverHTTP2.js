@@ -2,12 +2,7 @@ import http2        from 'http2'
 import fs           from 'fs'
 import path         from 'path'
 import logSys       from './server/msgSystem.js'
-import { dbLoad,
-    dbLogin,
-    dbRegister,
-    dbUpdateUser,
-    dbUpdatePassword,
-    dbCart,
+import { dbCart,
     dbOrders }      from './api/database.js'
 import Token        from './server/token.js'
 let token =         new Token
@@ -77,7 +72,7 @@ async function handleRequest( req, res ) {
 
         if ( req.param.name === 'products' || req.param.name === 'pages' ) {
 
-            const resp = await dbLoad( config.db.userR, config.db.pwdR, config.db.name, req.param )
+            const resp = await db.getCollection( req.param.name )
             res.headers[ 'content-type' ] = 'application/json'
             res.data = JSON.stringify( resp )
 
@@ -87,10 +82,10 @@ async function handleRequest( req, res ) {
     }  else if ( req.url.pathname.startsWith( '/api/token' ) ) {
 
         if( req.param.action === 'verify' ){
+
             const resp = await token.check( req.param.token )
             res.headers[ 'content-type' ] = 'application/json'
             res.data = JSON.stringify( resp )
-
 
         } else if ( req.param.action === 'remove' ){
 
@@ -100,25 +95,25 @@ async function handleRequest( req, res ) {
 
         // LOGIN
     } else if ( req.url.pathname.startsWith( '/api/login' ) ) {
-
-        let resp = await dbLogin( config.db.userR, config.db.pwdR, config.db.name, 'users', req.param )
+        let user = new User()
+        let resp = await user.login( req.param )
         typeof resp === 'object' ? resp.token = await token.add() : null
         res.headers[ 'content-type' ] = 'application/json'
         res.data = JSON.stringify( resp )
 
         // REGISTER
     } else if ( req.url.pathname.startsWith( '/api/register' ) ) {
-
-        const resp = await dbRegister( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.param )
+        let user = new User()
+        const resp = await user.createUser( req.param )
         res.headers[ 'content-type' ] = 'application/json'
         res.data = JSON.stringify( resp )
 
         // UPDATE USER
     } else if ( req.url.pathname.startsWith( '/api/updateUser' ) ) {
-        const tokenResp = await token.check( req.param.token )
-        if( tokenResp === true ){
-            const resp = await dbUpdateUser( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.body )
-            resp.token = req.param.token
+        if( await token.check( req.param.token ) ){
+            let user = new User()
+            const resp = await user.editUser( JSON.parse( req.body ) )
+            typeof resp === 'object' ? resp.token = req.param.token : null
             res.headers[ 'content-type' ] = 'application/json'
             res.data = JSON.stringify( resp )
 
@@ -129,9 +124,9 @@ async function handleRequest( req, res ) {
 
         // UPDATE PASSWORD
     } else if ( req.url.pathname.startsWith( '/api/updatePwd' ) ) {
-        const tokenResp = await token.check( req.param.token )
-        if( tokenResp === true ){
-            const resp = await dbUpdatePassword( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.param )
+        if( await token.check( req.param.token ) ){
+            let user = new User()
+            const resp = await user.editPwd( req.param )
             res.headers[ 'content-type' ] = 'application/json'
             res.data = JSON.stringify( resp )
         } else {

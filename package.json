@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "watch": "./compil.js --watch public/script.js & sass --watch src/sass:public/",
-    "compil": "./compil.js --compress public/script.js; sass src/sass:public/ --style=compressed",
+    "prod": "./compil.js --compress public/script.js; sass src/sass:public/ --style=compressed",
     "server": "node --trace-warnings ./serverHTTP2.js",
+    "serverHttp": "node --trace-warnings ./serverHTTP.js",
     "serverTest": "node --trace-warnings ./server.js",
     "cloc": "cloc ./ --exclude-dir=.idea,node_modules",
     "docs": "docsify serve ./docs"

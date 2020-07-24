@@ -90,10 +90,11 @@ function getUserProfilPage( content ) {
                 if ( data === false ){
                     showPushNotification( 'error', "Session expirée" )
                 } else {
-                    localStorage.setItem( 'userLocal', JSON.stringify( data ) )
+                    dataSend.token = userLocal.token
+                    localStorage.setItem( 'userLocal', JSON.stringify( dataSend ) )
                     showPushNotification( 'success', "Informations sauvegardées" )
-                    writeData( )
-                    cancelEdit( )
+                    writeData()
+                    cancelEdit()
                 }
             } )
         }
@@ -123,7 +124,7 @@ function getUserProfilPage( content ) {
                                 showPushNotification( 'error', "Email incorrect" )
                             } else if ( data === 'incorrect password' ) {
                                 showPushNotification( 'error', "Mauvais mot de passe" )
-                            } else if ( data === 'password updated') {
+                            } else if ( data === 'edited document') {
                                 showPushNotification( 'success', "Modification du mot de passe réussi" )
                                 document.getElementById('newPassword' ).value = ''
                                 document.getElementById('confirmPassword' ).value = ''
@@ -254,11 +255,11 @@ function loginRegister( location ){
                                 return res.json( )
                             })
                             .then( data => {
-                                if ( data === 'user not found' ) {
+                                if ( data === 'document not found' ) {
                                     showPushNotification( 'error', "Email incorrect" )
-                                } else if ( data === 'incorrect password' ) {
+                                } else if ( data === 'password incorrect' ) {
                                     showPushNotification( 'error', "Mauvais mot de passe" )
-                                } else {
+                                } else if ( typeof data === 'object') {
                                     localStorage.setItem( 'userLocal', JSON.stringify( data ) )
                                     showPushNotification( 'success', "Connexion réussi !" )
                                     location === 'modal' ? hideModal( ) : purchase( 'step2' )
@@ -285,9 +286,9 @@ function loginRegister( location ){
                                 .then( res => {
                                     return res.json( )
                                 }).then( data => {
-                                if ( data === 'email already use' ){
+                                if ( data === 'already existing document' ){
                                     showPushNotification( 'error', "Adresse email déjà utilisée" )
-                                } else {
+                                } else if ( data === 'create document') {
                                     showPushNotification( 'success', "Compte créé, vous pouvez vous connecter" )
                                     hideModal( )
                                 }
