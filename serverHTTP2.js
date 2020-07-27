@@ -140,7 +140,7 @@ async function executeRequest( stream, headers ) {
         data: '',
         compress: false,
         headers: {
-            'server': 'Made with NodeJS by atrepp & aleclercq',
+            'server': 'Made with NodeJS by aleclercq',
             ':status': 200
         }
     }
@@ -176,8 +176,7 @@ async function executeRequest( stream, headers ) {
                  res.cached = true
                  this.cache[key] = {timestamp: Date.now(), res: res}
              }
-         }
- */
+         }*/
         stream.respond( res.headers )
         stream.end( res.data )
     }
