@@ -16,8 +16,7 @@ import Database     from './server/database.js'
 let db =            new Database( config.db.userRW, config.db.pwdRW, config.db.name )
 import { config }   from './public/assets/config.js'
 
-const port = '3001'
-
+const port = '3002'
 const mimeTypes = {
     'html' : 'text/html',
     'js'   : 'text/javascript',

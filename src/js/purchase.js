@@ -83,7 +83,7 @@ function createOrders( ) {
     let emailUser = userLocal.email
     let tokenUser = userLocal.token
 
-    fetch( `/api/orders?token=${tokenUser}&email=${emailUser}&action=createOrders` )
+    fetch( `/api?action=orders&token=${tokenUser}&email=${emailUser}` )
         .then( res => {
             return res.json( )
         } ).then( data => {
