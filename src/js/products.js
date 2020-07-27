@@ -36,24 +36,42 @@ function buildProduct( ) {
 
             // Calc price & write technical
             let totalVarPrice = 0
+            let prodPrice = 0
             let tableTech = document.getElementById( 'productTech' ).querySelector('tbody')
             elt.tech !== undefined ? tableTech.innerHTML = tableTech.innerHTML.concat( `<tr><td>${elt.tech}</td></tr>` ) : null
+
+            if( elt.priceRules ){
+                elt.priceRules.forEach( rule => {
+                    prodPrice = prodPrice === 0 ? parseFloat(elt.price) : prodPrice
+                    prodPrice = eval( rule.replace( new RegExp(/\$p/g), prodPrice ) )
+                } )
+                prodPrice = prodPrice.toFixed(2)
+            }
 
             if( elt.variables ) {
                 for (const [key, value] of Object.entries( elt.variables ) ) {
                     let varPrice
                     productList.forEach( prod => {
                         if( prod.ref === key ){
-                            varPrice = prod.price * value
+                            let calcVarPrice = 0
+                            if( prod.priceRules ){
+                                prod.priceRules.forEach( rule => {
+                                    calcVarPrice = calcVarPrice === 0 ? parseFloat(prod.price) : calcVarPrice
+                                    calcVarPrice = eval( rule.replace( new RegExp(/\$p/g), calcVarPrice ) )
+                                } )
+                                calcVarPrice = calcVarPrice.toFixed(2)
+                            } else {
+                                calcVarPrice = prod.price
+                            }
+                            varPrice = calcVarPrice * value
                             totalVarPrice = totalVarPrice + varPrice
-
                             let rowHTML = `<tr><td>${prod.name} | ${prod.tech}</td></tr>`
                             tableTech.innerHTML = tableTech.innerHTML.concat( rowHTML )
                         }
                     } )
                 }
             }
-            let totalProdPrice = ( parseFloat( elt.price ) + totalVarPrice).toFixed(2)
+            let totalProdPrice = ( parseFloat( prodPrice ) + totalVarPrice).toFixed(2)
             document.getElementById( 'price' ).innerHTML = productPrice = totalProdPrice
 
             // Write desc
@@ -263,14 +281,32 @@ function getProductsByCat( ) {
                 let prodImg
                 thisProd.images[ 0 ] ? prodImg = thisProd.images[ 0 ] : prodImg = '/assets/images/aucune-image.png'
                 prodCardHTML.querySelector('.productImg' ).src = prodImg
+                let prodPrice = 0
+                if( thisProd.priceRules ){
+                    thisProd.priceRules.forEach( rule => {
+                        prodPrice = prodPrice === 0 ? parseFloat(thisProd.price) : prodPrice
+                        prodPrice = eval( rule.replace( new RegExp(/\$p/g), prodPrice ) )
+                    } )
+                    prodPrice = prodPrice.toFixed(2)
+                }
 
                 let totalVarPrice = 0
                 if( thisProd.variables ) {
                     for (const [key, value] of Object.entries( thisProd.variables ) ) {
                         let varPrice
                         productsList.forEach( p => {
+                            let calcVarPrice = 0
                             if( p.ref === key ){
-                                varPrice = p.price * value
+                                if( p.priceRules ){
+                                    p.priceRules.forEach( rule => {
+                                        calcVarPrice = calcVarPrice === 0 ? parseFloat(p.price) : calcVarPrice
+                                        calcVarPrice = eval( rule.replace( new RegExp(/\$p/g), calcVarPrice ) )
+                                    } )
+                                    calcVarPrice = calcVarPrice.toFixed(2)
+                                } else {
+                                    calcVarPrice = p.price
+                                }
+                                varPrice = calcVarPrice * value
                                 totalVarPrice = totalVarPrice + varPrice
                             }
                         } )
