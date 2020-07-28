@@ -1224,18 +1224,18 @@ function createOrders( ) {
 
 document.addEventListener('pageReady',()=>{
     config()
-    calcConfig()
 })
-document.addEventListener('input',()=>{
-    calcConfig()
-})
+
 let montab=new Map()
 let curprod = JSON.parse(localStorage.getItem('products'))
 
-
+// TODO:ajouter les elements du configurator au panier
 function config(){
     let formconfig = document.getElementById('configclo')
     if(formconfig){
+        document.addEventListener('input',()=>{
+            calcConfig()
+        })
         let arrayRef =formconfig.querySelectorAll('[data-ref]')
         for(let item of arrayRef){
             curprod.forEach( prod => {
@@ -1244,6 +1244,7 @@ function config(){
                 }
             })
         }
+        calcConfig()
     }
 }
 
@@ -1279,9 +1280,7 @@ function calcConfig(){
         prixtotal = pricepoteau * nbpoteau
         prixtotal=prixtotal + priceembou *nbembou
         prixtotal=prixtotal + priceentretoise * nbentretoise
-        console.log(" "+priceentretoise+" "+prixtotal)
         prixtotal=prixtotal +pricelame*nblametotal
-        console.log(" "+pricelame+" "+prixtotal)
         if(document.getElementById('platine').checked)
         {
             prixtotal=prixtotal + priceplatine *nbplatine
@@ -1293,12 +1292,10 @@ function calcConfig(){
         }
         document.getElementById('price').innerHTML=prixtotal.toFixed(2)
         document.getElementById('resultat').innerHTML= nblameparsection*nbsection
-    console.log(montab)
 }
 let addpanier
 const iterator = montab.keys();
-console.log(iterator.next())
-console.log(iterator.next().value)
+
 /*
 productAdd = {
     "ref"           : productElem.querySelector('#ref' ).innerHTML,
