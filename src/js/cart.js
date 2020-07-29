@@ -201,7 +201,7 @@ function saveCart( ){
 
 function getCart( ){
 
-    let cartLocal = localStorage.getItem('cartLocal' ) ? localStorage.getItem('cartLocal' ) : {}
+    let cartLocal = localStorage.getItem('cartLocal' ) ? localStorage.getItem('cartLocal' ) : '{}'
     let userLocal = JSON.parse( localStorage.getItem('userLocal' ) )
 
     fetch( `/api/cart?token=${userLocal.token}&email=${userLocal.email}&action=getCart`, {
@@ -217,7 +217,7 @@ function getCart( ){
         if ( data === false ){
             showPushNotification( 'error', "Session expirée" )
         } else if( data !== 'null' ) {
-            localStorage.setItem( 'cartLocal', data )
+            localStorage.setItem( 'cartLocal', JSON.stringify( data ) )
         }
     }).then( ( ) => refreshCart( ) )
 
