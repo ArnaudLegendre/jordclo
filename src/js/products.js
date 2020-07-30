@@ -4,7 +4,6 @@ document.addEventListener('pageReady', () => {
     getProductsByCat()
     enableFilters()
     document.dispatchEvent(initWebsite)
-    document.getElementById('qtyInput').addEventListener('input', () => calcProductPrice())
 })
 
 window.addEventListener('pageChange', () => {
@@ -12,7 +11,6 @@ window.addEventListener('pageChange', () => {
     productsPage()
     getProductsByCat()
     enableFilters()
-    document.getElementById('qtyInput').addEventListener('input', () => calcProductPrice())
 })
 
 
@@ -22,6 +20,7 @@ let productList
 
 function buildProduct() {
 
+    document.getElementById('qtyInput') ? document.getElementById('qtyInput').addEventListener('input', () => calcProductPrice()) : null
 
     let target = location.pathname.split('/').pop()
     productList = JSON.parse(localStorage.getItem('products'))
