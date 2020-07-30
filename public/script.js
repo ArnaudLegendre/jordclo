@@ -155,316 +155,316 @@ window.onpopstate = e => {
     setTimeout(( ) => { document.dispatchEvent( pageChange ) }, 200)
 
 }
-document.addEventListener( 'pageReady', () => {
+document.addEventListener('pageReady', () => {
     buildProduct()
     productsPage()
     getProductsByCat()
     enableFilters()
-    document.dispatchEvent( initWebsite )
-} )
+    document.dispatchEvent(initWebsite)
+})
 
-window.addEventListener( 'pageChange', () => {
+window.addEventListener('pageChange', () => {
     buildProduct()
     productsPage()
     getProductsByCat()
     enableFilters()
-} )
+})
 
-let optionsList = { }
+let optionsList = {}
 let productPrice
 let productList
 
-function buildProduct( ) {
+function buildProduct() {
 
 
-    let target = location.pathname.split( '/' ).pop( )
-    productList = JSON.parse(localStorage.getItem( 'products' ) )
+    let target = location.pathname.split('/').pop()
+    productList = JSON.parse(localStorage.getItem('products'))
 
 
-    productList.forEach( elt => {
+    productList.forEach(elt => {
 
-        if( elt.slug === target ) {
-            document.querySelector( 'h1' ).innerHTML = elt.name
-            document.getElementById( 'ref' ).innerHTML = elt.ref
+        if (elt.slug === target) {
+            document.querySelector('h1').innerHTML = elt.name
+            document.getElementById('ref').innerHTML = elt.ref
 
             let prodImg
-            elt.images[ 0 ] ? prodImg = elt.images[ 0 ] : prodImg = 'assets/images/aucune-image.png'
-            document.getElementById('productImg' ).src = prodImg
+            elt.images[0] ? prodImg = elt.images[0] : prodImg = 'assets/images/aucune-image.png'
+            document.getElementById('productImg').src = prodImg
 
             // Calc price & write technical
             let totalVarPrice = 0
-            let tableTech = document.getElementById( 'productTech' ).querySelector('tbody')
-            elt.tech !== undefined ? tableTech.innerHTML = tableTech.innerHTML.concat( `<tr><td>${elt.tech}</td></tr>` ) : null
+            let tableTech = document.getElementById('productTech').querySelector('tbody')
+            elt.tech !== undefined ? tableTech.innerHTML = tableTech.innerHTML.concat(`<tr><td>${elt.tech}</td></tr>`) : null
 
-            if( elt.variables ) {
-                for (const [key, value] of Object.entries( elt.variables ) ) {
+            if (elt.variables) {
+                for (const [key, value] of Object.entries(elt.variables)) {
                     let varPrice
-                    productList.forEach( prod => {
-                        if( prod.ref === key ){
+                    productList.forEach(prod => {
+                        if (prod.ref === key) {
                             varPrice = prod.price * value
                             totalVarPrice = totalVarPrice + varPrice
 
                             let rowHTML = `<tr><td>${prod.name} | ${prod.tech}</td></tr>`
-                            tableTech.innerHTML = tableTech.innerHTML.concat( rowHTML )
+                            tableTech.innerHTML = tableTech.innerHTML.concat(rowHTML)
                         }
-                    } )
+                    })
                 }
             }
-            let totalProdPrice = ( parseFloat( elt.price ) + totalVarPrice).toFixed(2)
-            document.getElementById( 'price' ).innerHTML = productPrice = totalProdPrice
+            let totalProdPrice = (parseFloat(elt.price) + totalVarPrice).toFixed(2)
+            document.getElementById('price').innerHTML = productPrice = totalProdPrice
 
             // Write desc
-            let prodDesc = document.getElementById( 'productDesc' )
-            if( elt.desc ){
-                prodDesc.querySelector( '.desc' ).innerHTML = elt.desc
+            let prodDesc = document.getElementById('productDesc')
+            if (elt.desc) {
+                prodDesc.querySelector('.desc').innerHTML = elt.desc
                 prodDesc.hidden = false
             } else
                 prodDesc.hidden = true
 
             //Show/Hide tech
-            tableTech.childElementCount === 0 ? document.getElementById( 'productTech' ).hidden = true : document.getElementById( 'productTech' ).hidden = false
+            tableTech.childElementCount === 0 ? document.getElementById('productTech').hidden = true : document.getElementById('productTech').hidden = false
 
             // Define options
-            if( elt.options ) {
+            if (elt.options) {
 
-                Object.values( elt.options ).forEach( grp => {
+                Object.values(elt.options).forEach(grp => {
 
                     const groupValues = grp.values
 
-                    if( grp.type === 'checkbox' ){
+                    if (grp.type === 'checkbox') {
 
-                        let checkboxGrp = document.createElement( 'div' )
+                        let checkboxGrp = document.createElement('div')
 
                         checkboxGrp.innerHTML = productsOptionsHTML
-                        checkboxGrp.innerHTML = checkboxGrp.querySelector('#checkbox' ).innerHTML
+                        checkboxGrp.innerHTML = checkboxGrp.querySelector('#checkbox').innerHTML
 
-                        checkboxGrp.querySelector('.title' ).innerHTML = grp.name
+                        checkboxGrp.querySelector('.title').innerHTML = grp.name
 
-                        let checkboxGrpHtml = checkboxGrp.querySelector('.checkboxGroup' ).innerHTML
-                        checkboxGrp.querySelector('.checkboxGroup' ).innerHTML = ''
+                        let checkboxGrpHtml = checkboxGrp.querySelector('.checkboxGroup').innerHTML
+                        checkboxGrp.querySelector('.checkboxGroup').innerHTML = ''
 
-                        groupValues.forEach( e => {
+                        groupValues.forEach(e => {
 
                             let optPrice = e.price
-                            productList.forEach( prod => {
+                            productList.forEach(prod => {
                                 prod.ref === e.ref ? optPrice = prod.price : null
-                            } )
+                            })
 
-                            optionsList[ e.ref ] = optPrice
+                            optionsList[e.ref] = optPrice
 
-                            let checkboxElem = document.createElement('div' )
+                            let checkboxElem = document.createElement('div')
                             checkboxElem.innerHTML = checkboxGrpHtml
 
-                            let input = checkboxElem.querySelector('input' )
-                            let label = checkboxElem.querySelector('label' )
+                            let input = checkboxElem.querySelector('input')
+                            let label = checkboxElem.querySelector('label')
 
                             input.id = input.value = e.ref
                             input.dataset.name = e.name
-                            label.setAttribute('for', e.ref )
+                            label.setAttribute('for', e.ref)
                             label.innerHTML = e.name
 
-                            checkboxGrp.querySelector('.checkboxGroup' ).innerHTML = checkboxGrp.querySelector('.checkboxGroup' ).innerHTML.concat( checkboxElem.innerHTML )
+                            checkboxGrp.querySelector('.checkboxGroup').innerHTML = checkboxGrp.querySelector('.checkboxGroup').innerHTML.concat(checkboxElem.innerHTML)
 
 
-                        } )
+                        })
 
-                        document.getElementById( 'options' ).innerHTML = document.getElementById( 'options' ).innerHTML.concat( checkboxGrp.innerHTML )
+                        document.getElementById('options').innerHTML = document.getElementById('options').innerHTML.concat(checkboxGrp.innerHTML)
 
-                    } else if( grp.type === 'select' ){
+                    } else if (grp.type === 'select') {
 
-                        let selectGrp = document.createElement( 'div' )
+                        let selectGrp = document.createElement('div')
 
                         selectGrp.innerHTML = productsOptionsHTML
-                        selectGrp.innerHTML = selectGrp.querySelector('#select' ).innerHTML
+                        selectGrp.innerHTML = selectGrp.querySelector('#select').innerHTML
 
-                        selectGrp.querySelector('.title' ).innerHTML = grp.name
+                        selectGrp.querySelector('.title').innerHTML = grp.name
 
-                        let selectGrpHtml = selectGrp.querySelector('.selectGroup' ).innerHTML
-                        selectGrp.querySelector('.selectGroup' ).id = grp.ref
+                        let selectGrpHtml = selectGrp.querySelector('.selectGroup').innerHTML
+                        selectGrp.querySelector('.selectGroup').id = grp.ref
 
-                        groupValues.forEach( e => {
+                        groupValues.forEach(e => {
 
-                            optionsList[ e.ref ] = e.price
+                            optionsList[e.ref] = e.price
 
-                            let optSelect = document.createElement('div' )
+                            let optSelect = document.createElement('div')
                             optSelect.innerHTML = selectGrpHtml
-                            optSelect.querySelector('option' ).id = optSelect.querySelector('option' ).value = e.ref
-                            optSelect.querySelector('option' ).innerHTML = e.name
+                            optSelect.querySelector('option').id = optSelect.querySelector('option').value = e.ref
+                            optSelect.querySelector('option').innerHTML = e.name
 
-                            selectGrp.querySelector('.selectGroup' ).innerHTML = selectGrp.querySelector('.selectGroup' ).innerHTML.concat( optSelect.innerHTML )
+                            selectGrp.querySelector('.selectGroup').innerHTML = selectGrp.querySelector('.selectGroup').innerHTML.concat(optSelect.innerHTML)
 
-                        } )
+                        })
 
-                        document.getElementById( 'options' ).innerHTML = document.getElementById( 'options' ).innerHTML.concat( selectGrp.innerHTML )
+                        document.getElementById('options').innerHTML = document.getElementById('options').innerHTML.concat(selectGrp.innerHTML)
 
-                    } else if ( grp.type === 'radio' ) {
+                    } else if (grp.type === 'radio') {
 
-                        let radioGrp = document.createElement('div' )
+                        let radioGrp = document.createElement('div')
                         radioGrp.innerHTML = productsOptionsHTML
-                        radioGrp.innerHTML = radioGrp.querySelector( '#radio' ).innerHTML
+                        radioGrp.innerHTML = radioGrp.querySelector('#radio').innerHTML
 
-                        radioGrp.querySelector( '.title' ).innerHTML = grp.name
+                        radioGrp.querySelector('.title').innerHTML = grp.name
 
-                        let radioGrpHtml = radioGrp.querySelector('.radioGroup' ).innerHTML
-                        radioGrp.querySelector( '.radioGroup' ).id = grp.ref
+                        let radioGrpHtml = radioGrp.querySelector('.radioGroup').innerHTML
+                        radioGrp.querySelector('.radioGroup').id = grp.ref
 
-                        radioGrp.querySelector('.radioGroup' ).innerHTML = ''
+                        radioGrp.querySelector('.radioGroup').innerHTML = ''
 
-                        groupValues.forEach( e => {
+                        groupValues.forEach(e => {
 
-                            optionsList[ e.ref ] = e.price
-                            let optRadio = document.createElement( 'div' )
+                            optionsList[e.ref] = e.price
+                            let optRadio = document.createElement('div')
                             optRadio.innerHTML = radioGrpHtml
-                            let label = optRadio.querySelector('label' )
-                            let input = label.querySelector( 'input' )
+                            let label = optRadio.querySelector('label')
+                            let input = label.querySelector('input')
                             input.value = e.ref
                             input.name = grp.ref
                             input.dataset.name = e.name
-                            label.querySelector( '.label-name' ).innerHTML = e.name
+                            label.querySelector('.label-name').innerHTML = e.name
 
-                            radioGrp.querySelector('.radioGroup' ).innerHTML = radioGrp.querySelector('.radioGroup' ).innerHTML.concat( optRadio.innerHTML )
+                            radioGrp.querySelector('.radioGroup').innerHTML = radioGrp.querySelector('.radioGroup').innerHTML.concat(optRadio.innerHTML)
 
-                        } )
+                        })
 
                         radioGrp.querySelector('input').defaultChecked = true
-                        document.getElementById( 'options' ).innerHTML = document.getElementById( 'options' ).innerHTML.concat( radioGrp.innerHTML )
+                        document.getElementById('options').innerHTML = document.getElementById('options').innerHTML.concat(radioGrp.innerHTML)
 
                     }
 
-                } )
+                })
 
-                document.getElementById('options' ).addEventListener( 'click', e => e.target.classList.contains( 'optProduct' ) ? calcProductPrice( ) : null )
+                document.getElementById('options').addEventListener('click', e => e.target.classList.contains('optProduct') ? calcProductPrice() : null)
 
             } else {
 
-                document.getElementById('options' ).remove( )
+                document.getElementById('options').remove()
 
             }
 
         }
 
-    } )
+    })
 
 }
 
-function calcProductPrice( ) {
+function calcProductPrice() {
 
-    let totalPrice = parseFloat( productPrice )
+    let totalPrice = parseFloat(productPrice)
 
-    document.getElementById('options' ).querySelectorAll('.optProduct' ).forEach(opt => {
-        if( ( opt.selected === true || opt.checked === true ) && opt.value !== '' )
-            totalPrice += parseFloat( optionsList[ opt.id ] )
-    } )
+    document.getElementById('options').querySelectorAll('.optProduct').forEach(opt => {
+        if ((opt.selected === true || opt.checked === true) && opt.value !== '')
+            totalPrice += parseFloat(optionsList[opt.id])
+    })
 
-    document.getElementById('price' ).innerHTML = totalPrice.toFixed(2 )
+    document.getElementById('price').innerHTML = totalPrice.toFixed(2)
 
 }
 
-function productsPage( cat = 'all', count = -1 ) {
+function productsPage(cat = 'all', count = -1) {
 
-    let productsPage = document.getElementById( 'productsPage' )
-    if( productsPage ) {
+    let productsPage = document.getElementById('productsPage')
+    if (productsPage) {
 
-        let productsList = JSON.parse( localStorage.getItem( 'products' ) )
+        let productsList = JSON.parse(localStorage.getItem('products'))
 
         let counter = 1
 
-        productsList.forEach( prod => {
+        productsList.forEach(prod => {
 
             let thisProd
 
-            cat !== 'all' && prod.category === cat ?  thisProd = prod : cat === 'all' ? thisProd = prod : null
+            cat !== 'all' && prod.category === cat ? thisProd = prod : cat === 'all' ? thisProd = prod : null
 
-            if ( thisProd && ( counter <= count || count === -1 ) ) {
+            if (thisProd && (counter <= count || count === -1)) {
                 counter++
-                let prodCardHTML = document.createElement( 'span' )
+                let prodCardHTML = document.createElement('span')
                 prodCardHTML.innerHTML = productCardHTML
-                prodCardHTML.querySelector('.productCard' ).href = `#${ thisProd.slug }`
-                prodCardHTML.querySelector('.productImg' ).src = thisProd.images[ 0 ]
-                prodCardHTML.querySelector('.productName' ).innerHTML = thisProd.name
-                prodCardHTML.querySelector('.productPrice' ).innerHTML = thisProd.price
-                productsPage.querySelector('.productsList' ).insertAdjacentHTML( 'beforeend', prodCardHTML.innerHTML )
+                prodCardHTML.querySelector('.productCard').href = `#${thisProd.slug}`
+                prodCardHTML.querySelector('.productImg').src = thisProd.images[0]
+                prodCardHTML.querySelector('.productName').innerHTML = thisProd.name
+                prodCardHTML.querySelector('.productPrice').innerHTML = thisProd.price
+                productsPage.querySelector('.productsList').insertAdjacentHTML('beforeend', prodCardHTML.innerHTML)
             }
-        } )
+        })
 
     }
 
 }
 
-function getProductsByCat( ) {
+function getProductsByCat() {
 
-    let cats = document.querySelectorAll('[data-cat]' )
+    let cats = document.querySelectorAll('[data-cat]')
 
     cats.forEach(catNode => {
 
-        let productsList = JSON.parse( localStorage.getItem( 'products' ) )
+        let productsList = JSON.parse(localStorage.getItem('products'))
 
         let counter = 1
-        let count = parseInt( catNode.dataset.count )
+        let count = parseInt(catNode.dataset.count)
         let cat = catNode.dataset.cat
 
-        productsList.forEach( prod => {
+        productsList.forEach(prod => {
 
             let thisProd
 
-            cat !== 'all' && prod.category === cat && parseFloat( prod.access ) === 0 ? thisProd = prod : cat === 'all' ? thisProd = prod : null
+            cat !== 'all' && prod.category === cat && parseFloat(prod.access) === 0 ? thisProd = prod : cat === 'all' ? thisProd = prod : null
 
-            if ( thisProd && ( counter <= count || count === -1 ) ) {
+            if (thisProd && (counter <= count || count === -1)) {
                 counter++
-                let prodCardHTML = document.createElement( 'span' )
+                let prodCardHTML = document.createElement('span')
                 prodCardHTML.innerHTML = productCardHTML
-                prodCardHTML.querySelector('.productCard' ).href = `#${ thisProd.slug }`
-                prodCardHTML.querySelector('.productCard' ).dataset.filters = `[${ JSON.stringify( thisProd.filters ) }]`
-                prodCardHTML.querySelector('.productName' ).innerHTML = thisProd.name
+                prodCardHTML.querySelector('.productCard').href = `#${thisProd.slug}`
+                prodCardHTML.querySelector('.productCard').dataset.filters = `[${JSON.stringify(thisProd.filters)}]`
+                prodCardHTML.querySelector('.productName').innerHTML = thisProd.name
 
                 let prodImg
-                thisProd.images[ 0 ] ? prodImg = thisProd.images[ 0 ] : prodImg = '/assets/images/aucune-image.png'
-                prodCardHTML.querySelector('.productImg' ).src = prodImg
+                thisProd.images[0] ? prodImg = thisProd.images[0] : prodImg = '/assets/images/aucune-image.png'
+                prodCardHTML.querySelector('.productImg').src = prodImg
 
                 let totalVarPrice = 0
-                if( thisProd.variables ) {
-                    for (const [key, value] of Object.entries( thisProd.variables ) ) {
+                if (thisProd.variables) {
+                    for (const [key, value] of Object.entries(thisProd.variables)) {
                         let varPrice
-                        productsList.forEach( p => {
-                            if( p.ref === key ){
+                        productsList.forEach(p => {
+                            if (p.ref === key) {
                                 varPrice = p.price * value
                                 totalVarPrice = totalVarPrice + varPrice
                             }
-                        } )
+                        })
                     }
 
                 }
                 let totalProdPrice = (parseFloat(thisProd.price) + totalVarPrice).toFixed(2)
-                prodCardHTML.querySelector('.productPrice' ).innerHTML = `${totalProdPrice}€ TTC`
-                catNode.insertAdjacentHTML( 'beforeend', prodCardHTML.innerHTML )
+                prodCardHTML.querySelector('.productPrice').innerHTML = `${totalProdPrice}€ TTC`
+                catNode.insertAdjacentHTML('beforeend', prodCardHTML.innerHTML)
             }
-        } )
-    } )
+        })
+    })
 
 }
 
-function enableFilters( ) {
+function enableFilters() {
 
-    if( document.querySelector('.filters') ){
-        document.querySelector('.filters').addEventListener( 'click', ( e ) => {
-            if( e.target.hasAttribute( 'data-filter' ) ) {
+    if (document.querySelector('.filters')) {
+        document.querySelector('.filters').addEventListener('click', (e) => {
+            if (e.target.hasAttribute('data-filter')) {
 
-                let products = document.querySelectorAll( '[data-filters]' )
-                products.forEach( prod => prod.hidden = false )
+                let products = document.querySelectorAll('[data-filters]')
+                products.forEach(prod => prod.hidden = false)
 
-                document.querySelectorAll( '[data-filter]' ).forEach( filter => {
-                    if( filter.checked === false ) {
-                        let filterGroup = filter.closest('[data-filter-group]' ).attributes[ 'data-filter-group' ].nodeValue
-                        let filterValue = filter.attributes[ 'data-filter' ].nodeValue
-                        products.forEach( prod => {
-                            let filtersList = JSON.parse( prod.attributes[ 'data-filters' ].nodeValue )
-                            if ( filtersList[ 0 ][ `${filterGroup}` ] === filterValue )
+                document.querySelectorAll('[data-filter]').forEach(filter => {
+                    if (filter.checked === false) {
+                        let filterGroup = filter.closest('[data-filter-group]').attributes['data-filter-group'].nodeValue
+                        let filterValue = filter.attributes['data-filter'].nodeValue
+                        products.forEach(prod => {
+                            let filtersList = JSON.parse(prod.attributes['data-filters'].nodeValue)
+                            if (filtersList[0][`${filterGroup}`] === filterValue)
                                 prod.hidden = true
-                        } )
+                        })
                     }
-                } )
+                })
             }
-        } )
+        })
     }
 }
 let userMenuHTML,
@@ -605,7 +605,7 @@ let cartLocal = null
 
 document.addEventListener( 'pageChange', ( ) => {
 
-    document.getElementById( 'addCart' ) ? document.getElementById( 'addCart' ).addEventListener( 'click', e => addCart( e.target ) ) : null
+    document.getElementById( 'addCart' ) ? document.getElementById( 'addCart' ).addEventListener( 'click', e => addCartFromProductPage( e.target ) ) : null
     document.getElementById( 'cartModal' ).firstElementChild.innerHTML = cartHTML
     refreshCart( )
 
@@ -613,7 +613,7 @@ document.addEventListener( 'pageChange', ( ) => {
 
 document.addEventListener( 'pageReady', ( ) => {
 
-    document.getElementById( 'addCart' ) ? document.getElementById( 'addCart' ).addEventListener( 'click', e => addCart( e.target ) ) : null
+    document.getElementById( 'addCart' ) ? document.getElementById( 'addCart' ).addEventListener( 'click', e => addCartFromProductPage( e.target ) ) : null
     document.getElementById( 'cartModal' ).firstElementChild.innerHTML = cartHTML
     refreshCart( )
 
@@ -698,7 +698,7 @@ function refreshCart( ) {
 
 }
 
-async function addCart( e ) {
+async function addCartFromProductPage( e ) {
 
     let productElem = e.closest( '.productElem' )
     let productAdd = { }
@@ -731,6 +731,47 @@ async function addCart( e ) {
         productAdd.optName = optionsName
     }
 
+
+    if ( !cartLocal ){
+
+        await data.push( productAdd )
+        localStorage.setItem( 'cartLocal', JSON.stringify( data ) )
+        refreshCart( )
+
+    } else {
+
+        data = JSON.parse( localStorage.getItem( 'cartLocal' ) )
+        let newItem = true
+
+        data.forEach( e => {
+            ( productAdd.ref === e.ref && String( productAdd.options ) === String( e.options ) ) ? ( e.qty += productAdd.qty, newItem = false ) : null;
+        } )
+        newItem ? ( data.push( productAdd ), localStorage.setItem( 'cartLocal', JSON.stringify( data ) ) ) : localStorage.setItem( 'cartLocal', JSON.stringify( data ) )
+        refreshCart( )
+
+    }
+
+}
+
+async function addCart( ref, qty ) {
+    let productAdd = { }
+    let data = [ ]
+
+    let prod = new Promise( resolve => {
+        productList.forEach(prod => {
+            prod.ref === ref ? resolve( prod ) : null
+        } )
+    } )
+
+    let product = await prod
+
+    productAdd = {
+        "ref"           : ref,
+        "qty"           : qty,
+        "name"          : product.name,
+        "price"         : product.price,
+        "options"       : ''
+    }
 
     if ( !cartLocal ){
 
@@ -1221,86 +1262,169 @@ function createOrders( ) {
     } )
 
 }
+document.addEventListener('pageReady', () => {
 
-document.addEventListener('pageReady',()=>{
-    config()
+    if (document.getElementById('configclo')) {
+        config()
+        document.getElementById("btnadd").addEventListener('click', () => {
+            addingCart()
+        })
+        document.addEventListener('input', () => {
+            calcConfig(document.getElementById('longueur').value, +document.getElementById('hauteur').options[document.getElementById('hauteur').selectedIndex].value)
+
+        })
+        document.getElementById('redan').addEventListener('click', () => {
+            redanClick()
+        })
+
+    }
+})
+document.addEventListener('pageChange', () => {
+
+    if (document.getElementById('configclo')) {
+        config()
+        calcConfig(document.getElementById('longueur').value, +document.getElementById('hauteur').options[document.getElementById('hauteur').selectedIndex].value)
+
+        document.getElementById("btnadd").addEventListener('click', () => {
+            addingCart()
+        })
+        document.addEventListener('input', () => {
+            calcConfig(document.getElementById('longueur').value, +document.getElementById('hauteur').options[document.getElementById('hauteur').selectedIndex].value)
+        })
+        document.getElementById('redan').addEventListener('click', () => {
+            redanClick()
+            document.getElementById('addredan').addEventListener('click', () => {
+                addRedan()
+            })
+        })
+
+    }
 })
 
-let montab=new Map()
-let curprod = JSON.parse(localStorage.getItem('products'))
+let refArray
 
-// TODO:ajouter les elements du configurator au panier
-function config(){
-    let formconfig = document.getElementById('configclo')
-    if(formconfig){
-        document.addEventListener('input',()=>{
-            calcConfig()
+function config() {
+    refArray = new Map()
+    for (let item of document.getElementById('configclo').querySelectorAll('[data-ref]')) {
+        JSON.parse(localStorage.getItem('products')).forEach(prod => {
+            if (prod.ref === item.dataset.ref) {
+                refArray.set(prod.ref, JSON.parse(`{ "price": "${prod.price}" ${prod.hauteur !== undefined ? ',"hauteur":' + prod.hauteur : ''}}`))
+            }
         })
-        let arrayRef =formconfig.querySelectorAll('[data-ref]')
-        for(let item of arrayRef){
-            curprod.forEach( prod => {
-                if(prod.ref === item.dataset.ref){
-                   montab.set( prod.ref,`{ "price": "${prod.price}" ${prod.hauteur !== undefined ? ',"hauteur":' + prod.hauteur : '' }}`)
-                }
-            })
-        }
-        calcConfig()
     }
 }
 
-function calcConfig(){
+function classic() {
 
-
-        let templong = document.getElementById('longueur').value
-        let longueur=templong.replace(',','.')
-        longueur=parseFloat(longueur)
-        let selecthauteur = document.getElementById('hauteur')
-        let prixtotal =0
-        let hauteur = parseFloat(selecthauteur.options[selecthauteur.selectedIndex].value)
-        let refpoteau = selecthauteur.options[selecthauteur.selectedIndex].dataset.ref
-        let pricepoteau, priceplatine, priceembou, priceentretoise, priceraid, pricelame 
-        let raidisseur = false
-
-        pricepoteau = parseFloat(JSON.parse(montab.get(refpoteau)).price)
-        priceplatine = parseFloat(JSON.parse(montab.get("pl01")).price)
-        priceembou = parseFloat(JSON.parse(montab.get("emb01")).price)
-        priceentretoise = parseFloat(JSON.parse(montab.get("ent01")).price)
-        priceraid = parseFloat(JSON.parse(montab.get("raid")).price)
-        pricelame = parseFloat(JSON.parse(montab.get("lam01")).price)
-
-        let hlame = parseFloat(JSON.parse(montab.get("lam01")).hauteur)
-        let nblameparsection = hauteur/hlame
-        let nbsection = Math.ceil(longueur/1.80)
-        let nbpoteau = nbsection +1
-        let nbplatine= nbpoteau
-        let nbembou= nbpoteau
-        let nblametotal =nblameparsection*nbsection
-        let nbentretoise = Math.ceil(nblametotal/8)
-
-        prixtotal = pricepoteau * nbpoteau
-        prixtotal=prixtotal + priceembou *nbembou
-        prixtotal=prixtotal + priceentretoise * nbentretoise
-        prixtotal=prixtotal +pricelame*nblametotal
-        if(document.getElementById('platine').checked)
-        {
-            prixtotal=prixtotal + priceplatine *nbplatine
-        }
-        if(hauteur >1.25 && hauteur <=1.80){
-            raidisseur =0;
-            raidisseur=nbpoteau
-            prixtotal= prixtotal + priceraid*raidisseur
-        }
-        document.getElementById('price').innerHTML=prixtotal.toFixed(2)
-        document.getElementById('resultat').innerHTML= nblameparsection*nbsection
 }
-let addpanier
-const iterator = montab.keys();
+let refStake, refBlade, refSpacer, refCover, nbStake, nbPlate, nbCover, nbTotalBlade, nbSpacer, stringer,
+    hlame
 
-/*
-productAdd = {
-    "ref"           : productElem.querySelector('#ref' ).innerHTML,
-    "name"          : productElem.querySelector('#name' ).innerHTML,
-    "price"         : parseFloat( productElem.querySelector('#price' ).innerHTML ),
-    "qty"           : parseFloat( productElem.querySelector('#qty' ).children[ 'qtyInput' ].value )
-}*/
 
+function calcConfig(tempLength, height) {
+    let fenceLength = +tempLength.replace(',', '.')
+    let priceStake, pricePlate, priceCover, priceSpacer, priceStringer, priceBlade,bladePerSection,nbSection,totalPrice = 0
+    let quantityArray = []
+
+    //ref
+    refStake = document.getElementById('hauteur').options[document.getElementById('hauteur').selectedIndex].dataset.ref
+    refBlade = document.getElementById('lame').dataset.ref
+    refCover = document.getElementById('embout').dataset.ref
+    refSpacer = document.getElementById('entretoise') !== null ? document.getElementById('entretoise').dataset.ref : null
+    stringer = false
+
+    //price
+    priceStake = +refArray.get(refStake).price
+    pricePlate = +refArray.get(document.getElementById('platine').dataset.ref).price
+    priceSpacer = refSpacer !== null ? +refArray.get(refSpacer).price : 0
+    priceCover = +refArray.get(refCover).price
+    priceStringer = +refArray.get(document.getElementById('raid').dataset.ref).price
+    priceBlade = +refArray.get(refBlade).price
+
+    //calcul
+    hlame = +refArray.get(refBlade).hauteur
+    bladePerSection = height / hlame
+    nbSection = Math.ceil(fenceLength / 1.80)
+    nbStake = nbSection + 1
+    nbCover = nbStake
+    nbTotalBlade = parseInt(bladePerSection * nbSection)
+    nbSpacer = Math.ceil(nbTotalBlade / 8)
+
+    //totalprice
+    totalPrice = priceStake * nbStake
+    totalPrice += priceCover * nbCover
+    totalPrice += priceSpacer * nbSpacer
+    totalPrice += priceBlade * nbTotalBlade
+
+    //
+    if (document.getElementById('platine').checked) {
+        nbPlate = nbStake
+        totalPrice += pricePlate * nbPlate
+    } else {
+        nbPlate = 0
+    }
+    if (height > 1.25 && height <= 1.80) {
+        stringer = nbStake
+        totalPrice += priceStringer * stringer
+    }
+    //quantityArray
+    quantityArray.push({[refStake]: nbStake}, {[refCover]: nbCover}, {[refBlade]: nbTotalBlade})
+    stringer > 1 ? quantityArray.push({"raid": stringer}) : null
+    refSpacer !== null ? quantityArray.push({[refSpacer]: nbSpacer}) : null
+    nbPlate >1 ? quantityArray.push({"pl01": nbPlate}) : null
+    console.log(quantityArray)
+    document.getElementById('price').innerHTML = totalPrice.toFixed(2)
+
+}
+
+function redanClick() {
+    document.getElementById("dimension").style.display = "none"
+
+    addRedan()
+
+    document.getElementById('divparent').insertAdjacentHTML('afterend', '<div class="btn btn-primary" id="addredan">' +
+        '<svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#plus"/></svg></div>')
+
+    document.getElementById('addredan').addEventListener('click', () => {
+        addRedan()
+    })
+
+    document.getElementById("addredan").click()
+}
+
+let nbredan = 0
+
+function addRedan() {
+    nbredan++
+    let divparent = document.getElementById('divparent')
+
+    //creation div dimredan
+    let divredan = document.createElement('div')
+    divredan.classList.add("form-group", "form-inline", "col-5")
+    divredan.id = 'dimredan' + `${nbredan}`
+    divparent.insertAdjacentElement('beforeend', divredan)
+
+    //creation champ longueur
+    divredan.insertAdjacentHTML("beforeend", '<label class="form-label " for=' + `longueur${nbredan}` + '>longueur section ' + `${nbredan}` + ' </label>' +
+        '<input class="form-input col-12 form-inline" type="text" id=' + `longueur${nbredan}` + ' placeholder="Longueur de la cloture" value="1" min="1">' +
+        '<label class="form-label" for=' + `hauteur${nbredan}` + '>hauteur section ' + `${nbredan}` + ' </label>')
+
+    //creation du select
+    let div = document.createElement('div')
+    div.innerHTML = document.getElementById('hauteur').outerHTML
+    div.querySelector("#hauteur").id = 'hauteur' + `${nbredan}`
+    divredan.insertAdjacentHTML("beforeend", div.innerHTML)
+
+
+}
+
+async function addingCart() {
+
+    await addCart(refStake, nbStake)
+    nbPlate > 1 ? await addCart("pl01", nbPlate) : null
+    await addCart(refBlade, nbTotalBlade)
+    await addCart("emb01", nbCover)
+    nbSpacer >= 1 ? await addCart(refSpacer, nbSpacer) : null
+    stringer > 1 ? await addCart("raid", stringer) : null
+
+}
