@@ -1,312 +1,312 @@
-document.addEventListener( 'pageReady', () => {
+document.addEventListener('pageReady', () => {
     buildProduct()
     productsPage()
     getProductsByCat()
     enableFilters()
-    document.dispatchEvent( initWebsite )
-} )
+    document.dispatchEvent(initWebsite)
+})
 
-window.addEventListener( 'pageChange', () => {
+window.addEventListener('pageChange', () => {
     buildProduct()
     productsPage()
     getProductsByCat()
     enableFilters()
-} )
+})
 
-let optionsList = { }
+let optionsList = {}
 let productPrice
 let productList
 
-function buildProduct( ) {
+function buildProduct() {
 
 
-    let target = location.pathname.split( '/' ).pop( )
-    productList = JSON.parse(localStorage.getItem( 'products' ) )
+    let target = location.pathname.split('/').pop()
+    productList = JSON.parse(localStorage.getItem('products'))
 
 
-    productList.forEach( elt => {
+    productList.forEach(elt => {
 
-        if( elt.slug === target ) {
-            document.querySelector( 'h1' ).innerHTML = elt.name
-            document.getElementById( 'ref' ).innerHTML = elt.ref
+        if (elt.slug === target) {
+            document.querySelector('h1').innerHTML = elt.name
+            document.getElementById('ref').innerHTML = elt.ref
 
             let prodImg
-            elt.images[ 0 ] ? prodImg = elt.images[ 0 ] : prodImg = 'assets/images/aucune-image.png'
-            document.getElementById('productImg' ).src = prodImg
+            elt.images[0] ? prodImg = elt.images[0] : prodImg = 'assets/images/aucune-image.png'
+            document.getElementById('productImg').src = prodImg
 
             // Calc price & write technical
             let totalVarPrice = 0
-            let tableTech = document.getElementById( 'productTech' ).querySelector('tbody')
-            elt.tech !== undefined ? tableTech.innerHTML = tableTech.innerHTML.concat( `<tr><td>${elt.tech}</td></tr>` ) : null
+            let tableTech = document.getElementById('productTech').querySelector('tbody')
+            elt.tech !== undefined ? tableTech.innerHTML = tableTech.innerHTML.concat(`<tr><td>${elt.tech}</td></tr>`) : null
 
-            if( elt.variables ) {
-                for (const [key, value] of Object.entries( elt.variables ) ) {
+            if (elt.variables) {
+                for (const [key, value] of Object.entries(elt.variables)) {
                     let varPrice
-                    productList.forEach( prod => {
-                        if( prod.ref === key ){
+                    productList.forEach(prod => {
+                        if (prod.ref === key) {
                             varPrice = prod.price * value
                             totalVarPrice = totalVarPrice + varPrice
 
                             let rowHTML = `<tr><td>${prod.name} | ${prod.tech}</td></tr>`
-                            tableTech.innerHTML = tableTech.innerHTML.concat( rowHTML )
+                            tableTech.innerHTML = tableTech.innerHTML.concat(rowHTML)
                         }
-                    } )
+                    })
                 }
             }
-            let totalProdPrice = ( parseFloat( elt.price ) + totalVarPrice).toFixed(2)
-            document.getElementById( 'price' ).innerHTML = productPrice = totalProdPrice
+            let totalProdPrice = (parseFloat(elt.price) + totalVarPrice).toFixed(2)
+            document.getElementById('price').innerHTML = productPrice = totalProdPrice
 
             // Write desc
-            let prodDesc = document.getElementById( 'productDesc' )
-            if( elt.desc ){
-                prodDesc.querySelector( '.desc' ).innerHTML = elt.desc
+            let prodDesc = document.getElementById('productDesc')
+            if (elt.desc) {
+                prodDesc.querySelector('.desc').innerHTML = elt.desc
                 prodDesc.hidden = false
             } else
                 prodDesc.hidden = true
 
             //Show/Hide tech
-            tableTech.childElementCount === 0 ? document.getElementById( 'productTech' ).hidden = true : document.getElementById( 'productTech' ).hidden = false
+            tableTech.childElementCount === 0 ? document.getElementById('productTech').hidden = true : document.getElementById('productTech').hidden = false
 
             // Define options
-            if( elt.options ) {
+            if (elt.options) {
 
-                Object.values( elt.options ).forEach( grp => {
+                Object.values(elt.options).forEach(grp => {
 
                     const groupValues = grp.values
 
-                    if( grp.type === 'checkbox' ){
+                    if (grp.type === 'checkbox') {
 
-                        let checkboxGrp = document.createElement( 'div' )
+                        let checkboxGrp = document.createElement('div')
 
                         checkboxGrp.innerHTML = productsOptionsHTML
-                        checkboxGrp.innerHTML = checkboxGrp.querySelector('#checkbox' ).innerHTML
+                        checkboxGrp.innerHTML = checkboxGrp.querySelector('#checkbox').innerHTML
 
-                        checkboxGrp.querySelector('.title' ).innerHTML = grp.name
+                        checkboxGrp.querySelector('.title').innerHTML = grp.name
 
-                        let checkboxGrpHtml = checkboxGrp.querySelector('.checkboxGroup' ).innerHTML
-                        checkboxGrp.querySelector('.checkboxGroup' ).innerHTML = ''
+                        let checkboxGrpHtml = checkboxGrp.querySelector('.checkboxGroup').innerHTML
+                        checkboxGrp.querySelector('.checkboxGroup').innerHTML = ''
 
-                        groupValues.forEach( e => {
+                        groupValues.forEach(e => {
 
                             let optPrice = e.price
-                            productList.forEach( prod => {
+                            productList.forEach(prod => {
                                 prod.ref === e.ref ? optPrice = prod.price : null
-                            } )
+                            })
 
-                            optionsList[ e.ref ] = optPrice
+                            optionsList[e.ref] = optPrice
 
-                            let checkboxElem = document.createElement('div' )
+                            let checkboxElem = document.createElement('div')
                             checkboxElem.innerHTML = checkboxGrpHtml
 
-                            let input = checkboxElem.querySelector('input' )
-                            let label = checkboxElem.querySelector('label' )
+                            let input = checkboxElem.querySelector('input')
+                            let label = checkboxElem.querySelector('label')
 
                             input.id = input.value = e.ref
                             input.dataset.name = e.name
-                            label.setAttribute('for', e.ref )
+                            label.setAttribute('for', e.ref)
                             label.innerHTML = e.name
 
-                            checkboxGrp.querySelector('.checkboxGroup' ).innerHTML = checkboxGrp.querySelector('.checkboxGroup' ).innerHTML.concat( checkboxElem.innerHTML )
+                            checkboxGrp.querySelector('.checkboxGroup').innerHTML = checkboxGrp.querySelector('.checkboxGroup').innerHTML.concat(checkboxElem.innerHTML)
 
 
-                        } )
+                        })
 
-                        document.getElementById( 'options' ).innerHTML = document.getElementById( 'options' ).innerHTML.concat( checkboxGrp.innerHTML )
+                        document.getElementById('options').innerHTML = document.getElementById('options').innerHTML.concat(checkboxGrp.innerHTML)
 
-                    } else if( grp.type === 'select' ){
+                    } else if (grp.type === 'select') {
 
-                        let selectGrp = document.createElement( 'div' )
+                        let selectGrp = document.createElement('div')
 
                         selectGrp.innerHTML = productsOptionsHTML
-                        selectGrp.innerHTML = selectGrp.querySelector('#select' ).innerHTML
+                        selectGrp.innerHTML = selectGrp.querySelector('#select').innerHTML
 
-                        selectGrp.querySelector('.title' ).innerHTML = grp.name
+                        selectGrp.querySelector('.title').innerHTML = grp.name
 
-                        let selectGrpHtml = selectGrp.querySelector('.selectGroup' ).innerHTML
-                        selectGrp.querySelector('.selectGroup' ).id = grp.ref
+                        let selectGrpHtml = selectGrp.querySelector('.selectGroup').innerHTML
+                        selectGrp.querySelector('.selectGroup').id = grp.ref
 
-                        groupValues.forEach( e => {
+                        groupValues.forEach(e => {
 
-                            optionsList[ e.ref ] = e.price
+                            optionsList[e.ref] = e.price
 
-                            let optSelect = document.createElement('div' )
+                            let optSelect = document.createElement('div')
                             optSelect.innerHTML = selectGrpHtml
-                            optSelect.querySelector('option' ).id = optSelect.querySelector('option' ).value = e.ref
-                            optSelect.querySelector('option' ).innerHTML = e.name
+                            optSelect.querySelector('option').id = optSelect.querySelector('option').value = e.ref
+                            optSelect.querySelector('option').innerHTML = e.name
 
-                            selectGrp.querySelector('.selectGroup' ).innerHTML = selectGrp.querySelector('.selectGroup' ).innerHTML.concat( optSelect.innerHTML )
+                            selectGrp.querySelector('.selectGroup').innerHTML = selectGrp.querySelector('.selectGroup').innerHTML.concat(optSelect.innerHTML)
 
-                        } )
+                        })
 
-                        document.getElementById( 'options' ).innerHTML = document.getElementById( 'options' ).innerHTML.concat( selectGrp.innerHTML )
+                        document.getElementById('options').innerHTML = document.getElementById('options').innerHTML.concat(selectGrp.innerHTML)
 
-                    } else if ( grp.type === 'radio' ) {
+                    } else if (grp.type === 'radio') {
 
-                        let radioGrp = document.createElement('div' )
+                        let radioGrp = document.createElement('div')
                         radioGrp.innerHTML = productsOptionsHTML
-                        radioGrp.innerHTML = radioGrp.querySelector( '#radio' ).innerHTML
+                        radioGrp.innerHTML = radioGrp.querySelector('#radio').innerHTML
 
-                        radioGrp.querySelector( '.title' ).innerHTML = grp.name
+                        radioGrp.querySelector('.title').innerHTML = grp.name
 
-                        let radioGrpHtml = radioGrp.querySelector('.radioGroup' ).innerHTML
-                        radioGrp.querySelector( '.radioGroup' ).id = grp.ref
+                        let radioGrpHtml = radioGrp.querySelector('.radioGroup').innerHTML
+                        radioGrp.querySelector('.radioGroup').id = grp.ref
 
-                        radioGrp.querySelector('.radioGroup' ).innerHTML = ''
+                        radioGrp.querySelector('.radioGroup').innerHTML = ''
 
-                        groupValues.forEach( e => {
+                        groupValues.forEach(e => {
 
-                            optionsList[ e.ref ] = e.price
-                            let optRadio = document.createElement( 'div' )
+                            optionsList[e.ref] = e.price
+                            let optRadio = document.createElement('div')
                             optRadio.innerHTML = radioGrpHtml
-                            let label = optRadio.querySelector('label' )
-                            let input = label.querySelector( 'input' )
+                            let label = optRadio.querySelector('label')
+                            let input = label.querySelector('input')
                             input.value = e.ref
                             input.name = grp.ref
                             input.dataset.name = e.name
-                            label.querySelector( '.label-name' ).innerHTML = e.name
+                            label.querySelector('.label-name').innerHTML = e.name
 
-                            radioGrp.querySelector('.radioGroup' ).innerHTML = radioGrp.querySelector('.radioGroup' ).innerHTML.concat( optRadio.innerHTML )
+                            radioGrp.querySelector('.radioGroup').innerHTML = radioGrp.querySelector('.radioGroup').innerHTML.concat(optRadio.innerHTML)
 
-                        } )
+                        })
 
                         radioGrp.querySelector('input').defaultChecked = true
-                        document.getElementById( 'options' ).innerHTML = document.getElementById( 'options' ).innerHTML.concat( radioGrp.innerHTML )
+                        document.getElementById('options').innerHTML = document.getElementById('options').innerHTML.concat(radioGrp.innerHTML)
 
                     }
 
-                } )
+                })
 
-                document.getElementById('options' ).addEventListener( 'click', e => e.target.classList.contains( 'optProduct' ) ? calcProductPrice( ) : null )
+                document.getElementById('options').addEventListener('click', e => e.target.classList.contains('optProduct') ? calcProductPrice() : null)
 
             } else {
 
-                document.getElementById('options' ).remove( )
+                document.getElementById('options').remove()
 
             }
 
         }
 
-    } )
+    })
 
 }
 
-function calcProductPrice( ) {
+function calcProductPrice() {
 
-    let totalPrice = parseFloat( productPrice )
+    let totalPrice = parseFloat(productPrice)
 
-    document.getElementById('options' ).querySelectorAll('.optProduct' ).forEach(opt => {
-        if( ( opt.selected === true || opt.checked === true ) && opt.value !== '' )
-            totalPrice += parseFloat( optionsList[ opt.id ] )
-    } )
+    document.getElementById('options').querySelectorAll('.optProduct').forEach(opt => {
+        if ((opt.selected === true || opt.checked === true) && opt.value !== '')
+            totalPrice += parseFloat(optionsList[opt.id])
+    })
 
-    document.getElementById('price' ).innerHTML = totalPrice.toFixed(2 )
+    document.getElementById('price').innerHTML = totalPrice.toFixed(2)
 
 }
 
-function productsPage( cat = 'all', count = -1 ) {
+function productsPage(cat = 'all', count = -1) {
 
-    let productsPage = document.getElementById( 'productsPage' )
-    if( productsPage ) {
+    let productsPage = document.getElementById('productsPage')
+    if (productsPage) {
 
-        let productsList = JSON.parse( localStorage.getItem( 'products' ) )
+        let productsList = JSON.parse(localStorage.getItem('products'))
 
         let counter = 1
 
-        productsList.forEach( prod => {
+        productsList.forEach(prod => {
 
             let thisProd
 
-            cat !== 'all' && prod.category === cat ?  thisProd = prod : cat === 'all' ? thisProd = prod : null
+            cat !== 'all' && prod.category === cat ? thisProd = prod : cat === 'all' ? thisProd = prod : null
 
-            if ( thisProd && ( counter <= count || count === -1 ) ) {
+            if (thisProd && (counter <= count || count === -1)) {
                 counter++
-                let prodCardHTML = document.createElement( 'span' )
+                let prodCardHTML = document.createElement('span')
                 prodCardHTML.innerHTML = productCardHTML
-                prodCardHTML.querySelector('.productCard' ).href = `#${ thisProd.slug }`
-                prodCardHTML.querySelector('.productImg' ).src = thisProd.images[ 0 ]
-                prodCardHTML.querySelector('.productName' ).innerHTML = thisProd.name
-                prodCardHTML.querySelector('.productPrice' ).innerHTML = thisProd.price
-                productsPage.querySelector('.productsList' ).insertAdjacentHTML( 'beforeend', prodCardHTML.innerHTML )
+                prodCardHTML.querySelector('.productCard').href = `#${thisProd.slug}`
+                prodCardHTML.querySelector('.productImg').src = thisProd.images[0]
+                prodCardHTML.querySelector('.productName').innerHTML = thisProd.name
+                prodCardHTML.querySelector('.productPrice').innerHTML = thisProd.price
+                productsPage.querySelector('.productsList').insertAdjacentHTML('beforeend', prodCardHTML.innerHTML)
             }
-        } )
+        })
 
     }
 
 }
 
-function getProductsByCat( ) {
+function getProductsByCat() {
 
-    let cats = document.querySelectorAll('[data-cat]' )
+    let cats = document.querySelectorAll('[data-cat]')
 
     cats.forEach(catNode => {
 
-        let productsList = JSON.parse( localStorage.getItem( 'products' ) )
+        let productsList = JSON.parse(localStorage.getItem('products'))
 
         let counter = 1
-        let count = parseInt( catNode.dataset.count )
+        let count = parseInt(catNode.dataset.count)
         let cat = catNode.dataset.cat
 
-        productsList.forEach( prod => {
+        productsList.forEach(prod => {
 
             let thisProd
 
-            cat !== 'all' && prod.category === cat && parseFloat( prod.access ) === 0 ? thisProd = prod : cat === 'all' ? thisProd = prod : null
+            cat !== 'all' && prod.category === cat && parseFloat(prod.access) === 0 ? thisProd = prod : cat === 'all' ? thisProd = prod : null
 
-            if ( thisProd && ( counter <= count || count === -1 ) ) {
+            if (thisProd && (counter <= count || count === -1)) {
                 counter++
-                let prodCardHTML = document.createElement( 'span' )
+                let prodCardHTML = document.createElement('span')
                 prodCardHTML.innerHTML = productCardHTML
-                prodCardHTML.querySelector('.productCard' ).href = `#${ thisProd.slug }`
-                prodCardHTML.querySelector('.productCard' ).dataset.filters = `[${ JSON.stringify( thisProd.filters ) }]`
-                prodCardHTML.querySelector('.productName' ).innerHTML = thisProd.name
+                prodCardHTML.querySelector('.productCard').href = `#${thisProd.slug}`
+                prodCardHTML.querySelector('.productCard').dataset.filters = `[${JSON.stringify(thisProd.filters)}]`
+                prodCardHTML.querySelector('.productName').innerHTML = thisProd.name
 
                 let prodImg
-                thisProd.images[ 0 ] ? prodImg = thisProd.images[ 0 ] : prodImg = '/assets/images/aucune-image.png'
-                prodCardHTML.querySelector('.productImg' ).src = prodImg
+                thisProd.images[0] ? prodImg = thisProd.images[0] : prodImg = '/assets/images/aucune-image.png'
+                prodCardHTML.querySelector('.productImg').src = prodImg
 
                 let totalVarPrice = 0
-                if( thisProd.variables ) {
-                    for (const [key, value] of Object.entries( thisProd.variables ) ) {
+                if (thisProd.variables) {
+                    for (const [key, value] of Object.entries(thisProd.variables)) {
                         let varPrice
-                        productsList.forEach( p => {
-                            if( p.ref === key ){
+                        productsList.forEach(p => {
+                            if (p.ref === key) {
                                 varPrice = p.price * value
                                 totalVarPrice = totalVarPrice + varPrice
                             }
-                        } )
+                        })
                     }
 
                 }
                 let totalProdPrice = (parseFloat(thisProd.price) + totalVarPrice).toFixed(2)
-                prodCardHTML.querySelector('.productPrice' ).innerHTML = `${totalProdPrice}€ TTC`
-                catNode.insertAdjacentHTML( 'beforeend', prodCardHTML.innerHTML )
+                prodCardHTML.querySelector('.productPrice').innerHTML = `${totalProdPrice}€ TTC`
+                catNode.insertAdjacentHTML('beforeend', prodCardHTML.innerHTML)
             }
-        } )
-    } )
+        })
+    })
 
 }
 
-function enableFilters( ) {
+function enableFilters() {
 
-    if( document.querySelector('.filters') ){
-        document.querySelector('.filters').addEventListener( 'click', ( e ) => {
-            if( e.target.hasAttribute( 'data-filter' ) ) {
+    if (document.querySelector('.filters')) {
+        document.querySelector('.filters').addEventListener('click', (e) => {
+            if (e.target.hasAttribute('data-filter')) {
 
-                let products = document.querySelectorAll( '[data-filters]' )
-                products.forEach( prod => prod.hidden = false )
+                let products = document.querySelectorAll('[data-filters]')
+                products.forEach(prod => prod.hidden = false)
 
-                document.querySelectorAll( '[data-filter]' ).forEach( filter => {
-                    if( filter.checked === false ) {
-                        let filterGroup = filter.closest('[data-filter-group]' ).attributes[ 'data-filter-group' ].nodeValue
-                        let filterValue = filter.attributes[ 'data-filter' ].nodeValue
-                        products.forEach( prod => {
-                            let filtersList = JSON.parse( prod.attributes[ 'data-filters' ].nodeValue )
-                            if ( filtersList[ 0 ][ `${filterGroup}` ] === filterValue )
+                document.querySelectorAll('[data-filter]').forEach(filter => {
+                    if (filter.checked === false) {
+                        let filterGroup = filter.closest('[data-filter-group]').attributes['data-filter-group'].nodeValue
+                        let filterValue = filter.attributes['data-filter'].nodeValue
+                        products.forEach(prod => {
+                            let filtersList = JSON.parse(prod.attributes['data-filters'].nodeValue)
+                            if (filtersList[0][`${filterGroup}`] === filterValue)
                                 prod.hidden = true
-                        } )
+                        })
                     }
-                } )
+                })
             }
-        } )
+        })
     }
 }
