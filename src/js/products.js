@@ -4,6 +4,7 @@ document.addEventListener( 'pageReady', () => {
     getProductsByCat()
     enableFilters()
     document.dispatchEvent( initWebsite )
+    document.getElementById('qtyInput').addEventListener('input', () => calcProductPrice() )
 } )
 
 window.addEventListener( 'pageChange', () => {
@@ -11,7 +12,9 @@ window.addEventListener( 'pageChange', () => {
     productsPage()
     getProductsByCat()
     enableFilters()
+    document.getElementById('qtyInput').addEventListener('input', () => calcProductPrice() )
 } )
+
 
 let optionsList = { }
 let productPrice
@@ -217,7 +220,7 @@ function calcProductPrice( ) {
             totalPrice += parseFloat( optionsList[ opt.id ] )
     } )
 
-    document.getElementById('price' ).innerHTML = totalPrice.toFixed(2 )
+    document.getElementById('price' ).innerHTML = (totalPrice * document.getElementById('qtyInput').value).toFixed(2 )
 
 }
 
