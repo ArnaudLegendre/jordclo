@@ -13,16 +13,16 @@ export default class Shop {
     /**
      * Manage cart
      * @method
-     * @param [action] {string} saveCart or getCart
+     * @param [state] {string} saveCart or getCart
      * @param [primaryKey] {object} key: value
      * @param [data] {object} object with cart
      * @returns {Promise<*>}
      */
-    async cart( action, primaryKey, data ) {
+    async cart( state, primaryKey, data ) {
         try {
-            let resp = action === 'saveCart'
+            let resp = state === 'saveCart'
                 ? await db.editDocument( 'users', primaryKey, data[0] )
-                : action === 'getCart'
+                : state === 'getCart'
                     ? await db.getDocument( 'users', primaryKey )
                     : null
             return typeof resp === 'object' ? resp.cart : resp

@@ -77,7 +77,7 @@ function getUserProfilPage( content ) {
                 'shipping_town':        document.getElementById('townShippingField').nextElementSibling.value,
             }
 
-            fetch( `/api/updateUser?token=${userLocal.token}`, {
+            fetch( `/api?action=updateUser&token=${userLocal.token}`, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json"
@@ -115,7 +115,7 @@ function getUserProfilPage( content ) {
             function editPassword( ){
                 if ( newPass === confirmPass ) {
 
-                    fetch( `/api/updatePwd?email=${email}&password=${encodeURIComponent(oldPass)}&newPassword=${encodeURIComponent(newPass)}&token=${token}` )
+                    fetch( `/api?action=updatePwd&email=${email}&password=${encodeURIComponent(oldPass)}&newPassword=${encodeURIComponent(newPass)}&token=${token}` )
                         .then( res => {
                             return res.json( )
                         } )
@@ -239,7 +239,7 @@ function loginRegister( location ){
             e.addEventListener( 'submit', async( elt ) => {
 
                 elt.preventDefault( )
-                let param = '?'
+                let param = ''
 
                 if( elt.target.monprenom.value === '' & elt.target.monadresse.value === 'ceci est mon adresse' ) {
                     let data = new FormData( elt.target )
@@ -250,7 +250,7 @@ function loginRegister( location ){
                         }
                         param = param.slice( 0, -1 )
 
-                        fetch( `api/login${param}` )
+                        fetch( `api?action=login&${param}` )
                             .then( res => {
                                 return res.json( )
                             })
@@ -282,7 +282,7 @@ function loginRegister( location ){
                         if ( pwdCheck && dataSend.password === dataSend.confirmPassword ){
                             param = param.slice( 0, -1 )
 
-                            fetch( `api/register${param}` )
+                            fetch( `api?action=register&${param}` )
                                 .then( res => {
                                     return res.json( )
                                 }).then( data => {

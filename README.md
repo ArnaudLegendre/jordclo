@@ -33,7 +33,16 @@ This is a personnal project, but if you want you can use it with love and respec
 * ~~Prototype (done)~~
 
 ## Change log and Todo List
-It's not available yet, but you can see the progress of project [here](https://github.com/AndreLeclercq/JORD/projects/2).
+Todo list and progress of project [here](https://github.com/AndreLeclercq/JORD/projects/2).
+
+####Log 0.3.0 ( 30/07/2020 )
+* Update new server.js for better perf.
+* Refacto serverHTTP.js
+* Add price Rules (tax...)
+* Add update price when change quantity
+* Update README for price rules in Product Database
+* Update better `assets_sample` base
+
 
 ## How to use JORD ?
 I try to maintain docs [here](https://andreleclercq.github.io/JORD/).

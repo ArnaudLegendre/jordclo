@@ -9,11 +9,17 @@ It's a personnal project, but if you want you can use it ;)
 * MongoDB server ( ^4.2.5 )  [ latest version check : 4.2.6 ]
 
 #### NodeJS dependencies
+![GitHub package.json dependency version (dev dep on branch)](https://img.shields.io/github/package-json/dependency-version/andreleclercq/jord/dev/argon2)
+![GitHub package.json dependency version (dev dep on branch)](https://img.shields.io/github/package-json/dependency-version/andreleclercq/jord/dev/mongodb)
+![GitHub package.json dependency version (dev dep on branch)](https://img.shields.io/github/package-json/dependency-version/andreleclercq/jord/dev/nodemailer)
+![GitHub package.json dependency version (dev dep on branch)](https://img.shields.io/github/package-json/dependency-version/andreleclercq/jord/dev/sass)
+![GitHub package.json dependency version (dev dep on branch)](https://img.shields.io/github/package-json/dependency-version/andreleclercq/jord/dev/terser)
+
 * Argon2 - password-hashing function ( ^0.26.2 )
-* MongoDB - MongoDB driver for Node.js ( ^3.5.7 ) [ latest version check : 3.5.9 ]
-* Nodemailer - Allow easy as cake email sending ( ^6.4.6 ) [ latest version check : 6.4.10 ]
-* SASS - CSS extension and preprocessor ( ^1.26.5 ) [ latest version check : 1.26.10 ]
-* Terser - JavaScript parser and mangler/compressor ( ^4.6.13 ) [ latest version check : 4.8.0 ]
+* MongoDB - MongoDB driver for Node.js ( ^3.5.9 )
+* Nodemailer - Allow easy as cake email sending ( ^6.4.10 )
+* SASS - CSS extension and preprocessor ( ^1.26.10 )
+* Terser - JavaScript parser and mangler/compressor ( ^4.8.0 )
 
 Optionnals deps ( need manual install ) :
 * Cloc : `npm i cloc -g`
@@ -22,9 +28,10 @@ Optionnals deps ( need manual install ) :
 
 ### NPM Commands
 Default :
-* Launch server ( watch mode ) : `npm run server`
+* Launch server HTTP2 ( watch mode ) : `npm run server`
+* Launch server HTTP1 ( watch mode ) : `npm run serverHttp`
 * Launch watch ( CSS & JS ) : `npm run watch`
-* Launch compil ( CSS & JS ) : `npm run compil`
+* Launch prod ( CSS & JS ) : `npm run prod`
 
 Optionnal :
 * Docs ( Jord's local docs ) : `npm run docs`
@@ -90,7 +97,7 @@ db.createCollection('orders')
 ```
 
 ### ConfigFile
-Edit the Config File into `public/assets/config.json`
+Edit the Config File into `public/assets/config.js`
 #### general
 ```json
 "general" : {
@@ -237,6 +244,7 @@ db.orders.insertOne(
     "access": "0",
     "ref": "prodref",
     "price": "19.78",
+    "priceRules": ["$p+30","$p*1.2"],
     "category": "category-1",
     "filters": {
         "firstFilter": "value",
@@ -270,6 +278,9 @@ db.orders.insertOne(
 * Access : Access level (0: all | 1 : user login)
 * Name : Use for H1 and Title tag
 * Price : The product price
+* PriceRules : Calcul rules to applied
+    * $p was replace by the price (ex : $p * 1.2 => 100 * 1.2 for 20% of tax)
+    * Always calculate by order of the array (ex: ["$p+30","$p*1.2"] => 70+30 = 100 => 100*1.2 = 120)
 * Category: Main category slug (only on)
 * Filters : Filters for classifications
     * Filter Name : Value of filter
@@ -319,7 +330,5 @@ List of icons (v4.24.1) : https://feathericons.com/
 Github docs : https://github.com/feathericons/feather#feather
 #### How to add icon
 ```html
-<svg class="feather">
-  <use xlink:href="assets/svg/feather-sprite.svg#iconName"/>
-</svg>
+<svg class="feather"><use xlink:href="assets/svg/feather-sprite.svg#iconName"/></svg>
 ```
