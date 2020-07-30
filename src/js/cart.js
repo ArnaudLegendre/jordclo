@@ -2,7 +2,7 @@ let cartLocal = null
 
 document.addEventListener( 'pageChange', ( ) => {
 
-    document.getElementById( 'addCart' ) ? document.getElementById( 'addCart' ).addEventListener( 'click', e => addCart( e.target ) ) : null
+    document.getElementById( 'addCart' ) ? document.getElementById( 'addCart' ).addEventListener( 'click', e => addCartFromProductPage( e.target ) ) : null
     document.getElementById( 'cartModal' ).firstElementChild.innerHTML = cartHTML
     refreshCart( )
 
@@ -10,7 +10,7 @@ document.addEventListener( 'pageChange', ( ) => {
 
 document.addEventListener( 'pageReady', ( ) => {
 
-    document.getElementById( 'addCart' ) ? document.getElementById( 'addCart' ).addEventListener( 'click', e => addCart( e.target ) ) : null
+    document.getElementById( 'addCart' ) ? document.getElementById( 'addCart' ).addEventListener( 'click', e => addCartFromProductPage( e.target ) ) : null
     document.getElementById( 'cartModal' ).firstElementChild.innerHTML = cartHTML
     refreshCart( )
 
@@ -95,7 +95,7 @@ function refreshCart( ) {
 
 }
 
-async function addCart( e ) {
+async function addCartFromProductPage( e ) {
 
     let productElem = e.closest( '.productElem' )
     let productAdd = { }
@@ -128,6 +128,47 @@ async function addCart( e ) {
         productAdd.optName = optionsName
     }
 
+
+    if ( !cartLocal ){
+
+        await data.push( productAdd )
+        localStorage.setItem( 'cartLocal', JSON.stringify( data ) )
+        refreshCart( )
+
+    } else {
+
+        data = JSON.parse( localStorage.getItem( 'cartLocal' ) )
+        let newItem = true
+
+        data.forEach( e => {
+            ( productAdd.ref === e.ref && String( productAdd.options ) === String( e.options ) ) ? ( e.qty += productAdd.qty, newItem = false ) : null;
+        } )
+        newItem ? ( data.push( productAdd ), localStorage.setItem( 'cartLocal', JSON.stringify( data ) ) ) : localStorage.setItem( 'cartLocal', JSON.stringify( data ) )
+        refreshCart( )
+
+    }
+
+}
+
+async function addCart( ref, qty ) {
+    let productAdd = { }
+    let data = [ ]
+
+    let prod = new Promise( resolve => {
+        productList.forEach(prod => {
+            prod.ref === ref ? resolve( prod ) : null
+        } )
+    } )
+
+    let product = await prod
+
+    productAdd = {
+        "ref"           : ref,
+        "qty"           : qty,
+        "name"          : product.name,
+        "price"         : product.price,
+        "options"       : ''
+    }
 
     if ( !cartLocal ){
 
