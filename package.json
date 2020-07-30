@@ -1,6 +1,6 @@
 {
   "name": "jord",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Minimal eShop Single Page Application system without framework or useless dependencies.",
   "main": "server.js",
   "type": "module",
