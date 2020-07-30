@@ -35,7 +35,7 @@ This is a personnal project, but if you want you can use it with love and respec
 ## Change log and Todo List
 Todo list and progress of project [here](https://github.com/AndreLeclercq/JORD/projects/2).
 
-####Log 0.3.0 ( 30/07/2020 )
+#### Log 0.3.0 ( 30/07/2020 )
 * Update new server.js for better perf.
 * Refacto serverHTTP.js
 * Add price Rules (tax...)
