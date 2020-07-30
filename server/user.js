@@ -65,6 +65,7 @@ export default class User {
      * @returns {Promise<string|*>} token or error message
      */
     async login( data ) {
+        logSys(`data => ${data}`, 'debug')
         try {
             this.document = await db.getDocument( 'users', { email: data.email } )
             if( typeof this.document === 'object' ){

@@ -1,23 +1,16 @@
-import http         from 'http'
+import http        from 'http'
 import fs           from 'fs'
 import path         from 'path'
 import logSys       from './server/msgSystem.js'
-import { dbLoad,
-    dbLogin,
-    dbRegister,
-    dbUpdateUser,
-    dbUpdatePassword,
-    dbCart,
-    dbOrders }      from './api/database.js'
 import Token        from './server/token.js'
 let token =         new Token
 import User         from './server/user.js'
+import Shop         from './server/shop.js'
+// import Payment      from './server/payment.js'
 import Database     from './server/database.js'
 let db =            new Database( config.db.userRW, config.db.pwdRW, config.db.name )
 import { config }   from './public/assets/config.js'
-
-const port = '3001'
-
+const port = '3002'
 const mimeTypes = {
     'html' : 'text/html',
     'js'   : 'text/javascript',
@@ -35,9 +28,9 @@ const mimeTypes = {
     'otf'  : 'application/font-otf',
     'wasm' : 'application/wasm'
 }
+const enableCollection = ['products', 'pages']
 
-async function parseRequest( req, res ) {
-
+async function parseRequest( req ) {
     req.url = new URL( req.url, `http://localhost:${ port }` )
     req.param = await Object.fromEntries( req.url.searchParams.entries() )
     req.path = req.url.pathname.split('/' )
@@ -47,20 +40,14 @@ async function parseRequest( req, res ) {
     req.body = ''
     for await ( const chunk of req )
         req.body += chunk
-
 }
 
 async function readFile( req, res ) {
-
     const fileName = req.path.join( path.sep )
     let filePath = 'public/' + ( fileName === '' ? 'index.html' : fileName )
-
     const ext = path.extname( filePath ).substring( 1 )
-
     //if (this.conf.typeAllowed instanceof Array && !this.conf.typeAllowed.includes(ext)) { throw new Error('403 Forbidden, file type not allowed') }
-
     res.headers[ 'content-type' ] = ( ext in mimeTypes ) ? mimeTypes[ ext ] : 'text/plain'
-
     try {
         res.data = await fs.promises.readFile( filePath )
     } catch ( e ) {
@@ -70,141 +57,86 @@ async function readFile( req, res ) {
     }
 }
 
+async function prepareResponse( res, resp ) {
+    res.headers[ 'content-type' ] = 'application/json'
+    res.data = JSON.stringify( resp )
+}
+
 async function handleRequest( req, res ) {
-
-    // GET COLLECTION
-    if ( req.url.pathname.startsWith( '/api/get' ) ) {
-
-        if ( req.param.name === 'products' || req.param.name === 'pages' ) {
-
-            const resp = await dbLoad( config.db.userR, config.db.pwdR, config.db.name, req.param )
-            res.headers[ 'content-type' ] = 'application/json'
-            res.data = JSON.stringify( resp )
-
+    if( req.url.pathname.startsWith('/api') ){
+        if ( req.param.action === 'get' && enableCollection.some( elt => elt === req.param.name ) ) {
+            await prepareResponse( res, await db.getCollection( req.param.name ) )
+        } else if ( req.param.action === 'token' ) {
+            if( req.param.state === 'verify' )
+                await prepareResponse( res, await token.check( req.param.token ) )
+            else if ( req.param.state === 'remove' )
+                token.del( req.param.token )
+        } else if ( req.param.action === 'login' ) {
+            let user = new User()
+            let resp = await user.login( req.param )
+            typeof resp === 'object' ? resp.token = await token.add() : null
+            await prepareResponse( res, resp )
+        } else if ( req.param.action === 'register' ) {
+            let user = new User()
+            await prepareResponse( res, await user.createUser( req.param ) )
+        } else if ( req.param.action === 'updateUser' ) {
+            if( await token.check( req.param.token ) ){
+                let user = new User()
+                const resp = await user.editUser( JSON.parse( req.body ) )
+                typeof resp === 'object' ? resp.token = req.param.token : null
+                await prepareResponse( res, resp )
+            } else
+                await prepareResponse( res, false )
+        } else if ( req.param.action === 'updatePwd' ) {
+            if( await token.check( req.param.token ) ) {
+                let user = new User()
+                await prepareResponse( res, await user.user.editPwd( await user.editPwd( req.param ) ) )
+            } else {
+                await prepareResponse( res, false )
+            }
+        } else if ( req.param.action === 'cart' ) {
+            if( await token.check( req.param.token ) ){
+                let shop = new Shop()
+                await prepareResponse( res, await shop.cart( req.param.state, {email: req.param.email}, JSON.parse( req.body ) ) )
+            } else {
+                await prepareResponse( res, false )
+            }
+        } else if ( req.param.action === 'orders' ) {
+            if ( await token.check( req.param.token ) ) {
+                let shop = new Shop()
+                await prepareResponse( res, await shop.order( { email: req.param.email } ) )
+            } else {
+                await prepareResponse( res, false )
+            }
         }
-
-        // TOKEN
-    }  else if ( req.url.pathname.startsWith( '/api/token' ) ) {
-
-        if( req.param.action === 'verify' ){
-
-            const resp = await token.check( req.param.token )
-            res.headers[ 'content-type' ] = 'application/json'
-            res.data = JSON.stringify( resp )
-
-        } else if ( req.param.action === 'remove' ){
-            token.del( req.param.token )
-        }
-
-        // LOGIN
-    } else if ( req.url.pathname.startsWith( '/api/login' ) ) {
-
-        const resp = await dbLogin( config.db.userR, config.db.pwdR, config.db.name, 'users', req.param )
-        resp.token = token.add()
-        res.headers[ 'content-type' ] = 'application/json'
-        res.data = JSON.stringify( resp )
-
-        // REGISTER
-    } else if ( req.url.pathname.startsWith( '/api/register' ) ) {
-
-        const resp = await dbRegister( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.param )
-        res.headers[ 'content-type' ] = 'application/json'
-        res.data = JSON.stringify( resp )
-
-        // UPDATE USER
-    } else if ( req.url.pathname.startsWith( '/api/updateUser' ) ) {
-
-        const tokenResp = await token.check( req.param.token )
-
-        if( tokenResp === true ){
-
-            const resp = await dbUpdateUser( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.body )
-            resp.token = req.param.token
-            res.headers[ 'content-type' ] = 'application/json'
-            res.data = JSON.stringify( resp )
-
-        } else {
-            res.headers[ 'content-type' ] = 'application/json'
-            res.data = JSON.stringify( false )
-        }
-
-        // UPDATE PASSWORD
-    } else if ( req.url.pathname.startsWith( '/api/updatePwd' ) ) {
-
-        const resp = await dbUpdatePassword( config.db.userRW, config.db.pwdRW, config.db.name, 'users', req.param )
-        res.headers[ 'content-type' ] = 'application/json'
-        res.data = JSON.stringify( resp )
-
-        // CART
-    } else if ( req.url.pathname.startsWith( '/api/cart' ) ) {
-
-        const tokenResp = await token.check( req.param.token )
-
-        if( tokenResp === true ){
-
-            const resp = await dbCart( config.db.userRW, config.db.pwdRW, config.db.name, 'users',req.param.action ,req.param.email , req.body )
-            res.headers[ 'content-type' ] = 'application/json'
-            res.data = JSON.stringify( resp )
-
-        } else {
-            res.headers[ 'content-type' ] = 'application/json'
-            res.data = JSON.stringify( false )
-        }
-
-        // ORDER
-    } else if ( req.url.pathname.startsWith( '/api/orders' ) ) {
-
-        const tokenResp = await token.check( req.param.token )
-        if( tokenResp === true ){
-            const resp = await dbOrders( config.db.userRW, config.db.pwdRW, config.db.name, 'orders',req.param.action , req.param.email )
-            res.headers[ 'content-type' ] = 'application/json'
-            res.data = JSON.stringify( resp )
-        } else {
-            res.headers[ 'content-type' ] = 'application/json'
-            res.data = JSON.stringify( false )
-        }
-
     } else if ( path.extname( String( req.url ) ) === '' && String( req.url.pathname ) !== '/' ) {
-
         res.headers['Location'] = '/#' + String(req.url.pathname).replace('/', '')
         res.headers[':status'] = 302
-
     }  else {
         await readFile( req, res )
     }
 }
 
 async function executeRequest( req, stream ) {
-
     // logSys( JSON.stringify(stream.session.socket.remoteAddress), 'debug' )
-
     req.on('error', err => logSys( err, 'error' ) )
-
     let res = {
         data: '',
         compress: false,
         headers: {
-            'server': 'Made with NodeJS by atrepp & aleclercq',
+            'server': 'Made with NodeJS by aleclercq',
             ':status': 200
         }
     }
-
     try {
-
-        // Build request object
         await parseRequest(req, res)
-
         await handleRequest(req, res)
-
     } catch ( err ) {
-
         let error = err.message.match( /^(\d{3}) (.+)$/ )
-
         if ( error )
             error.shift( )
         else
             error = [ '500', 'Internal Server Error' ]
-
         res.headers[ ':status' ] = error[ 0 ]
         res.headers[ 'content-type' ] = 'text/html'
         res.data = `<h1>${error[0]} ${error[1]}</h1><pre>${err.stack}</pre>\n<pre>Request : ${JSON.stringify(req.param, null, 2)}</pre>`

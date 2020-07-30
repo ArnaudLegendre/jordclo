@@ -1,7 +1,8 @@
-document.body.addEventListener( 'click', e => {
-    e.target.dataset.modaltarget != null ? showModal( e.target.dataset.modaltarget ) : e.target.classList.contains('modal') || e.target.classList.contains('btn') ? hideModal() : null
 
+document.addEventListener( 'click', e => {
+    e.target.dataset.modaltarget != null ? showModal( e.target.dataset.modaltarget ) : e.target.classList.contains('modal') || e.target.classList.contains('btn') ? hideModal() : null
 } )
+
 
 window.addEventListener( 'hashchange', hideModal )
 

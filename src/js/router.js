@@ -3,7 +3,7 @@ let route
 let currentPage
 let routes = { }
 
-;( ( ) => { fetch( '/api/get?name=pages' )
+;( ( ) => { fetch( '/api?action=get&name=pages' )
 
     .then( res => { return res.json( ) } )
 
@@ -29,7 +29,7 @@ let routes = { }
 
 } )( );
 
-function loadProducts( ) { fetch( '/api/get?name=products' )
+function loadProducts( ) { fetch( '/api?action=get&name=products' )
 
     .then( res => { return res.json( ) } )
 
@@ -90,7 +90,7 @@ class Router {
                     userLocal = JSON.parse(userLocal)
                     let userToken = userLocal.token;
 
-                    ( ( ) => { fetch(`/api/token?token=${userToken}&action=verify` )
+                    ( ( ) => { fetch(`/api?action=token&token=${userToken}&state=verify` )
                         .then( res => { return res.json( ) } )
                         .then( data => {
                             if ( data != true ) {
