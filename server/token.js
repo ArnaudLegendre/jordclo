@@ -1,4 +1,4 @@
-import logSys   from '../server/msgSystem.js'
+import logSys from '../server/msgSystem.js'
 
 /**
  * Manage token auth, reset at server restart
@@ -7,7 +7,7 @@ import logSys   from '../server/msgSystem.js'
 export default class Token {
 
     constructor() {
-        this.tokenUserList = [ ]
+        this.tokenUserList = []
     }
 
     /**
@@ -16,9 +16,9 @@ export default class Token {
      * @returns {string} [token] Return the new token
      */
     add() {
-        let randomString = () =>  Math.random().toString(36 ).substr(2 )
+        let randomString = () => Math.random().toString(36).substr(2)
         let newToken = randomString() + randomString() + randomString()
-        this.tokenUserList.push( newToken )
+        this.tokenUserList.push(newToken)
         return newToken
     }
 
@@ -27,10 +27,10 @@ export default class Token {
      * @method
      * @param {string} [token] To delete
      */
-    del( token) {
-        let tokenUser = this.tokenUserList.indexOf( token )
+    del(token) {
+        let tokenUser = this.tokenUserList.indexOf(token)
         if (tokenUser > -1)
-            this.tokenUserList.splice( tokenUser, 1 )
+            this.tokenUserList.splice(tokenUser, 1)
     }
 
     /**
@@ -40,10 +40,10 @@ export default class Token {
      * @returns {boolean} [true/false] True if in the list, false if not
      * TODO: Check the syntax of !! line 44
      */
-    check( token ) {
+    check(token) {
         return !!this.tokenUserList.find(e => e === token)
     }
 
 }
 
-logSys( 'Token Manage..............READY', 'success' )
+logSys('Token Manage..............READY', 'success')
