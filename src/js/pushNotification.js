@@ -1,6 +1,5 @@
-
-document.addEventListener( 'initWebsite', function( ) {
-    const pushNotif = document.getElementById( 'pushNotification' )
+document.addEventListener('initWebsite', function () {
+    const pushNotif = document.getElementById('pushNotification')
     const notice = pushNotif.firstElementChild
     // const closeBtn = pushNotif.lastElementChild
     //
@@ -11,40 +10,40 @@ document.addEventListener( 'initWebsite', function( ) {
 
 })
 
-function showPushNotification( type, msg ){
+function showPushNotification(type, msg) {
 
-    const pushNotif = document.getElementById( 'pushNotification' )
+    const pushNotif = document.getElementById('pushNotification')
     const notice = pushNotif.firstElementChild
 
-    notice.classList.remove( 'show' )
-    notice.classList.add( 'hide' )
-    notice.classList.remove( 'info' )
-    notice.classList.remove( 'success' )
-    notice.classList.remove( 'error' )
+    notice.classList.remove('show')
+    notice.classList.add('hide')
+    notice.classList.remove('info')
+    notice.classList.remove('success')
+    notice.classList.remove('error')
 
-    switch ( type ) {
+    switch (type) {
         case 'success':
-            notice.classList.add( 'success' )
+            notice.classList.add('success')
             break
         case 'error':
-            notice.classList.add( 'error' )
+            notice.classList.add('error')
             break
         case 'info':
-            notice.classList.add( 'info' )
+            notice.classList.add('info')
             break
     }
 
-    notice.querySelector( '.msg' ).innerText = ''
-    notice.querySelector( '.msg' ).innerText = msg
+    notice.querySelector('.msg').innerText = ''
+    notice.querySelector('.msg').innerText = msg
 
-    notice.classList.toggle( 'hide' )
-    notice.classList.toggle( 'show' )
+    notice.classList.toggle('hide')
+    notice.classList.toggle('show')
 
-    setTimeout( function( ) {
-        if ( notice.classList.contains( 'show' ) ) {
-            notice.classList.toggle( 'show' )
-            notice.classList.toggle( 'hide' )
+    setTimeout(function () {
+        if (notice.classList.contains('show')) {
+            notice.classList.toggle('show')
+            notice.classList.toggle('hide')
         }
-    }, 5000 )
+    }, 5000)
 
 }
