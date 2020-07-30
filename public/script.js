@@ -8,7 +8,7 @@ let route
 let currentPage
 let routes = { }
 
-;( ( ) => { fetch( '/api/get?name=pages' )
+;( ( ) => { fetch( '/api?action=get&name=pages' )
 
     .then( res => { return res.json( ) } )
 
@@ -34,7 +34,7 @@ let routes = { }
 
 } )( );
 
-function loadProducts( ) { fetch( '/api/get?name=products' )
+function loadProducts( ) { fetch( '/api?action=get&name=products' )
 
     .then( res => { return res.json( ) } )
 
@@ -95,7 +95,7 @@ class Router {
                     userLocal = JSON.parse(userLocal)
                     let userToken = userLocal.token;
 
-                    ( ( ) => { fetch(`/api/token?token=${userToken}&action=verify` )
+                    ( ( ) => { fetch(`/api?action=token&token=${userToken}&state=verify` )
                         .then( res => { return res.json( ) } )
                         .then( data => {
                             if ( data != true ) {
@@ -160,17 +160,31 @@ document.addEventListener('pageReady', () => {
     productsPage()
     getProductsByCat()
     enableFilters()
+<<<<<<< HEAD
     document.dispatchEvent(initWebsite)
 })
+=======
+    document.dispatchEvent( initWebsite )
+    document.getElementById('qtyInput').addEventListener('input', () => calcProductPrice() )
+} )
+>>>>>>> d649e8bed29a77e9db56a34992adb1321e309055
 
 window.addEventListener('pageChange', () => {
     buildProduct()
     productsPage()
     getProductsByCat()
     enableFilters()
+<<<<<<< HEAD
 })
 
 let optionsList = {}
+=======
+    document.getElementById('qtyInput').addEventListener('input', () => calcProductPrice() )
+} )
+
+
+let optionsList = { }
+>>>>>>> d649e8bed29a77e9db56a34992adb1321e309055
 let productPrice
 let productList
 
@@ -193,6 +207,7 @@ function buildProduct() {
 
             // Calc price & write technical
             let totalVarPrice = 0
+<<<<<<< HEAD
             let tableTech = document.getElementById('productTech').querySelector('tbody')
             elt.tech !== undefined ? tableTech.innerHTML = tableTech.innerHTML.concat(`<tr><td>${elt.tech}</td></tr>`) : null
 
@@ -202,16 +217,50 @@ function buildProduct() {
                     productList.forEach(prod => {
                         if (prod.ref === key) {
                             varPrice = prod.price * value
-                            totalVarPrice = totalVarPrice + varPrice
+=======
+            let prodPrice = 0
+            let tableTech = document.getElementById( 'productTech' ).querySelector('tbody')
+            elt.tech !== undefined ? tableTech.innerHTML = tableTech.innerHTML.concat( `<tr><td>${elt.tech}</td></tr>` ) : null
 
+            if( elt.priceRules ){
+                elt.priceRules.forEach( rule => {
+                    prodPrice = prodPrice === 0 ? parseFloat(elt.price) : prodPrice
+                    prodPrice = eval( rule.replace( new RegExp(/\$p/g), prodPrice ) )
+                } )
+                prodPrice = prodPrice.toFixed(2)
+            }
+
+            if( elt.variables ) {
+                for (const [key, value] of Object.entries( elt.variables ) ) {
+                    let varPrice
+                    productList.forEach( prod => {
+                        if( prod.ref === key ){
+                            let calcVarPrice = 0
+                            if( prod.priceRules ){
+                                prod.priceRules.forEach( rule => {
+                                    calcVarPrice = calcVarPrice === 0 ? parseFloat(prod.price) : calcVarPrice
+                                    calcVarPrice = eval( rule.replace( new RegExp(/\$p/g), calcVarPrice ) )
+                                } )
+                                calcVarPrice = calcVarPrice.toFixed(2)
+                            } else {
+                                calcVarPrice = prod.price
+                            }
+                            varPrice = calcVarPrice * value
+>>>>>>> d649e8bed29a77e9db56a34992adb1321e309055
+                            totalVarPrice = totalVarPrice + varPrice
                             let rowHTML = `<tr><td>${prod.name} | ${prod.tech}</td></tr>`
                             tableTech.innerHTML = tableTech.innerHTML.concat(rowHTML)
                         }
                     })
                 }
             }
+<<<<<<< HEAD
             let totalProdPrice = (parseFloat(elt.price) + totalVarPrice).toFixed(2)
             document.getElementById('price').innerHTML = productPrice = totalProdPrice
+=======
+            let totalProdPrice = ( parseFloat( prodPrice ) + totalVarPrice).toFixed(2)
+            document.getElementById( 'price' ).innerHTML = productPrice = totalProdPrice
+>>>>>>> d649e8bed29a77e9db56a34992adb1321e309055
 
             // Write desc
             let prodDesc = document.getElementById('productDesc')
@@ -356,7 +405,11 @@ function calcProductPrice() {
             totalPrice += parseFloat(optionsList[opt.id])
     })
 
+<<<<<<< HEAD
     document.getElementById('price').innerHTML = totalPrice.toFixed(2)
+=======
+    document.getElementById('price' ).innerHTML = (totalPrice * document.getElementById('qtyInput').value).toFixed(2 )
+>>>>>>> d649e8bed29a77e9db56a34992adb1321e309055
 
 }
 
@@ -418,16 +471,45 @@ function getProductsByCat() {
                 prodCardHTML.querySelector('.productName').innerHTML = thisProd.name
 
                 let prodImg
+<<<<<<< HEAD
                 thisProd.images[0] ? prodImg = thisProd.images[0] : prodImg = '/assets/images/aucune-image.png'
                 prodCardHTML.querySelector('.productImg').src = prodImg
+=======
+                thisProd.images[ 0 ] ? prodImg = thisProd.images[ 0 ] : prodImg = '/assets/images/aucune-image.png'
+                prodCardHTML.querySelector('.productImg' ).src = prodImg
+                let prodPrice = 0
+                if( thisProd.priceRules ){
+                    thisProd.priceRules.forEach( rule => {
+                        prodPrice = prodPrice === 0 ? parseFloat(thisProd.price) : prodPrice
+                        prodPrice = eval( rule.replace( new RegExp(/\$p/g), prodPrice ) )
+                    } )
+                    prodPrice = prodPrice.toFixed(2)
+                }
+>>>>>>> d649e8bed29a77e9db56a34992adb1321e309055
 
                 let totalVarPrice = 0
                 if (thisProd.variables) {
                     for (const [key, value] of Object.entries(thisProd.variables)) {
                         let varPrice
+<<<<<<< HEAD
                         productsList.forEach(p => {
                             if (p.ref === key) {
                                 varPrice = p.price * value
+=======
+                        productsList.forEach( p => {
+                            let calcVarPrice = 0
+                            if( p.ref === key ){
+                                if( p.priceRules ){
+                                    p.priceRules.forEach( rule => {
+                                        calcVarPrice = calcVarPrice === 0 ? parseFloat(p.price) : calcVarPrice
+                                        calcVarPrice = eval( rule.replace( new RegExp(/\$p/g), calcVarPrice ) )
+                                    } )
+                                    calcVarPrice = calcVarPrice.toFixed(2)
+                                } else {
+                                    calcVarPrice = p.price
+                                }
+                                varPrice = calcVarPrice * value
+>>>>>>> d649e8bed29a77e9db56a34992adb1321e309055
                                 totalVarPrice = totalVarPrice + varPrice
                             }
                         })
@@ -586,10 +668,11 @@ function showPushNotification( type, msg ){
     }, 5000 )
 
 }
-document.body.addEventListener( 'click', e => {
-    e.target.dataset.modaltarget != null ? showModal( e.target.dataset.modaltarget ) : e.target.classList.contains('modal') || e.target.classList.contains('btn') ? hideModal() : null
 
+document.addEventListener( 'click', e => {
+    e.target.dataset.modaltarget != null ? showModal( e.target.dataset.modaltarget ) : e.target.classList.contains('modal') || e.target.classList.contains('btn') ? hideModal() : null
 } )
+
 
 window.addEventListener( 'hashchange', hideModal )
 
@@ -619,7 +702,7 @@ document.addEventListener( 'pageReady', ( ) => {
 
 } )
 
-document.body.addEventListener( 'click', e => {
+document.addEventListener( 'click', e => {
 
     if( e.target.closest( '.removeCart' ) ) {
         let ref = e.target.closest( '.removeCart' ).parentElement.parentElement.parentElement.querySelector( '.refLabel > .value' ).innerHTML
@@ -833,7 +916,7 @@ function saveCart( ){
     let cartLocal = localStorage.getItem('cartLocal' ) ? localStorage.getItem('cartLocal' ) : 'null'
     let userLocal = JSON.parse( localStorage.getItem('userLocal' ) )
 
-    fetch( `/api/cart?token=${userLocal.token}&email=${userLocal.email}&action=saveCart`, {
+    fetch( `/api?action=cart?token=${userLocal.token}&email=${userLocal.email}&state=saveCart`, {
         method: "POST",
         headers: {
             "Content-type": "application/json"
@@ -848,7 +931,7 @@ function getCart( ){
     let cartLocal = localStorage.getItem('cartLocal' ) ? localStorage.getItem('cartLocal' ) : '{}'
     let userLocal = JSON.parse( localStorage.getItem('userLocal' ) )
 
-    fetch( `/api/cart?token=${userLocal.token}&email=${userLocal.email}&action=getCart`, {
+    fetch( `/api?action=cart&token=${userLocal.token}&email=${userLocal.email}&state=getCart`, {
         method: "POST",
         headers: {
             "Content-type": "application/json"
@@ -945,7 +1028,7 @@ function getUserProfilPage( content ) {
                 'shipping_town':        document.getElementById('townShippingField').nextElementSibling.value,
             }
 
-            fetch( `/api/updateUser?token=${userLocal.token}`, {
+            fetch( `/api?action=updateUser&token=${userLocal.token}`, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json"
@@ -983,7 +1066,7 @@ function getUserProfilPage( content ) {
             function editPassword( ){
                 if ( newPass === confirmPass ) {
 
-                    fetch( `/api/updatePwd?email=${email}&password=${encodeURIComponent(oldPass)}&newPassword=${encodeURIComponent(newPass)}&token=${token}` )
+                    fetch( `/api?action=updatePwd&email=${email}&password=${encodeURIComponent(oldPass)}&newPassword=${encodeURIComponent(newPass)}&token=${token}` )
                         .then( res => {
                             return res.json( )
                         } )
@@ -1107,7 +1190,7 @@ function loginRegister( location ){
             e.addEventListener( 'submit', async( elt ) => {
 
                 elt.preventDefault( )
-                let param = '?'
+                let param = ''
 
                 if( elt.target.monprenom.value === '' & elt.target.monadresse.value === 'ceci est mon adresse' ) {
                     let data = new FormData( elt.target )
@@ -1118,7 +1201,7 @@ function loginRegister( location ){
                         }
                         param = param.slice( 0, -1 )
 
-                        fetch( `api/login${param}` )
+                        fetch( `api?action=login&${param}` )
                             .then( res => {
                                 return res.json( )
                             })
@@ -1150,7 +1233,7 @@ function loginRegister( location ){
                         if ( pwdCheck && dataSend.password === dataSend.confirmPassword ){
                             param = param.slice( 0, -1 )
 
-                            fetch( `api/register${param}` )
+                            fetch( `api?action=register&${param}` )
                                 .then( res => {
                                     return res.json( )
                                 }).then( data => {
@@ -1254,7 +1337,7 @@ function createOrders( ) {
     let emailUser = userLocal.email
     let tokenUser = userLocal.token
 
-    fetch( `/api/orders?token=${tokenUser}&email=${emailUser}&action=createOrders` )
+    fetch( `/api?action=orders&token=${tokenUser}&email=${emailUser}` )
         .then( res => {
             return res.json( )
         } ).then( data => {
