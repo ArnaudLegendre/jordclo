@@ -1,5 +1,3 @@
-import logSys from '../server/msgSystem.js'
-
 /**
  * Manage token auth, reset at server restart
  * @class
@@ -45,5 +43,3 @@ export default class Token {
     }
 
 }
-
-logSys('Token Manage..............READY', 'success')

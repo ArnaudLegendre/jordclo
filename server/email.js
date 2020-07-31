@@ -47,8 +47,3 @@ export default class Email {
 
     }
 }
-
-logSys('------------------------------------')
-logSys('---------- SERVER STARTUP ----------')
-logSys('------------------------------------')
-logSys('Sending Email..............READY', 'success')

@@ -1,3 +1,6 @@
+logSys('----------------------------------------------')
+logSys('---------------- SERVER STARTS ---------------')
+
 import http from 'http'
 import fs from 'fs'
 import path from 'path'
@@ -142,44 +145,19 @@ async function executeRequest(req, stream) {
         res.headers[':status'] = error[0]
         res.headers['content-type'] = 'text/html'
         res.data = `<h1>${error[0]} ${error[1]}</h1><pre>${err.stack}</pre>\n<pre>Request : ${JSON.stringify(req.param, null, 2)}</pre>`
-
     } finally {
-        /* if(!res.cached) {
-             // Compress the response using Brotli
-             const paramCompress = this.conf.compression
-             if(paramCompress && paramCompress.enable && req.headers['accept-encoding'].includes('br')
-                 && paramCompress.mimeType.includes(res.headers['content-type']) && (paramCompress.minSize < res.data.length)) {
-
-                 res.headers['content-encoding'] = 'br'
-                 res.data = await compress(res.data, {
-                     params: {
-                         [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
-                         [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.Z_BEST_SPEED
-                     }
-                 })
-             }
-
-             if(this.conf.cache?.enable && (!this.conf.cache.maxSize || (this.conf.cache.maxSize && (this.conf.cache.maxSize > res.data.length)))) {
-                 res.cached = true
-                 this.cache[key] = {timestamp: Date.now(), res: res}
-             }
-         }
- */
         const statusCode = res.headers[':status']
         delete res.headers[':status']
         stream.writeHead(statusCode, res.headers)
         stream.end(res.data)
-
     }
 }
 
 const server = http.createServer()
-
-
 server.on('error', err => logSys(err, 'error'))
 server.on('request', executeRequest)
-
 server.listen(port);
 
-logSys(`Server is launch at http://localhost:${port}`, 'success')
-logSys('------------------------------------')
+logSys(`Server READY at http://localhost:${port}`, 'success')
+logSys('----------------------------------------------')
+

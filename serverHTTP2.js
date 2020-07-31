@@ -1,3 +1,6 @@
+logSys('-----------------------------------------------')
+logSys('---------------- SERVER STARTS ----------------')
+
 import http2 from 'http2'
 import fs from 'fs'
 import path from 'path'
@@ -158,26 +161,6 @@ async function executeRequest(stream, headers) {
         res.headers['content-type'] = 'text/html'
         res.data = `<h1>${error[0]} ${error[1]}</h1><pre>${err.stack}</pre>\n<pre>Request : ${JSON.stringify(req, null, 2)}</pre>`
     } finally {
-        /* if(!res.cached) {
-             // Compress the response using Brotli
-             const paramCompress = this.conf.compression
-             if(paramCompress && paramCompress.enable && req.headers['accept-encoding'].includes('br')
-                 && paramCompress.mimeType.includes(res.headers['content-type']) && (paramCompress.minSize < res.data.length)) {
-
-                 res.headers['content-encoding'] = 'br'
-                 res.data = await compress(res.data, {
-                     params: {
-                         [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
-                         [zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.Z_BEST_SPEED
-                     }
-                 })
-             }
-
-             if(this.conf.cache?.enable && (!this.conf.cache.maxSize || (this.conf.cache.maxSize && (this.conf.cache.maxSize > res.data.length)))) {
-                 res.cached = true
-                 this.cache[key] = {timestamp: Date.now(), res: res}
-             }
-         }*/
         stream.respond(res.headers)
         stream.end(res.data)
     }
@@ -195,8 +178,7 @@ const server = http2.createSecureServer({
 
 server.on('error', err => logSys(err, 'error'))
 server.on('stream', executeRequest)
-
 server.listen(port);
 
-logSys(`Server is launch at https://localhost:${port}`, 'success')
-logSys('------------------------------------')
+logSys(`Server READY at https://localhost:${port}`, 'success')
+logSys('-----------------------------------------------')

@@ -15,7 +15,7 @@ export default class Database {
         try {
             this.uri = `mongodb://127.0.0.1:27017/?authSource=${config.global.dbName}&readPreference=primary&ssl=false`
             this.name = config.global.dbName
-            this.connection()
+            this.connection().then()
         } catch (error) {
             logSys(error, 'error')
             return error
@@ -43,15 +43,6 @@ export default class Database {
     }
 
     /**
-     * Close mongoDB connnection
-     * @method
-     * @returns {Promise<void>}
-     */
-    async closeConnect() {
-        await this.client.close()
-    }
-
-    /**
      * Get all documents in targeted collection into Array [MongoDB]
      * @method
      * @param {string} [collection] targeted
@@ -59,9 +50,7 @@ export default class Database {
      */
     async getCollection(collection) {
         try {
-            this.collection = await this.db.collection(collection).find().toArray()
-            await logSys(`Open connection to Database "${this.name}" and get "${collection}"`)
-            return this.collection
+            return await this.db.collection(collection).find().toArray()
         } catch (error) {
             await logSys(error, 'error')
             return error
@@ -119,7 +108,7 @@ export default class Database {
      * @method
      * @param {string} [collection] targeted
      * @param {object} [primaryKey] ex: {key: value} to find document
-     * @returns {Promise<Collection~findAndModifyWriteOpResultObject|Array>} document
+     * @returns {Promise<string|*>}
      */
     async getDocument(collection, primaryKey) {
         try {
@@ -130,5 +119,3 @@ export default class Database {
         }
     }
 }
-
-logSys('Database..............READY', 'success')
