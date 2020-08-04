@@ -1,6 +1,6 @@
 /node_modules/
 /.idea/
-/public/assets/
+
 /public/spectre/
 package-lock.json
 /public/app.css
