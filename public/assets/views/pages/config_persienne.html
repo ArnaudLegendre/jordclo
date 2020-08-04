@@ -1,0 +1,111 @@
+<div class="columns p-centered mb-2 pb-2">
+    <div class="column col-10 col-md-12 p-centered">
+        <div class="columns">
+            <div class="column col-5 col-sm-12">
+                <img class="w-75 d-block m-auto pt-2 mt-2" id="" src="assets/images/persienne.png" alt="">
+            </div>
+            <div class="column col-sm-12">
+                <h1 id="name" class="h3"></h1>
+                <small id="ref"></small>
+                <div class="h3">A partir de <span id="price"></span><small> € TTC </small></div>
+                <form id="configclo">
+                    <div>
+                        <input type="text" id="embout" data-ref="emb01" hidden>
+                        <input type="text" id="entretoise" data-ref="ent01" hidden>
+                        <input type="text" id="lame" data-ref="lam01" hidden>
+                        <input type="text" id="raid" data-ref="raid" hidden>
+                    </div>
+                    <div class="form-group" id="formsection">
+                        <label class="form-label">Section</label>
+                        <label class="form-radio form-inline">
+                            <input type="radio" name="section" checked>
+                            <i class="form-icon"></i> Droit
+                        </label>
+                        <label class="form-radio form-inline">
+                            <input type="radio" name="section">
+                            <i class="form-icon"></i> Angle
+                        </label>
+                        <label class="form-radio form-inline">
+                            <input type="radio" name="section">
+                            <i class="form-icon"></i> Courbe
+                        </label>
+                        <label class="form-radio form-inline">
+                            <input type="radio" name="section" id="redan" >
+                            <i class="form-icon"></i> Redan
+                        </label>
+                    </div>
+                    <div id="divparent" class="col-12">
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Fixation</label>
+                        <label class="form-radio">
+                            <input type="radio" name="fixe" id="platine" checked data-ref="pl01">
+                            <i class="form-icon"></i> Platine
+                        </label>
+                        <label class="form-radio">
+                            <input type="radio" name="fixe" id="scelle">
+                            <i class="form-icon"></i> Scellé
+                        </label>
+                    </div>
+                    <div id="dimension">
+                        <div class="form-group">
+                            <label class="form-label" for="longueur">Longueur en mètre</label>
+                            <input class="form-input longueur" type="text" id="longueur" placeholder="Longueur de la cloture"
+                                   value="1" min="1">
+                        </div>
+
+                        <select id="hauteur" class="form-control hauteur">
+                            <option class="optProduct" value="">Selectionnez une hauteur</option>
+
+                            <option class="optProduct" value="0.11" id="0.11" data-ref="pot06" selected>0.11 metre
+                            </option>
+
+                            <option class="optProduct" value="0.22" id="0.22" data-ref="pot06">0.22 metre</option>
+
+                            <option class="optProduct" value="0.33" id="0.33" data-ref="pot06">0.33 metre</option>
+
+                            <option class="optProduct" value="0.44" id="0.44" data-ref="pot06">0.44 metre</option>
+
+                            <option class="optProduct" value="0.55" id="0.55" data-ref="pot06">0.55 metre</option>
+
+                            <option class="optProduct" value="0.66" id="0.66" data-ref="pot125">0.66 metre</option>
+
+                            <option class="optProduct" value="0.77" id="0.77" data-ref="pot125">0.77 metre</option>
+
+                            <option class="optProduct" value="0.88" id="0.88" data-ref="pot125">0.88 metre</option>
+
+                            <option class="optProduct" value="0.99" id="0.99" data-ref="pot125">0.99 metre</option>
+
+                            <option class="optProduct" value="1.10" id="1.10" data-ref="pot125">1.10 metre</option>
+
+                            <option class="optProduct" value="1.21" id="1.21" data-ref="pot125">1.21 metre</option>
+
+                            <option class="optProduct" value="1.32" id="1.32" data-ref="pot185">1.32 metre</option>
+
+                            <option class="optProduct" value="1.43" id="1.43" data-ref="pot185">1.43 metre</option>
+
+                            <option class="optProduct" value="1.54" id="1.54" data-ref="pot185">1.54 metre</option>
+
+                            <option class="optProduct" value="1.65" id="1.65" data-ref="pot185">1.65 metre</option>
+
+                            <option class="optProduct" value="1.76" id="1.76" data-ref="pot185">1.76 metre</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="btn btn-primary mt-2 pt-2" id="btnadd">
+                            <svg class="feather ml-2 mr-1">
+                                <use xlink:href="assets/svg/feather-sprite.svg#shopping-cart"/>
+                            </svg>
+                            <span class="ml-2 mr-2">Ajouter au panier</span></div>
+                    </div>
+                </form>
+
+                <div class="divider mt-2 mb-2 pt-2 pb-2"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

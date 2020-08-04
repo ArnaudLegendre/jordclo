@@ -1,0 +1,15 @@
+<form action="" id="loginRegisterForm" class="loginRegisterForm">
+    <legend class="modal-header">S'identifier</legend>
+    <div class="form-group">
+        <input class="form-input mb-2" type="email" name="email" id="email" placeholder="Email"/>
+        <input class="form-input mb-2" type="password" name="password" id="password" placeholder="Mot de passe"/>
+        <input class="form-input mb-2" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirmer le mot de passe" hidden/>
+        <input class="important-field" type="text" id="monprenom" name="monprenom" placeholder="Mon prénom" autocomplete="off"/>
+        <input class="important-field" type="text" id="monadresse" name="monadresse" placeholder="Mon adresse" autocomplete="off" value="ceci est mon adresse" required/>
+        <small class="disclaimer" hidden>En créant votre compte, vous acceptez les <a href="cgv">Conditions générales de vente</a> et la <a href="">Politique de confidentialité</a> du volet Français.</small>
+        <div class="modal-footer mt-2 p-2">
+            <a href="" class="switchForm">Pas encore enregistré</a> -
+            <input type="submit" id="buttonSend" class="loginSubmit buttonSend btn" value="Connexion" />
+        </div>
+    </div>
+</form>
