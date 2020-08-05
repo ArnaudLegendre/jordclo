@@ -42,27 +42,37 @@ document.addEventListener('pageChange', () => {
     }
 })
 
-let refStake, refBlade, refSpacer, refCover, refPlate, refStringer, nbStake, nbPlate, nbCover, nbTotalBlade, nbSpacer,
-    stringer, hlame
-let quantityArray = []
-
+// let refStake, refBlade, refSpacer, refCover, refPlate, refStringer, nbStake, nbPlate, nbCover, nbTotalBlade, nbSpacer,
+//     priceStake, pricePlate, priceCover, priceSpacer, priceStringer, priceBlade,
+//     stringer, hlame
+let prodList = JSON.parse(localStorage.getItem('products'))
+let resArray, redanArray
+let nbredan = 0
 function calcConfig(tempLength, height) {
-
+    let refStake, refBlade, refSpacer, refCover, refPlate, refStringer, nbStake, nbPlate, nbCover, nbTotalBlade, nbSpacer,
+        priceStake, pricePlate, priceCover, priceSpacer, priceStringer, priceBlade, stringer, hlame, bladePerSection, nbSection, heightSealing, totalPrice = 0
     let refArray = new Map()
     for (let item of document.getElementById('configclo').querySelectorAll('[data-ref]')) {
-        JSON.parse(localStorage.getItem('products')).forEach(prod => {
+        prodList.forEach(prod => {
             if (prod.ref === item.dataset.ref)
                 refArray.set(prod.ref, JSON.parse(`{ "price": "${prod.price}" ${prod.hauteur !== undefined ? ',"hauteur":' + prod.hauteur : ''}}`))
         })
     }
 
     let fenceLength = tempLength.replace(',', '.')
-    let priceStake, pricePlate, priceCover, priceSpacer, priceStringer, priceBlade, bladePerSection, nbSection,
-        totalPrice = 0
 
-
+    if (document.getElementById('scelle').checked) {
+        document.querySelector(".scellement").style.display = "block"
+        if (document.getElementById('scelleMur').checked || document.getElementById('scelleTerre').checked) {
+            heightSealing = document.getElementById('scelleMur').checked ? +document.getElementById('scelleMur').dataset.height : +document.getElementById('scelleTerre').dataset.height
+        }
+    } else {
+        document.querySelector(".scellement").style.display = "none"
+        heightSealing = 0
+    }
     //ref
-    refStake = document.querySelector(`[value='${height}']`).dataset.ref
+
+    refStake = document.querySelector(`[value='${(height + heightSealing).toFixed(2)}']`).dataset.ref
     refBlade = document.getElementById('lame').dataset.ref
     refCover = document.getElementById('embout').dataset.ref
     refSpacer = document.getElementById('entretoise') !== null ? document.getElementById('entretoise').dataset.ref : null
@@ -80,12 +90,11 @@ function calcConfig(tempLength, height) {
 
     //calcul
     hlame = +refArray.get(refBlade).hauteur
-    bladePerSection = height / hlame
+    bladePerSection = Math.round(height / hlame)
     nbSection = Math.ceil(fenceLength / 1.80)
-    nbStake = nbCover = nbSection + 1
-    // document.getElementById('redan').checked ? nbStake = nbCover = nbSection : nbStake = nbCover = nbSection + 1
+    nbStake = nbCover = nbSection
     nbTotalBlade = parseInt(bladePerSection * nbSection)
-    nbSpacer = Math.ceil(nbTotalBlade / 8)
+    nbSpacer = refBlade == "lam01" ? Math.ceil(nbTotalBlade / 8) : Math.ceil(nbTotalBlade / 16)
 
     //totalprice
     totalPrice = priceStake * nbStake
@@ -93,35 +102,44 @@ function calcConfig(tempLength, height) {
     totalPrice += priceSpacer * nbSpacer
     totalPrice += priceBlade * nbTotalBlade
 
-    //
     if (document.getElementById('platine').checked) {
+        if (height > 1.25 && height <= 1.80) {
+            stringer = nbStake
+            totalPrice += priceStringer * stringer
+        }
         nbPlate = nbStake
         totalPrice += pricePlate * nbPlate
     } else {
         nbPlate = 0
     }
 
-    if (height > 1.25 && height <= 1.80) {
-        stringer = nbStake
-        totalPrice += priceStringer * stringer
-    }
-
     //quantityArray
-    quantityArray = {}
+    let quantityArray = {}
     quantityArray[refStake] = nbStake
     quantityArray[refCover] = nbCover
     quantityArray[refBlade] = nbTotalBlade
-    stringer > 1 ? quantityArray[refStringer] = stringer : null
+    stringer >= 1 ? quantityArray[refStringer] = stringer : null
     refSpacer !== null ? quantityArray[refSpacer] = nbSpacer : null
-    nbPlate > 1 ? quantityArray[refPlate] = nbPlate : null
+    nbPlate >= 1 ? quantityArray[refPlate] = nbPlate : null
     quantityArray.prix = +totalPrice.toFixed(2)
 
     return quantityArray
 }
 
+
+
 function classic() {
-    calcConfig(document.getElementById('longueur').value, +document.getElementById('hauteur').options[document.getElementById('hauteur').selectedIndex].value)
-    document.getElementById('price').innerHTML = quantityArray.prix
+    resArray = calcConfig(document.getElementById('longueur').value, +document.getElementById('hauteur').options[document.getElementById('hauteur').selectedIndex].value)
+    for (let [key] of Object.entries(resArray)) {
+        let poteau = new RegExp("pot")
+        if (poteau.test(key) || key === 'pla' || key === 'raid' || key === 'emb') {
+            resArray[key] += 1
+            prodList.forEach(prod => {
+                if (prod.ref === key) resArray.prix += +prod.price
+            })
+        }
+    }
+    document.getElementById('price').innerHTML = resArray.prix.toFixed(2)
 }
 
 function redanClick() {
@@ -140,8 +158,6 @@ function redanClick() {
         document.getElementById("addredan").click()
     }
 }
-
-let nbredan = 0
 
 function addRedan() {
     nbredan++
@@ -172,47 +188,56 @@ function addRedan() {
 
 }
 
-let redanArray
-
 function calcRedan() {
     let nbRedan = document.getElementById('divparent').childElementCount
     redanArray = {}
-    while (nbRedan > 0) {
-        let divRedan = document.getElementById(`dimredan${nbRedan}`)
-        calcConfig(divRedan.querySelector('.longueur').value, divRedan.querySelector('.hauteur').value)
+    let count = nbRedan
+    while (count > 0) {
+        //todo Si (nbRedau !== count || count !== 1), -1 sur la valeur dont la key commence par POT
+        let divRedan = document.getElementById(`dimredan${count}`)
+        resArray = calcConfig(divRedan.querySelector('.longueur').value, +divRedan.querySelector('.hauteur').value)
+        console.log('count' + count)
+        console.log('nbRedan' + nbRedan)
 
+        //gestion du nombre de poteau
+        if (nbRedan !== count || count !== 1) {
+            for (let [key] of Object.entries(resArray)) {
+                let poteau = new RegExp("pot")
+                if (poteau.test(key)) {
+                    resArray[key] -= 1
+                }
+            }
+        }
+        //remplissage du tableau final
         if (!Object.keys(redanArray).length) {
-            redanArray = quantityArray
+            redanArray = resArray
         } else {
-            for (let [key, value] of Object.entries(quantityArray)) {
+            for (let [key, value] of Object.entries(resArray)) {
                 redanArray.hasOwnProperty(key) ? redanArray[key] += value : redanArray[key] = value
             }
-            console.log(redanArray)
         }
-        nbRedan--
+
+    count--
     }
-    console.log(redanArray[refStake]=  redanArray[refStake]-1)
+    //todo Add N poteau en 2.50 (N = nbRedan - 1)
+    console.log(redanArray)
 
 }
 
 function domRedan() {
     calcRedan()
+    //TODO prix -> Math.round()
     document.getElementById('price').innerHTML = redanArray.prix.toFixed(2)
 }
 
 async function addingCart() {
     if (document.getElementById('redan').checked) {
         for (let [key, value] of Object.entries(redanArray)) {
-            if(key !="prix"){
-                await addCart(key, value)
-            }
+            if (key != "prix") await addCart(key, value)
         }
     } else {
-        await addCart(refStake, nbStake)
-        nbPlate > 1 ? await addCart(refPlate, nbPlate) : null
-        await addCart(refBlade, nbTotalBlade)
-        await addCart(refCover, nbCover)
-        nbSpacer >= 1 ? await addCart(refSpacer, nbSpacer) : null
-        stringer > 1 ? await addCart(refStringer, stringer) : null
+        for (let [key, value] of Object.entries(resArray)) {
+            if (key != "prix") await addCart(key, value)
+        }
     }
 }

@@ -10,12 +10,12 @@
                 <div class="h3">A partir de <span id="price"></span><small> € TTC </small></div>
                 <form id="configclo">
                     <div>
-                        <input type="text" id="embout" data-ref="emb01" hidden>
+                        <input type="text" id="embout" data-ref="emb" hidden>
                         <input type="text" id="lame" data-ref="lam03" hidden>
                         <input type="text" id="raid" data-ref="raid" hidden>
 
                     </div>
-                    <div class="form-group ">
+                    <div class="form-group " id="formsection">
                         <label class="form-label">Section</label>
                         <label class="form-radio form-inline">
                             <input type="radio" name="section" checked>
@@ -30,15 +30,18 @@
                             <i class="form-icon"></i> Courbe
                         </label>
                         <label class="form-radio form-inline">
-                            <input type="radio" name="section">
+                            <input type="radio" name="section" id="redan">
                             <i class="form-icon"></i> Redan
                         </label>
+                    </div>
+                    <div id="divparent" class="col-12">
+
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">Fixation</label>
                         <label class="form-radio">
-                            <input type="radio" name="fixe" id="platine" checked data-ref="pl01">
+                            <input type="radio" name="fixe" id="platine" checked data-ref="pla">
                             <i class="form-icon"></i> Platine
                         </label>
                         <label class="form-radio">
@@ -46,34 +49,53 @@
                             <i class="form-icon"></i> Scellé
                         </label>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="longueur">Longueur</label>
-                        <input class="form-input" type="text" id="longueur" placeholder="Longueur de la cloture"
-                               value="1" min="1">
+                    <div class="form-group scellement">
+                        <label class="form-radio">
+                            <input type="radio" name="scelle" id="scelleMur" data-height="0.40" checked>
+                            <i class="form-icon"></i> Scellé dans mur
+                        </label>
+                        <label class="form-radio">
+                            <input type="radio" name="scelle" id="scelleTerre" data-height="0.60">
+                            <i class="form-icon"></i> Scellé dans terre
+                        </label>
                     </div>
+                    <div id="dimension">
+                        <div class="form-group">
+                            <label class="form-label" for="longueur">Longueur</label>
+                            <input class="form-input longueur" type="text" id="longueur"
+                                   placeholder="Longueur de la cloture"
+                                   value="1" min="1">
+                        </div>
 
-                    <select id="hauteur" class="form-control">
-                        <option class="optProduct" value="">Selectionnez une hauteur</option>
+                        <select id="hauteur" class="form-control hauteur">
+                            <option class="optProduct" value="">Selectionnez une hauteur</option>
 
-                        <option class="optProduct" value="0.20" id="0.20" data-ref="pot06" selected>0.20 metre</option>
+                            <option class="optProduct" value="0.20" data-ref="pot06" selected>0.20 metre</option>
 
-                        <option class="optProduct" value="0.40" id="0.40" data-ref="pot06">0.40 metre</option>
+                            <option class="optProduct" value="0.40" data-ref="pot06">0.40 metre</option>
 
-                        <option class="optProduct" value="0.60" id="0.60" data-ref="pot06">0.60 metre</option>
+                            <option class="optProduct" value="0.60" data-ref="pot06">0.60 metre</option>
 
-                        <option class="optProduct" value="0.80" id="0.80" data-ref="pot125">0.80 metre</option>
+                            <option class="optProduct" value="0.80" data-ref="pot125">0.80 metre</option>
 
-                        <option class="optProduct" value="1.00" id="1.00" data-ref="pot125">1.00 metre</option>
+                            <option class="optProduct" value="1.00" data-ref="pot125">1.00 metre</option>
 
-                        <option class="optProduct" value="1.20" id="1.20" data-ref="pot125">1.20 metre</option>
+                            <option class="optProduct" value="1.20" data-ref="pot125">1.20 metre</option>
 
-                        <option class="optProduct" value="1.40" id="1.40" data-ref="pot185">1.40 metre</option>
+                            <option class="optProduct" value="1.40" data-ref="pot185">1.40 metre</option>
 
-                        <option class="optProduct" value="1.60" id="1.60" data-ref="pot185">1.60 metre</option>
+                            <option class="optProduct" value="1.60" data-ref="pot185">1.60 metre</option>
 
-                        <option class="optProduct" value="1.80" id="1.80" data-ref="pot185">1.80 metre</option>
+                            <option class="optProduct" value="1.80" data-ref="pot185">1.80 metre</option>
 
-                    </select>
+                            <option class="optProduct" value="2.00" data-ref="pot250" hidden></option>
+
+                            <option class="optProduct" value="2.20" data-ref="pot250" hidden></option>
+
+                            <option class="optProduct" value="2.40" data-ref="pot250" hidden></option>
+
+                        </select>
+                    </div>
                     <div>
                         <div class="btn btn-primary mt-2 pt-2" id="btnadd">
                             <svg class="feather ml-2 mr-1">
@@ -83,7 +105,6 @@
                     </div>
                 </form>
 
-                <div id="resultat"></div>
                 <div class="divider mt-2 mb-2 pt-2 pb-2"></div>
 
             </div>
