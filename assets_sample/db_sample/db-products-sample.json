@@ -1,0 +1,741 @@
+[{
+  "_id": {
+    "$oid": "5ef9a60b869fa00b32157614"
+  },
+  "name": "First Product",
+  "slug": "first-product",
+  "access": "0",
+  "ref": "refp00001",
+  "price": "00.00",
+  "category": "category-1",
+  "filters": {
+    "filter1": "1",
+    "filter2": "white"
+  },
+  "variables": {
+    "refp00002": "2",
+    "refp00003": "2"
+  },
+  "options": {
+    "yourSelection": {
+      "name": "Your Selection",
+      "ref": "your-selection",
+      "type": "select",
+      "values": [
+        {
+          "ref": "option1",
+          "price": "01.00",
+          "name": "Option 1"
+        },
+        {
+          "ref": "option2",
+          "price": "03.00",
+          "name": "Option 2"
+        },
+        {
+          "ref": "option3",
+          "price": "04.00",
+          "name": "Option 3"
+        },
+        {
+          "ref": "option4",
+          "price": "03.00",
+          "name": "Option 4"
+        }
+      ]
+    },
+    "thisOrThat": {
+      "name": "This or That",
+      "ref": "this-or-that",
+      "type": "radio",
+      "values": [
+        {
+          "ref": "this",
+          "price": "05.00",
+          "name": "This"
+        },
+        {
+          "ref": "that",
+          "price": "00.00",
+          "name": "That"
+        }
+      ]
+    },
+    "withOrWithout": {
+      "name": "With or Without",
+      "ref": "with-or-without",
+      "type": "checkbox",
+      "values": [
+        {
+          "ref": "with",
+          "price": "15.00",
+          "name": "With"
+        }
+      ]
+    }
+  },
+  "images": [
+    "assets/images/no-image.png"
+  ],
+  "desc": "Best description evet",
+  "tech": "Product technical : 12",
+  "priceRules": [
+    "$p*1.2"
+  ]
+},{
+  "_id": {
+    "$oid": "5f198b245984f02959df06dc"
+  },
+  "name": "Second Product",
+  "slug": "Second-product",
+  "access": "0",
+  "ref": "refp00002",
+  "price": "12.00",
+  "category": "category-2",
+  "filters": {
+    "filter1": "2",
+    "filter2": "orange"
+  },
+  "variables": {},
+  "options": {
+    "yourSelection": {
+      "name": "Your Selection",
+      "ref": "your-selection",
+      "type": "select",
+      "values": [
+        {
+          "ref": "option1",
+          "price": "01.00",
+          "name": "Option 1"
+        },
+        {
+          "ref": "option2",
+          "price": "03.00",
+          "name": "Option 2"
+        },
+        {
+          "ref": "option3",
+          "price": "04.00",
+          "name": "Option 3"
+        },
+        {
+          "ref": "option4",
+          "price": "03.00",
+          "name": "Option 4"
+        }
+      ]
+    },
+    "thisOrThat": {
+      "name": "This or That",
+      "ref": "this-or-that",
+      "type": "radio",
+      "values": [
+        {
+          "ref": "this",
+          "price": "05.00",
+          "name": "This"
+        },
+        {
+          "ref": "that",
+          "price": "00.00",
+          "name": "That"
+        }
+      ]
+    },
+    "withOrWithout": {
+      "name": "With or Without",
+      "ref": "with-or-without",
+      "type": "checkbox",
+      "values": [
+        {
+          "ref": "with",
+          "price": "15.00",
+          "name": "With"
+        }
+      ]
+    }
+  },
+  "images": [
+    "assets/images/no-image.png"
+  ],
+  "desc": "Best description ever, for the second product",
+  "tech": "Product technical value : ø320mm",
+  "priceRules": [
+    "$p*1.2"
+  ]
+},{
+  "_id": {
+    "$oid": "5f198b485984f02959df06dd"
+  },
+  "name": "Third Product",
+  "slug": "Third-product",
+  "access": "0",
+  "ref": "refp00003",
+  "price": "5.00",
+  "category": "category-2",
+  "filters": {
+    "filter1": "3",
+    "filter2": "blue"
+  },
+  "variables": {},
+  "options": {
+    "yourSelection": {
+      "name": "Your Selection",
+      "ref": "your-selection",
+      "type": "select",
+      "values": [
+        {
+          "ref": "option1",
+          "price": "01.00",
+          "name": "Option 1"
+        },
+        {
+          "ref": "option2",
+          "price": "03.00",
+          "name": "Option 2"
+        },
+        {
+          "ref": "option3",
+          "price": "04.00",
+          "name": "Option 3"
+        },
+        {
+          "ref": "option4",
+          "price": "03.00",
+          "name": "Option 4"
+        }
+      ]
+    },
+    "thisOrThat": {
+      "name": "This or That",
+      "ref": "this-or-that",
+      "type": "radio",
+      "values": [
+        {
+          "ref": "this",
+          "price": "05.00",
+          "name": "This"
+        },
+        {
+          "ref": "that",
+          "price": "00.00",
+          "name": "That"
+        }
+      ]
+    },
+    "withOrWithout": {
+      "name": "With or Without",
+      "ref": "with-or-without",
+      "type": "checkbox",
+      "values": [
+        {
+          "ref": "with",
+          "price": "15.00",
+          "name": "With"
+        }
+      ]
+    }
+  },
+  "images": [
+    "assets/images/no-image.png"
+  ],
+  "desc": "Best description ever, for the last product",
+  "tech": "Product technical width : 2m",
+  "priceRules": [
+    "$p*1.2"
+  ]
+},{
+  "_id": {
+    "$oid": "5f1ef1fdef84492cf369aeb4"
+  },
+  "name": "Another Product",
+  "slug": "another-product",
+  "access": "0",
+  "ref": "refp00004",
+  "price": "00.00",
+  "category": "category-1",
+  "filters": {
+    "filter1": "3",
+    "filter2": "orange"
+  },
+  "variables": {
+    "refp00002": "1",
+    "refp00003": "2"
+  },
+  "options": {
+    "yourSelection": {
+      "name": "Your Selection",
+      "ref": "your-selection",
+      "type": "select",
+      "values": [
+        {
+          "ref": "option1",
+          "price": "01.00",
+          "name": "Option 1"
+        },
+        {
+          "ref": "option2",
+          "price": "03.00",
+          "name": "Option 2"
+        },
+        {
+          "ref": "option3",
+          "price": "04.00",
+          "name": "Option 3"
+        },
+        {
+          "ref": "option4",
+          "price": "03.00",
+          "name": "Option 4"
+        }
+      ]
+    },
+    "thisOrThat": {
+      "name": "This or That",
+      "ref": "this-or-that",
+      "type": "radio",
+      "values": [
+        {
+          "ref": "this",
+          "price": "05.00",
+          "name": "This"
+        },
+        {
+          "ref": "that",
+          "price": "00.00",
+          "name": "That"
+        }
+      ]
+    },
+    "withOrWithout": {
+      "name": "With or Without",
+      "ref": "with-or-without",
+      "type": "checkbox",
+      "values": [
+        {
+          "ref": "with",
+          "price": "15.00",
+          "name": "With"
+        }
+      ]
+    }
+  },
+  "images": [
+    "assets/images/no-image.png"
+  ],
+  "desc": "Best description evet",
+  "tech": "Product technical : 12",
+  "priceRules": [
+    "$p*1.2"
+  ]
+},{
+  "_id": {
+    "$oid": "5f1ef215ef84492cf369aeb5"
+  },
+  "name": "Super Product",
+  "slug": "super-product",
+  "access": "0",
+  "ref": "refp00005",
+  "price": "00.00",
+  "category": "category-1",
+  "filters": {
+    "filter1": "3",
+    "filter2": "orange"
+  },
+  "variables": {
+    "refp00002": "4",
+    "refp00003": "3"
+  },
+  "options": {
+    "yourSelection": {
+      "name": "Your Selection",
+      "ref": "your-selection",
+      "type": "select",
+      "values": [
+        {
+          "ref": "option1",
+          "price": "01.00",
+          "name": "Option 1"
+        },
+        {
+          "ref": "option2",
+          "price": "03.00",
+          "name": "Option 2"
+        },
+        {
+          "ref": "option3",
+          "price": "04.00",
+          "name": "Option 3"
+        },
+        {
+          "ref": "option4",
+          "price": "03.00",
+          "name": "Option 4"
+        }
+      ]
+    },
+    "thisOrThat": {
+      "name": "This or That",
+      "ref": "this-or-that",
+      "type": "radio",
+      "values": [
+        {
+          "ref": "this",
+          "price": "05.00",
+          "name": "This"
+        },
+        {
+          "ref": "that",
+          "price": "00.00",
+          "name": "That"
+        }
+      ]
+    },
+    "withOrWithout": {
+      "name": "With or Without",
+      "ref": "with-or-without",
+      "type": "checkbox",
+      "values": [
+        {
+          "ref": "with",
+          "price": "15.00",
+          "name": "With"
+        }
+      ]
+    }
+  },
+  "images": [
+    "assets/images/no-image.png"
+  ],
+  "desc": "Best description evet",
+  "tech": "Product technical : 12",
+  "priceRules": [
+    "$p*1.2"
+  ]
+},{
+  "_id": {
+    "$oid": "5f1ef244ef84492cf369aeb6"
+  },
+  "name": "Low Price Product",
+  "slug": "low-price-product",
+  "access": "0",
+  "ref": "refp00006",
+  "price": "00.00",
+  "category": "category-1",
+  "filters": {
+    "filter1": "2",
+    "filter2": "blue"
+  },
+  "variables": {
+    "refp00002": "1"
+  },
+  "options": {
+    "yourSelection": {
+      "name": "Your Selection",
+      "ref": "your-selection",
+      "type": "select",
+      "values": [
+        {
+          "ref": "option1",
+          "price": "01.00",
+          "name": "Option 1"
+        },
+        {
+          "ref": "option2",
+          "price": "03.00",
+          "name": "Option 2"
+        },
+        {
+          "ref": "option3",
+          "price": "04.00",
+          "name": "Option 3"
+        },
+        {
+          "ref": "option4",
+          "price": "03.00",
+          "name": "Option 4"
+        }
+      ]
+    },
+    "thisOrThat": {
+      "name": "This or That",
+      "ref": "this-or-that",
+      "type": "radio",
+      "values": [
+        {
+          "ref": "this",
+          "price": "05.00",
+          "name": "This"
+        },
+        {
+          "ref": "that",
+          "price": "00.00",
+          "name": "That"
+        }
+      ]
+    },
+    "withOrWithout": {
+      "name": "With or Without",
+      "ref": "with-or-without",
+      "type": "checkbox",
+      "values": [
+        {
+          "ref": "with",
+          "price": "15.00",
+          "name": "With"
+        }
+      ]
+    }
+  },
+  "images": [
+    "assets/images/no-image.png"
+  ],
+  "desc": "Best description evet",
+  "tech": "Product technical : 12",
+  "priceRules": [
+    "$p*1.2"
+  ]
+},{
+  "_id": {
+    "$oid": "5f1ef25eef84492cf369aeb7"
+  },
+  "name": "Cool Product",
+  "slug": "cool-product",
+  "access": "0",
+  "ref": "refp00007",
+  "price": "15.00",
+  "category": "category-2",
+  "filters": {
+    "filter1": "2",
+    "filter2": "orange"
+  },
+  "variables": {},
+  "options": {
+    "yourSelection": {
+      "name": "Your Selection",
+      "ref": "your-selection",
+      "type": "select",
+      "values": [
+        {
+          "ref": "option1",
+          "price": "01.00",
+          "name": "Option 1"
+        },
+        {
+          "ref": "option2",
+          "price": "03.00",
+          "name": "Option 2"
+        },
+        {
+          "ref": "option3",
+          "price": "04.00",
+          "name": "Option 3"
+        },
+        {
+          "ref": "option4",
+          "price": "03.00",
+          "name": "Option 4"
+        }
+      ]
+    },
+    "thisOrThat": {
+      "name": "This or That",
+      "ref": "this-or-that",
+      "type": "radio",
+      "values": [
+        {
+          "ref": "this",
+          "price": "05.00",
+          "name": "This"
+        },
+        {
+          "ref": "that",
+          "price": "00.00",
+          "name": "That"
+        }
+      ]
+    },
+    "withOrWithout": {
+      "name": "With or Without",
+      "ref": "with-or-without",
+      "type": "checkbox",
+      "values": [
+        {
+          "ref": "with",
+          "price": "15.00",
+          "name": "With"
+        }
+      ]
+    }
+  },
+  "images": [
+    "assets/images/no-image.png"
+  ],
+  "desc": "Best description ever, for the second product",
+  "tech": "Product technical value : ø320mm",
+  "priceRules": [
+    "$p*1.2"
+  ]
+},{
+  "_id": {
+    "$oid": "5f1ef283ef84492cf369aeb8"
+  },
+  "name": "Dark Product",
+  "slug": "dark-product",
+  "access": "0",
+  "ref": "refp00008",
+  "price": "5.70",
+  "category": "category-2",
+  "filters": {
+    "filter1": "1",
+    "filter2": "white"
+  },
+  "variables": {},
+  "options": {
+    "yourSelection": {
+      "name": "Your Selection",
+      "ref": "your-selection",
+      "type": "select",
+      "values": [
+        {
+          "ref": "option1",
+          "price": "01.00",
+          "name": "Option 1"
+        },
+        {
+          "ref": "option2",
+          "price": "03.00",
+          "name": "Option 2"
+        },
+        {
+          "ref": "option3",
+          "price": "04.00",
+          "name": "Option 3"
+        },
+        {
+          "ref": "option4",
+          "price": "03.00",
+          "name": "Option 4"
+        }
+      ]
+    },
+    "thisOrThat": {
+      "name": "This or That",
+      "ref": "this-or-that",
+      "type": "radio",
+      "values": [
+        {
+          "ref": "this",
+          "price": "05.00",
+          "name": "This"
+        },
+        {
+          "ref": "that",
+          "price": "00.00",
+          "name": "That"
+        }
+      ]
+    },
+    "withOrWithout": {
+      "name": "With or Without",
+      "ref": "with-or-without",
+      "type": "checkbox",
+      "values": [
+        {
+          "ref": "with",
+          "price": "15.00",
+          "name": "With"
+        }
+      ]
+    }
+  },
+  "images": [
+    "assets/images/no-image.png"
+  ],
+  "desc": "Best description ever, for the second product",
+  "tech": "Product technical value : ø320mm",
+  "priceRules": [
+    "$p*1.2"
+  ]
+},{
+  "_id": {
+    "$oid": "5f1ef2a1ef84492cf369aeb9"
+  },
+  "name": "Meh Product",
+  "slug": "meh-product",
+  "access": "0",
+  "ref": "refp00009",
+  "price": "18.99",
+  "category": "category-2",
+  "filters": {
+    "filter1": "3",
+    "filter2": "white"
+  },
+  "variables": {},
+  "options": {
+    "yourSelection": {
+      "name": "Your Selection",
+      "ref": "your-selection",
+      "type": "select",
+      "values": [
+        {
+          "ref": "option1",
+          "price": "01.00",
+          "name": "Option 1"
+        },
+        {
+          "ref": "option2",
+          "price": "03.00",
+          "name": "Option 2"
+        },
+        {
+          "ref": "option3",
+          "price": "04.00",
+          "name": "Option 3"
+        },
+        {
+          "ref": "option4",
+          "price": "03.00",
+          "name": "Option 4"
+        }
+      ]
+    },
+    "thisOrThat": {
+      "name": "This or That",
+      "ref": "this-or-that",
+      "type": "radio",
+      "values": [
+        {
+          "ref": "this",
+          "price": "05.00",
+          "name": "This"
+        },
+        {
+          "ref": "that",
+          "price": "00.00",
+          "name": "That"
+        }
+      ]
+    },
+    "withOrWithout": {
+      "name": "With or Without",
+      "ref": "with-or-without",
+      "type": "checkbox",
+      "values": [
+        {
+          "ref": "with",
+          "price": "15.00",
+          "name": "With"
+        }
+      ]
+    }
+  },
+  "images": [
+    "assets/images/no-image.png"
+  ],
+  "desc": "Best description ever, for the second product",
+  "tech": "Product technical value : ø320mm",
+  "priceRules": [
+    "$p*1.2"
+  ]
+}]

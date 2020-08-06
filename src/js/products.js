@@ -16,17 +16,14 @@ window.addEventListener('pageChange', () => {
 
 let optionsList = {}
 let productPrice
-let productList
 
 function buildProduct() {
 
     document.getElementById('qtyInput') ? document.getElementById('qtyInput').addEventListener('input', () => calcProductPrice()) : null
 
     let target = location.pathname.split('/').pop()
-    productList = JSON.parse(localStorage.getItem('products'))
 
-
-    productList.forEach(elt => {
+    productsData.forEach(elt => {
 
         if (elt.slug === target) {
             document.querySelector('h1').innerHTML = elt.name
@@ -53,7 +50,7 @@ function buildProduct() {
             if (elt.variables) {
                 for (const [key, value] of Object.entries(elt.variables)) {
                     let varPrice
-                    productList.forEach(prod => {
+                    productsData.forEach(prod => {
                         if (prod.ref === key) {
                             let calcVarPrice = 0
                             if (prod.priceRules) {
@@ -109,7 +106,7 @@ function buildProduct() {
                         groupValues.forEach(e => {
 
                             let optPrice = e.price
-                            productList.forEach(prod => {
+                            productsData.forEach(prod => {
                                 prod.ref === e.ref ? optPrice = prod.price : null
                             })
 
@@ -228,11 +225,9 @@ function productsPage(cat = 'all', count = -1) {
     let productsPage = document.getElementById('productsPage')
     if (productsPage) {
 
-        let productsList = JSON.parse(localStorage.getItem('products'))
-
         let counter = 1
 
-        productsList.forEach(prod => {
+        productsData.forEach(prod => {
 
             let thisProd
 
@@ -255,18 +250,15 @@ function productsPage(cat = 'all', count = -1) {
 }
 
 function getProductsByCat() {
-
     let cats = document.querySelectorAll('[data-cat]')
 
     cats.forEach(catNode => {
-
-        let productsList = JSON.parse(localStorage.getItem('products'))
 
         let counter = 1
         let count = parseInt(catNode.dataset.count)
         let cat = catNode.dataset.cat
 
-        productsList.forEach(prod => {
+        productsData.forEach(prod => {
 
             let thisProd
 
@@ -296,7 +288,7 @@ function getProductsByCat() {
                 if (thisProd.variables) {
                     for (const [key, value] of Object.entries(thisProd.variables)) {
                         let varPrice
-                        productsList.forEach(p => {
+                        productsData.forEach(p => {
                             let calcVarPrice = 0
                             if (p.ref === key) {
                                 if (p.priceRules) {
