@@ -1,5 +1,8 @@
+let prodList
+let nbredan = 0
 document.addEventListener('pageReady', () => {
-
+    prodList = JSON.parse(localStorage.getItem('products'))
+    nbredan = 0
     if (document.getElementById('configclo')) {
         classic()
 
@@ -12,15 +15,16 @@ document.addEventListener('pageReady', () => {
 
         document.getElementById('redan').addEventListener('click', () => {
             redanClick()
-            document.addEventListener('input', () => {
-                domRedan()
-            })
 
+            document.addEventListener('input', () => {
+                calcRedan()
+                dacClick()
+            })
         })
     }
 })
 document.addEventListener('pageChange', () => {
-
+    nbredan = 0
     if (document.getElementById('configclo')) {
         classic()
 
@@ -33,7 +37,8 @@ document.addEventListener('pageChange', () => {
         document.getElementById('redan').addEventListener('click', () => {
             redanClick()
             document.addEventListener('input', () => {
-                domRedan()
+                calcRedan()
+                dacClick()
             })
             document.getElementById('addredan').addEventListener('click', () => {
                 addRedan()
@@ -42,15 +47,15 @@ document.addEventListener('pageChange', () => {
     }
 })
 
-// let refStake, refBlade, refSpacer, refCover, refPlate, refStringer, nbStake, nbPlate, nbCover, nbTotalBlade, nbSpacer,
-//     priceStake, pricePlate, priceCover, priceSpacer, priceStringer, priceBlade,
-//     stringer, hlame
-let prodList = JSON.parse(localStorage.getItem('products'))
+
+
 let resArray, redanArray
-let nbredan = 0
+
+
 function calcConfig(tempLength, height) {
-    let refStake, refBlade, refSpacer, refCover, refPlate, refStringer, nbStake, nbPlate, nbCover, nbTotalBlade, nbSpacer,
-        priceStake, pricePlate, priceCover, priceSpacer, priceStringer, priceBlade, stringer, hlame, bladePerSection, nbSection, heightSealing, totalPrice = 0
+    let refStake, refBlade, refCover, refPlate, refSpacer, refStringer, nbStake, nbPlate, nbSpacer, nbCover,
+        nbTotalBlade, stringer, hlame, bladePerSection,
+        nbSection, heightSealing
     let refArray = new Map()
     for (let item of document.getElementById('configclo').querySelectorAll('[data-ref]')) {
         prodList.forEach(prod => {
@@ -75,18 +80,10 @@ function calcConfig(tempLength, height) {
     refStake = document.querySelector(`[value='${(height + heightSealing).toFixed(2)}']`).dataset.ref
     refBlade = document.getElementById('lame').dataset.ref
     refCover = document.getElementById('embout').dataset.ref
-    refSpacer = document.getElementById('entretoise') !== null ? document.getElementById('entretoise').dataset.ref : null
     refPlate = document.getElementById("platine").dataset.ref
     refStringer = document.getElementById("raid").dataset.ref
+    refSpacer = document.getElementById('entretoise') !== null ? document.getElementById('entretoise').dataset.ref : null
     stringer = false
-
-    //price
-    priceStake = +refArray.get(refStake).price
-    pricePlate = +refArray.get(refPlate).price
-    priceSpacer = refSpacer !== null ? +refArray.get(refSpacer).price : 0
-    priceCover = +refArray.get(refCover).price
-    priceStringer = +refArray.get(refStringer).price
-    priceBlade = +refArray.get(refBlade).price
 
     //calcul
     hlame = +refArray.get(refBlade).hauteur
@@ -94,21 +91,14 @@ function calcConfig(tempLength, height) {
     nbSection = Math.ceil(fenceLength / 1.80)
     nbStake = nbCover = nbSection
     nbTotalBlade = parseInt(bladePerSection * nbSection)
-    nbSpacer = refBlade == "lam01" ? Math.ceil(nbTotalBlade / 8) : Math.ceil(nbTotalBlade / 16)
+    nbSpacer = Math.ceil(nbTotalBlade / 8)
 
-    //totalprice
-    totalPrice = priceStake * nbStake
-    totalPrice += priceCover * nbCover
-    totalPrice += priceSpacer * nbSpacer
-    totalPrice += priceBlade * nbTotalBlade
 
     if (document.getElementById('platine').checked) {
         if (height > 1.25 && height <= 1.80) {
             stringer = nbStake
-            totalPrice += priceStringer * stringer
         }
         nbPlate = nbStake
-        totalPrice += pricePlate * nbPlate
     } else {
         nbPlate = 0
     }
@@ -118,38 +108,35 @@ function calcConfig(tempLength, height) {
     quantityArray[refStake] = nbStake
     quantityArray[refCover] = nbCover
     quantityArray[refBlade] = nbTotalBlade
-    stringer >= 1 ? quantityArray[refStringer] = stringer : null
     refSpacer !== null ? quantityArray[refSpacer] = nbSpacer : null
+    stringer >= 1 ? quantityArray[refStringer] = stringer : null
     nbPlate >= 1 ? quantityArray[refPlate] = nbPlate : null
-    quantityArray.prix = +totalPrice.toFixed(2)
 
     return quantityArray
 }
-
-
 
 function classic() {
     resArray = calcConfig(document.getElementById('longueur').value, +document.getElementById('hauteur').options[document.getElementById('hauteur').selectedIndex].value)
     for (let [key] of Object.entries(resArray)) {
         let poteau = new RegExp("pot")
-        if (poteau.test(key) || key === 'pla' || key === 'raid' || key === 'emb') {
-            resArray[key] += 1
-            prodList.forEach(prod => {
-                if (prod.ref === key) resArray.prix += +prod.price
-            })
-        }
+        if (poteau.test(key) || key === 'pla' || key === 'raid' || key === 'emb') resArray[key] += 1
     }
-    document.getElementById('price').innerHTML = resArray.prix.toFixed(2)
+    calcDOM(resArray)
 }
 
 function redanClick() {
+    document.getElementById("divparent").style.display = "block"
+    if(document.getElementById('addredan')) document.getElementById('addredan').style.display = "inline-block"
+    document.getElementById("dimension").style.display = "none"
     if (document.getElementById('divparent').childElementCount === 0) {
-        document.getElementById("dimension").style.display = "none"
+
 
         addRedan()
 
         document.getElementById('divparent').insertAdjacentHTML('afterend', '<div class="btn btn-primary" id="addredan">' +
             '<svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#plus"/></svg></div>')
+
+        document.getElementById('addredan').style.display = "inline-block"
 
         document.getElementById('addredan').addEventListener('click', () => {
             addRedan()
@@ -157,6 +144,7 @@ function redanClick() {
 
         document.getElementById("addredan").click()
     }
+
 }
 
 function addRedan() {
@@ -181,33 +169,41 @@ function addRedan() {
     div.querySelector(`#hauteur${nbredan}`).classList.add('hauteur')
     divredan.insertAdjacentHTML("beforeend", div.innerHTML)
 
-    domRedan()
+    calcRedan()
     document.getElementById('divparent').addEventListener('input', () => {
         calcRedan()
     })
 
 }
 
+function dacClick(){
+    if(! document.getElementById('redan').checked){
+        document.getElementById("dimension").style.display = "block"
+        document.getElementById('divparent').style.display = "none"
+        if(document.getElementById('addredan')) document.getElementById('addredan').style.display = "none"
+        classic()
+    }
+}
 function calcRedan() {
     let nbRedan = document.getElementById('divparent').childElementCount
     redanArray = {}
     let count = nbRedan
     while (count > 0) {
-        //todo Si (nbRedau !== count || count !== 1), -1 sur la valeur dont la key commence par POT
         let divRedan = document.getElementById(`dimredan${count}`)
         resArray = calcConfig(divRedan.querySelector('.longueur').value, +divRedan.querySelector('.hauteur').value)
-        console.log('count' + count)
-        console.log('nbRedan' + nbRedan)
 
         //gestion du nombre de poteau
-        if (nbRedan !== count || count !== 1) {
+
+        if (nbRedan !== count && count !== 1) {
             for (let [key] of Object.entries(resArray)) {
                 let poteau = new RegExp("pot")
                 if (poteau.test(key)) {
                     resArray[key] -= 1
+                    resArray[key] === 0 ? delete resArray[key] : null
                 }
             }
         }
+
         //remplissage du tableau final
         if (!Object.keys(redanArray).length) {
             redanArray = resArray
@@ -216,18 +212,32 @@ function calcRedan() {
                 redanArray.hasOwnProperty(key) ? redanArray[key] += value : redanArray[key] = value
             }
         }
-
-    count--
+        count--
     }
-    //todo Add N poteau en 2.50 (N = nbRedan - 1)
-    console.log(redanArray)
+    let entre = new RegExp("ent")
+    let lame = new RegExp("lam")
+    let ttblade
+    for (let [key] of Object.entries(redanArray)) {
+        if (lame.test(key)) ttblade = redanArray[key]
+        if (entre.test(key)) redanArray[key] = Math.ceil(ttblade / 8)
+    }
 
+    redanArray["pot250"] = +document.getElementById('divparent').childElementCount - 1
+    for (let [key] of Object.entries(redanArray)) if (key === 'pla' || key === 'raid' || key === 'emb') redanArray[key] += 1
+
+    calcDOM(redanArray)
 }
 
-function domRedan() {
-    calcRedan()
-    //TODO prix -> Math.round()
-    document.getElementById('price').innerHTML = redanArray.prix.toFixed(2)
+function calcDOM( totalArray ) {
+    let totalPrice = 0
+    for (let [key, value] of Object.entries(totalArray)) {
+            prodList.forEach(prod => {
+                if (prod.ref === key) totalPrice += +prod.price * value
+
+            })
+        }
+
+    document.getElementById('price').innerHTML = totalPrice.toFixed(2)
 }
 
 async function addingCart() {
