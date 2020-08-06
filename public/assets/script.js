@@ -5,14 +5,12 @@ document.addEventListener('pageReady', () => {
     nbredan = 0
     if (document.getElementById('configclo')) {
         classic()
-
         document.getElementById("btnadd").addEventListener('click', () => {
             addingCart()
         })
         document.addEventListener('input', () => {
             classic()
         })
-
         document.getElementById('redan').addEventListener('click', () => {
             redanClick()
 
@@ -27,7 +25,6 @@ document.addEventListener('pageChange', () => {
     nbredan = 0
     if (document.getElementById('configclo')) {
         classic()
-
         document.getElementById("btnadd").addEventListener('click', () => {
             addingCart()
         })
@@ -40,13 +37,9 @@ document.addEventListener('pageChange', () => {
                 calcRedan()
                 dacClick()
             })
-            document.getElementById('addredan').addEventListener('click', () => {
-                addRedan()
-            })
         })
     }
 })
-
 
 
 let resArray, redanArray
@@ -126,10 +119,9 @@ function classic() {
 
 function redanClick() {
     document.getElementById("divparent").style.display = "block"
-    if(document.getElementById('addredan')) document.getElementById('addredan').style.display = "inline-block"
+    if (document.getElementById('addredan')) document.getElementById('addredan').style.display = "inline-block"
     document.getElementById("dimension").style.display = "none"
     if (document.getElementById('divparent').childElementCount === 0) {
-
 
         addRedan()
 
@@ -169,21 +161,37 @@ function addRedan() {
     div.querySelector(`#hauteur${nbredan}`).classList.add('hauteur')
     divredan.insertAdjacentHTML("beforeend", div.innerHTML)
 
+//ajout boutton suppr
+    if(nbredan>2){
+        divredan.insertAdjacentHTML('beforeend', '<div class="btn btn-primary" id="suppRedan' + `${nbredan}` + '">' +
+            '<svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#minus"/></svg></div>')
+        document.getElementById('suppRedan' + `${nbredan}`).addEventListener('click', (e) => {
+            console.log(e.target.parentElement)
+            supprRedan()
+        })
+    }
+
+
+
     calcRedan()
     document.getElementById('divparent').addEventListener('input', () => {
         calcRedan()
     })
 
 }
-
-function dacClick(){
-    if(! document.getElementById('redan').checked){
+function supprRedan(e){
+    e.target.parentElement.parentElement.remove()
+    calcRedan()
+}
+function dacClick() {
+    if (!document.getElementById('redan').checked) {
         document.getElementById("dimension").style.display = "block"
         document.getElementById('divparent').style.display = "none"
-        if(document.getElementById('addredan')) document.getElementById('addredan').style.display = "none"
+        if (document.getElementById('addredan')) document.getElementById('addredan').style.display = "none"
         classic()
     }
 }
+
 function calcRedan() {
     let nbRedan = document.getElementById('divparent').childElementCount
     redanArray = {}
@@ -193,7 +201,6 @@ function calcRedan() {
         resArray = calcConfig(divRedan.querySelector('.longueur').value, +divRedan.querySelector('.hauteur').value)
 
         //gestion du nombre de poteau
-
         if (nbRedan !== count && count !== 1) {
             for (let [key] of Object.entries(resArray)) {
                 let poteau = new RegExp("pot")
@@ -203,7 +210,6 @@ function calcRedan() {
                 }
             }
         }
-
         //remplissage du tableau final
         if (!Object.keys(redanArray).length) {
             redanArray = resArray
@@ -228,14 +234,14 @@ function calcRedan() {
     calcDOM(redanArray)
 }
 
-function calcDOM( totalArray ) {
+function calcDOM(totalArray) {
     let totalPrice = 0
     for (let [key, value] of Object.entries(totalArray)) {
-            prodList.forEach(prod => {
-                if (prod.ref === key) totalPrice += +prod.price * value
+        prodList.forEach(prod => {
+            if (prod.ref === key) totalPrice += +prod.price * value
 
-            })
-        }
+        })
+    }
 
     document.getElementById('price').innerHTML = totalPrice.toFixed(2)
 }
