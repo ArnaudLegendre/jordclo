@@ -1,5 +1,6 @@
-import mongodb      from 'mongodb'
-import logSys       from '../server/msgSystem.js'
+import mongodb from 'mongodb'
+import logSys from '../server/msgSystem.js'
+import {config} from '../assets/config.js'
 
 /**
  * Manage mongoDB database
@@ -9,17 +10,14 @@ export default class Database {
     /**
      * Prepare mongoDB instance
      * @constructor
-     * @param {string} [user] account username
-     * @param {string} [pwd] account password
-     * @param {string} [name] of database
      */
-    constructor( user, pwd, name) {
+    constructor() {
         try {
-            this.uri = `mongodb://${user}:${pwd}@127.0.0.1:27017/?authSource=${name}&readPreference=primary&appname=MongoDB%20Compass&ssl=false`
-            this.name = name
-            this.connection()
-        } catch( error ) {
-            logSys( error, 'error' )
+            this.uri = `mongodb://127.0.0.1:27017/?authSource=${config.global.dbName}&readPreference=primary&ssl=false`
+            this.name = config.global.dbName
+            this.connection().then()
+        } catch (error) {
+            logSys(error, 'error')
             return error
         }
     }
@@ -32,25 +30,16 @@ export default class Database {
     async connection() {
         try {
             let MongoClient = mongodb.MongoClient
-            this.client = new MongoClient( this.uri, {
+            this.client = new MongoClient(this.uri, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
-            } )
+            })
             await this.client.connect()
-            this.db = this.client.db( this.name )
-        } catch( error ) {
-            await logSys( error, 'error' )
+            this.db = this.client.db(this.name)
+        } catch (error) {
+            await logSys(error, 'error')
             return error
         }
-    }
-
-    /**
-     * Close mongoDB connnection
-     * @method
-     * @returns {Promise<void>}
-     */
-    async closeConnect() {
-        await this.client.close()
     }
 
     /**
@@ -59,13 +48,11 @@ export default class Database {
      * @param {string} [collection] targeted
      * @returns {Promise<Array>} Get all documents in collection
      */
-    async getCollection( collection ) {
+    async getCollection(collection) {
         try {
-            this.collection = await this.db.collection( collection ).find( ).toArray( )
-            await logSys( `Open connection to Database "${ this.name }" and get "${ collection }"` )
-            return this.collection
-        } catch ( error ) {
-            await logSys( error, 'error' )
+            return await this.db.collection(collection).find().toArray()
+        } catch (error) {
+            await logSys(error, 'error')
             return error
         }
     }
@@ -78,22 +65,22 @@ export default class Database {
      * @param {object} [fields] to create new document
      * @returns {Promise<string>} message for error or success
      */
-    async createDocument( collection, primaryKey, fields ) {
+    async createDocument(collection, primaryKey, fields) {
         try {
-            this.document = await this.db.collection( collection ).find( primaryKey )
-            if ( this.document.length !== undefined ) {
+            this.document = await this.db.collection(collection).find(primaryKey)
+            if (this.document.length !== undefined) {
                 return 'already existing document'
             } else {
-                await this.db.collection( collection ).insertOne( fields, error => {
-                    if ( error ) {
-                        logSys( error, 'error' )
+                await this.db.collection(collection).insertOne(fields, error => {
+                    if (error) {
+                        logSys(error, 'error')
                     }
-                    logSys( `Document ADD with success in ${collection}`, 'success' )
+                    logSys(`Document ADD with success in ${collection}`, 'success')
                 })
                 return 'create document'
             }
-        } catch ( error ) {
-            await logSys( error, 'error' )
+        } catch (error) {
+            await logSys(error, 'error')
             return error
         }
     }
@@ -106,13 +93,13 @@ export default class Database {
      * @param {object} [fields] to edit document
      * @returns {Promise<string>} message for error or success
      */
-    async editDocument( collection, primaryKey, fields ) {
+    async editDocument(collection, primaryKey, fields) {
         try {
-            await this.db.collection( collection ).updateOne( primaryKey, {$set: fields} )
-            await logSys( `Document EDIT with success in ${collection}`, 'success' )
+            await this.db.collection(collection).updateOne(primaryKey, {$set: fields})
+            await logSys(`Document EDIT with success in ${collection}`, 'success')
             return 'edited document'
-        } catch ( error ) {
-            await logSys( error, 'error' )
+        } catch (error) {
+            await logSys(error, 'error')
         }
     }
 
@@ -121,16 +108,14 @@ export default class Database {
      * @method
      * @param {string} [collection] targeted
      * @param {object} [primaryKey] ex: {key: value} to find document
-     * @returns {Promise<Collection~findAndModifyWriteOpResultObject|Array>} document
+     * @returns {Promise<string|*>}
      */
-    async getDocument( collection, primaryKey ) {
+    async getDocument(collection, primaryKey) {
         try {
-            this.document = await this.db.collection( collection ).find( primaryKey ).toArray()
+            this.document = await this.db.collection(collection).find(primaryKey).toArray()
             return this.document[0] === undefined ? 'document not found' : this.document[0]
-        } catch( error ) {
-            await logSys( error, 'error' )
+        } catch (error) {
+            await logSys(error, 'error')
         }
     }
 }
-
-logSys( 'Database..............READY', 'success' )

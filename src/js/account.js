@@ -24,6 +24,8 @@ document.addEventListener('initWebsite', function () {
 
     })
 
+    console.log(productsData)
+
 })
 
 document.addEventListener('pageChange', () => {
@@ -235,9 +237,7 @@ function loginRegister(location) {
         })
 
         if (e) {
-
             e.addEventListener('submit', async (elt) => {
-
                 elt.preventDefault()
                 let param = ''
 
@@ -245,9 +245,10 @@ function loginRegister(location) {
                     let data = new FormData(elt.target)
 
                     if (buttonSubmit.classList.contains('loginSubmit')) {
-                        for (var [key, value] of data.entries()) {
+                        for (let [key, value] of data.entries()) {
                             param = param.concat(`${key}=${encodeURIComponent(value)}&`)
                         }
+
                         param = param.slice(0, -1)
 
                         fetch(`api?action=login&${param}`)
@@ -270,7 +271,7 @@ function loginRegister(location) {
 
                         let dataSend = {}
 
-                        for (var [key, value] of data.entries()) {
+                        for (let [key, value] of data.entries()) {
                             dataSend[key] = value
                             param = param.concat(`${key}=${encodeURIComponent(value)}&`)
                         }

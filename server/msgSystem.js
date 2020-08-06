@@ -2,9 +2,9 @@
 
 import dateTime from './dateTime.js'
 
-export default function logSys( msg, type ) {
+export default function logSys(msg, type) {
     let style
-    switch ( type ) {
+    switch (type) {
         case 'success':
             style = '\x1b[32m'
             break
@@ -24,8 +24,8 @@ export default function logSys( msg, type ) {
             style = '\x1b[0m'
     }
 
-    type = type === undefined ? '' : `[${ type }]`
+    type = type === undefined ? '' : `[${type}]`
 
-    console.log( style, `[${ dateTime() }]${ type } ${ msg }`, '\x1b[0m' )
+    console.log(style, `[${dateTime()}]${type} ${msg}`, '\x1b[0m')
 
 }

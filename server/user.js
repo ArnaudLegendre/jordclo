@@ -1,8 +1,8 @@
-import argon2       from 'argon2'
-import logSys       from '../server/msgSystem.js'
-import Database     from './database.js'
-import { config }   from '../public/assets/config.js'
-let db =            new Database( config.db.userRW, config.db.pwdRW, config.db.name )
+import argon2 from 'argon2'
+import logSys from '../server/msgSystem.js'
+import Database from './database.js'
+
+let db = new Database()
 
 /**
  * Manage User
@@ -15,12 +15,12 @@ export default class User {
      * @param {object} [data] to insert into database
      * @returns {Promise<object>} created data
      */
-    async createUser( data ) {
+    async createUser(data) {
         try {
-            data.password = await argon2.hash( data.password )
-            return await db.createDocument('users', { email: data.email }, data )
-        } catch ( error ) {
-            await logSys( error, 'error' )
+            data.password = await argon2.hash(data.password)
+            return await db.createDocument('users', {email: data.email}, data)
+        } catch (error) {
+            await logSys(error, 'error')
             return error
         }
     }
@@ -31,11 +31,11 @@ export default class User {
      * @param {object} [data] to edit into database
      * @returns {Promise<object>} edited data
      */
-    async editUser( data ) {
+    async editUser(data) {
         try {
-            return await db.editDocument( 'users', { email: data.email }, data )
-        } catch ( error ) {
-            await logSys( error, 'error' )
+            return await db.editDocument('users', {email: data.email}, data)
+        } catch (error) {
+            await logSys(error, 'error')
             return error
         }
     }
@@ -46,14 +46,14 @@ export default class User {
      * @param {object} [data] email, old and new password
      * @returns {Promise<string|*>} success or error message
      */
-    async editPwd( data ) {
+    async editPwd(data) {
         try {
-            this.document = await db.getDocument( 'users', { email: data.email } )
-            return await argon2.verify( this.document.password, data.password )
-                ? await db.editDocument( 'users', { email: data.email }, { password: await argon2.hash( data.newPassword ) } )
+            this.document = await db.getDocument('users', {email: data.email})
+            return await argon2.verify(this.document.password, data.password)
+                ? await db.editDocument('users', {email: data.email}, {password: await argon2.hash(data.newPassword)})
                 : 'old password invalid'
-        } catch ( error ) {
-            await logSys( error, 'error' )
+        } catch (error) {
+            await logSys(error, 'error')
             return error
         }
     }
@@ -64,13 +64,13 @@ export default class User {
      * @param {object} [data] email & password
      * @returns {Promise<string|*>} token or error message
      */
-    async login( data ) {
+    async login(data) {
         logSys(`data => ${data}`, 'debug')
         try {
-            this.document = await db.getDocument( 'users', { email: data.email } )
-            if( typeof this.document === 'object' ){
-                if( await argon2.verify( this.document.password, data.password ) ) {
-                    logSys( `User login "${ this.document._id }"` )
+            this.document = await db.getDocument('users', {email: data.email})
+            if (typeof this.document === 'object') {
+                if (await argon2.verify(this.document.password, data.password)) {
+                    logSys(`User login "${this.document._id}"`)
                     return {
                         'email': this.document.email,
                         'firstname': this.document.firstname,
@@ -88,8 +88,8 @@ export default class User {
                     return 'password incorrect'
             } else
                 return this.document
-        } catch ( error ) {
-            await logSys( error, 'error' )
+        } catch (error) {
+            await logSys(error, 'error')
             return error
         }
     }

@@ -1,19 +1,8 @@
-document.addEventListener('initWebsite', function () {
-    const pushNotif = document.getElementById('pushNotification')
-    const notice = pushNotif.firstElementChild
-    // const closeBtn = pushNotif.lastElementChild
-    //
-    // closeBtn.addEventListener( 'click', e => {
-    //     notice.classList.toggle( 'show' )
-    //     notice.classList.toggle( 'hide' )
-    // })
-
-})
-
 function showPushNotification(type, msg) {
 
-    const pushNotif = document.getElementById('pushNotification')
-    const notice = pushNotif.firstElementChild
+    let notice = document.createElement('div')
+    notice.innerHTML = pushNotificationHTML
+    notice = notice.firstElementChild
 
     notice.classList.remove('show')
     notice.classList.add('hide')
@@ -35,6 +24,9 @@ function showPushNotification(type, msg) {
 
     notice.querySelector('.msg').innerText = ''
     notice.querySelector('.msg').innerText = msg
+
+    console.log(document.getElementById('wrapper').firstElementChild)
+    !document.getElementById('notice') ? document.getElementById('wrapper').firstElementChild.appendChild(notice) : null
 
     notice.classList.toggle('hide')
     notice.classList.toggle('show')
