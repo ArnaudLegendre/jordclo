@@ -51,6 +51,9 @@ Todo list and progress of project [here](https://github.com/AndreLeclercq/JORD/p
     * The localStorage items `products` and `user` are now available into global variables `productsData` & `userData`.
     * Now the router fetch only one html file for all the html structure.
 * Fix all bugs after refacto router
+* Add sample database into `assets_sample/db_sample`
+* Change config.json into config.js (you need to update this file)
+* Remove MongoDB auth, you don't need account to manage MongoDB (don't forget to enable MongoDB only for local usage)
 * Minor Fix on assets files
 
 #### Log 0.3.0 ( 30/07/2020 )
