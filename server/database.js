@@ -1,6 +1,6 @@
 import mongodb from 'mongodb'
 import logSys from '../server/msgSystem.js'
-import {config} from '../public/assets/config.js'
+import {config} from '../assets/config.js'
 
 /**
  * Manage mongoDB database

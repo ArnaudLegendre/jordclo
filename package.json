@@ -5,8 +5,10 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "watch": "./compil.js --watch public/script.js & sass --watch src/sass:public/",
-    "prod": "./compil.js --compress public/script.js; sass src/sass:public/ --style=compressed",
+    "cwebp": "cp assets/images/*.* public/assets/images && find public/assets/images -type f \\( -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.png\" \\) -exec cwebp {} -o {}.webp \\;",
+    "img": "cp assets/images/*.* public/assets/images",
+    "watch": "./compil.js --watch public/app.js & sass --watch src/sass:public/",
+    "prod": "./compil.js --compress public/app.js; sass src/sass:public/ --style=compressed",
     "server": "node --trace-warnings ./serverHTTP2.js",
     "serverHttp": "node --trace-warnings ./serverHTTP.js",
     "cloc": "cloc ./ --exclude-dir=.idea,node_modules",
