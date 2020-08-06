@@ -4,8 +4,8 @@
             <div class="column col-5 col-sm-12">
                 <img class="w-75 d-block m-auto pt-2 mt-2" id="" src="assets/images/persienne.png" alt="">
             </div>
-            <div class="column col-sm-12">
-                <h1 id="name" class="h3"></h1>
+            <div class="column col-5 col-sm-12">
+                <h1 id="name" class="h3 col-10 m-auto">Configurateur pour lame persiennée</h1>
                 <small id="ref"></small>
                 <div class="h3">A partir de <span id="price"></span><small> € TTC </small></div>
                 <form id="configclo">
@@ -68,54 +68,57 @@
                                    placeholder="Longueur de la cloture"
                                    value="1" min="1">
                         </div>
+                        <div class="form-group">
+                            <label class="form-label" for="hauteur">Hauteur en mètre</label>
+                            <select id="hauteur" class="form-select hauteur">
+                                <option class="optProduct" value="">Selectionnez une hauteur</option>
 
-                        <select id="hauteur" class="form-control hauteur">
-                            <option class="optProduct" value="">Selectionnez une hauteur</option>
+                                <option class="optProduct" value="0.11" data-ref="pot06" selected>0.11 metre
+                                </option>
 
-                            <option class="optProduct" value="0.11" data-ref="pot06" selected>0.11 metre
-                            </option>
+                                <option class="optProduct" value="0.22" data-ref="pot06">0.22 metre</option>
 
-                            <option class="optProduct" value="0.22" data-ref="pot06">0.22 metre</option>
+                                <option class="optProduct" value="0.33" data-ref="pot06">0.34 metre</option>
 
-                            <option class="optProduct" value="0.33" data-ref="pot06">0.34 metre</option>
+                                <option class="optProduct" value="0.44" data-ref="pot06">0.45 metre</option>
 
-                            <option class="optProduct" value="0.44" data-ref="pot06">0.45 metre</option>
+                                <option class="optProduct" value="0.55" data-ref="pot06">0.56 metre</option>
 
-                            <option class="optProduct" value="0.55" data-ref="pot06">0.56 metre</option>
+                                <option class="optProduct" value="0.66" data-ref="pot125">0.67 metre</option>
 
-                            <option class="optProduct" value="0.66" data-ref="pot125">0.67 metre</option>
+                                <option class="optProduct" value="0.77" data-ref="pot125">0.79 metre</option>
 
-                            <option class="optProduct" value="0.77" data-ref="pot125">0.79 metre</option>
+                                <option class="optProduct" value="0.88" data-ref="pot125">0.90 metre</option>
 
-                            <option class="optProduct" value="0.88" data-ref="pot125">0.90 metre</option>
+                                <option class="optProduct" value="0.99" data-ref="pot125">1.01 metre</option>
 
-                            <option class="optProduct" value="0.99" data-ref="pot125">1.01 metre</option>
+                                <option class="optProduct" value="1.10" data-ref="pot125">1.12 metre</option>
 
-                            <option class="optProduct" value="1.10" data-ref="pot125">1.12 metre</option>
+                                <option class="optProduct" value="1.21" data-ref="pot125">1.24 metre</option>
 
-                            <option class="optProduct" value="1.21" data-ref="pot125">1.24 metre</option>
+                                <option class="optProduct" value="1.32" data-ref="pot185">1.35 metre</option>
 
-                            <option class="optProduct" value="1.32" data-ref="pot185">1.35 metre</option>
+                                <option class="optProduct" value="1.43" data-ref="pot185">1.46 metre</option>
 
-                            <option class="optProduct" value="1.43" data-ref="pot185">1.46 metre</option>
+                                <option class="optProduct" value="1.54" data-ref="pot185">1.57 metre</option>
 
-                            <option class="optProduct" value="1.54" data-ref="pot185">1.57 metre</option>
+                                <option class="optProduct" value="1.65" data-ref="pot185">1.69 metre</option>
 
-                            <option class="optProduct" value="1.65" data-ref="pot185">1.69 metre</option>
+                                <option class="optProduct" value="1.76" data-ref="pot185">1.80 metre</option>
 
-                            <option class="optProduct" value="1.76" data-ref="pot185">1.80 metre</option>
+                                <option class="optProduct" value="1.87" data-ref="pot250" hidden></option>
 
-                            <option class="optProduct" value="1.87" data-ref="pot250" hidden></option>
+                                <option class="optProduct" value="1.98" data-ref="pot250" hidden></option>
 
-                            <option class="optProduct" value="1.98" data-ref="pot250" hidden></option>
+                                <option class="optProduct" value="2.09" data-ref="pot250" hidden></option>
 
-                            <option class="optProduct" value="2.09" data-ref="pot250" hidden></option>
+                                <option class="optProduct" value="2.20" data-ref="pot250" hidden></option>
 
-                            <option class="optProduct" value="2.20" data-ref="pot250" hidden></option>
+                                <option class="optProduct" value="2.31" data-ref="pot250" hidden></option>
 
-                            <option class="optProduct" value="2.31" data-ref="pot250" hidden></option>
+                            </select>
+                        </div>
 
-                        </select>
                     </div>
                     <div>
                         <div class="btn btn-primary mt-2 pt-2" id="btnadd">

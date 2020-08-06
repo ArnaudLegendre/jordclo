@@ -117,6 +117,27 @@ function classic() {
     calcDOM(resArray)
 }
 
+function dacClick() {
+    if (!document.getElementById('redan').checked) {
+        document.getElementById("dimension").style.display = "block"
+        document.getElementById('divparent').style.display = "none"
+        document.getElementById('addredan').style.display = "none"
+        classic()
+    }
+}
+
+function calcDOM(totalArray) {
+    let totalPrice = 0
+    for (let [key, value] of Object.entries(totalArray)) {
+        prodList.forEach(prod => {
+            if (prod.ref === key) totalPrice += +prod.price * value
+
+        })
+    }
+
+    document.getElementById('price').innerHTML = totalPrice.toFixed(2)
+}
+
 function redanClick() {
     document.getElementById("divparent").style.display = "block"
     if (document.getElementById('addredan')) document.getElementById('addredan').style.display = "inline-block"
@@ -126,7 +147,7 @@ function redanClick() {
         addRedan()
 
         document.getElementById('divparent').insertAdjacentHTML('afterend', '<div class="btn btn-primary" id="addredan">' +
-            '<svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#plus"/></svg></div>')
+            '<svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#plus"/></svg><span class="ml-2 mr-2">Ajouter une section</span></div>')
 
         document.getElementById('addredan').style.display = "inline-block"
 
@@ -162,16 +183,22 @@ function addRedan() {
     divredan.insertAdjacentHTML("beforeend", div.innerHTML)
 
 //ajout boutton suppr
-    if(nbredan>2){
-        divredan.insertAdjacentHTML('beforeend', '<div class="btn btn-primary" id="suppRedan' + `${nbredan}` + '">' +
-            '<svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#minus"/></svg></div>')
-        document.getElementById('suppRedan' + `${nbredan}`).addEventListener('click', (e) => {
-            console.log(e.target.parentElement)
-            supprRedan()
+    if (nbredan > 2) {
+        divredan.insertAdjacentHTML('beforeend', '<div class="btn btn-primary btnsup" id="suppRedan' + `${nbredan}` + '">' +
+            '<span class="ml-2 mr-2">Supprimer la section</span><svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#x"/></svg></div>')
+
+        document.getElementById('suppRedan' + `${nbredan}`).addEventListener('click', e => {
+            e.target.closest('.form-group').remove()
+            nbredan--
+            for (let i = 0, btns = document.querySelectorAll('.btnsup').length - 1; i <= btns; i++) {
+                i !== btns ? document.querySelectorAll('.btnsup')[i].style.display = "none" : document.querySelectorAll('.btnsup')[i].style.display = "inline-block"
+            }
+            calcRedan()
         })
+        for (let i = 0, btns = document.querySelectorAll('.btnsup').length - 1; i <= btns; i++) {
+            i !== btns ? document.querySelectorAll('.btnsup')[i].style.display = "none" : document.querySelectorAll('.btnsup')[i].style.display = "inline-block"
+        }
     }
-
-
 
     calcRedan()
     document.getElementById('divparent').addEventListener('input', () => {
@@ -179,24 +206,14 @@ function addRedan() {
     })
 
 }
-function supprRedan(e){
-    e.target.parentElement.parentElement.remove()
-    calcRedan()
-}
-function dacClick() {
-    if (!document.getElementById('redan').checked) {
-        document.getElementById("dimension").style.display = "block"
-        document.getElementById('divparent').style.display = "none"
-        if (document.getElementById('addredan')) document.getElementById('addredan').style.display = "none"
-        classic()
-    }
-}
 
 function calcRedan() {
     let nbRedan = document.getElementById('divparent').childElementCount
+    // console.log(document.getElementById('divparent').childElementCount)
     redanArray = {}
     let count = nbRedan
     while (count > 0) {
+        // console.log(count)
         let divRedan = document.getElementById(`dimredan${count}`)
         resArray = calcConfig(divRedan.querySelector('.longueur').value, +divRedan.querySelector('.hauteur').value)
 
@@ -232,18 +249,6 @@ function calcRedan() {
     for (let [key] of Object.entries(redanArray)) if (key === 'pla' || key === 'raid' || key === 'emb') redanArray[key] += 1
 
     calcDOM(redanArray)
-}
-
-function calcDOM(totalArray) {
-    let totalPrice = 0
-    for (let [key, value] of Object.entries(totalArray)) {
-        prodList.forEach(prod => {
-            if (prod.ref === key) totalPrice += +prod.price * value
-
-        })
-    }
-
-    document.getElementById('price').innerHTML = totalPrice.toFixed(2)
 }
 
 async function addingCart() {
