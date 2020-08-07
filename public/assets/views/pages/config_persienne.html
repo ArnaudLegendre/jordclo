@@ -1,11 +1,11 @@
 <div class="columns p-centered mb-2 pb-2">
     <div class="column col-10 col-md-12 p-centered">
         <div class="columns">
-            <div class="column col-5 col-sm-12">
+            <div class="column col-4 col-sm-12">
                 <img class="w-75 d-block m-auto pt-2 mt-2" id="" src="assets/images/persienne.png" alt="">
             </div>
-            <div class="column col-5 col-sm-12">
-                <h1 id="name" class="h3 col-10 m-auto">Configurateur pour lame persiennée</h1>
+            <div class="column col-7 col-sm-12">
+                <h1 id="name" class="h3 col-12 m-auto">Configurateur pour lame persiennée</h1>
                 <small id="ref"></small>
                 <div class="h3">A partir de <span id="price"></span><small> € TTC </small></div>
                 <form id="configclo">
@@ -15,7 +15,7 @@
                         <input type="text" id="lame" data-ref="lam01" hidden>
                         <input type="text" id="raid" data-ref="raid" hidden>
                     </div>
-                    <div class="form-group" id="formsection">
+                    <div class="form-group col-6" id="formsection">
                         <label class="form-label">Section</label>
                         <label class="form-radio form-inline">
                             <input type="radio" name="section" checked>
@@ -34,34 +34,37 @@
                             <i class="form-icon"></i> Redan
                         </label>
                     </div>
-                    <div id="divparent" class="col-12">
 
+                        <div class="form-group column col-6">
+                            <label class="form-label">Fixation</label>
+                            <label class="form-radio form-inline">
+                                <input type="radio" name="fixe" id="platine" checked data-ref="pla">
+                                <i class="form-icon"></i> Platine
+                            </label>
+                            <label class="form-radio form-inline">
+                                <input type="radio" name="fixe" id="scelle">
+                                <i class="form-icon"></i> Scellé
+                            </label>
+
+                        </div>
+
+                        <div class="form-group scellement column col-6 ">
+                            <label class="form-radio form-inline">
+                                <input type="radio" name="scelle" id="scelleMur" data-height="0.33" checked>
+                                <i class="form-icon"></i> Scellé dans mur
+                            </label>
+                            <label class="form-radio form-inline">
+                                <input type="radio" name="scelle" id="scelleTerre" data-height="0.55">
+                                <i class="form-icon"></i> Scellé dans terre
+                            </label>
+                        </div>
+
+                    <div class="container">
+                        <div id="divparent" class="columns col-12">
+
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Fixation</label>
-                        <label class="form-radio">
-                            <input type="radio" name="fixe" id="platine" checked data-ref="pla">
-                            <i class="form-icon"></i> Platine
-                        </label>
-                        <label class="form-radio">
-                            <input type="radio" name="fixe" id="scelle">
-                            <i class="form-icon"></i> Scellé
-                        </label>
-
-                    </div>
-                    <div class="form-group scellement">
-                        <label class="form-radio">
-                            <input type="radio" name="scelle" id="scelleMur" data-height="0.33" checked>
-                            <i class="form-icon"></i> Scellé dans mur
-                        </label>
-                        <label class="form-radio">
-                            <input type="radio" name="scelle" id="scelleTerre" data-height="0.55">
-                            <i class="form-icon"></i> Scellé dans terre
-                        </label>
-                    </div>
-
-                    <div id="dimension">
+                    <div id="dimension" class="column col-6">
                         <div class="form-group">
                             <label class="form-label" for="longueur">Longueur en mètre</label>
                             <input class="form-input longueur" type="text" id="longueur"
@@ -120,8 +123,9 @@
                         </div>
 
                     </div>
-                    <div>
-                        <div class="btn btn-primary mt-2 pt-2" id="btnadd">
+
+                    <div class="columns col-12">
+                        <div class="btn btn-primary mt-2 pt-2 column col-5 col-mx-auto" id="btnadd">
                             <svg class="feather ml-2 mr-1">
                                 <use xlink:href="assets/svg/feather-sprite.svg#shopping-cart"/>
                             </svg>

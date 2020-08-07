@@ -41,9 +41,7 @@ document.addEventListener('pageChange', () => {
     }
 })
 
-
 let resArray, redanArray
-
 
 function calcConfig(tempLength, height) {
     let refStake, refBlade, refCover, refPlate, refSpacer, refStringer, nbStake, nbPlate, nbSpacer, nbCover,
@@ -166,7 +164,7 @@ function addRedan() {
 
     //creation div dimredan
     let divredan = document.createElement('div')
-    divredan.classList.add("form-group", "form-inline", "col-6")
+    divredan.classList.add("form-group", "form-inline", "col-5", "column","m-auto")
     divredan.id = 'dimredan' + `${nbredan}`
     divparent.insertAdjacentElement('beforeend', divredan)
 
@@ -184,11 +182,12 @@ function addRedan() {
 
 //ajout boutton suppr
     if (nbredan > 2) {
-        divredan.insertAdjacentHTML('beforeend', '<div class="btn btn-primary btnsup" id="suppRedan' + `${nbredan}` + '">' +
-            '<span class="ml-2 mr-2">Supprimer la section</span><svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#x"/></svg></div>')
+        divredan.insertAdjacentHTML('beforeend', '<div class="btn btn-primary btnsup float-right" id="suppRedan' + `${nbredan}` + '">' +
+            '<span class="ml-2 mr-2">Supprimer</span><svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#x"/></svg></div>')
 
         document.getElementById('suppRedan' + `${nbredan}`).addEventListener('click', e => {
             e.target.closest('.form-group').remove()
+
             nbredan--
             for (let i = 0, btns = document.querySelectorAll('.btnsup').length - 1; i <= btns; i++) {
                 i !== btns ? document.querySelectorAll('.btnsup')[i].style.display = "none" : document.querySelectorAll('.btnsup')[i].style.display = "inline-block"
