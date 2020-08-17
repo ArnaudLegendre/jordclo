@@ -14,6 +14,7 @@ let htmlData = document.createElement('html')
  */
 ;(async () => {
 
+    // TODO: create loop to generate variable with html structure
     let getHtmlData = await fetch('assets/structures.html')
     htmlData.innerHTML = await getHtmlData.text()
     document.body.insertBefore(htmlData.querySelector('[data-id=navbar]').firstChild, document.getElementById('wrapper'))
@@ -52,6 +53,16 @@ let htmlData = document.createElement('html')
 })();
 
 /**
+ * Manage history and back to prev page
+ */
+window.onpopstate = () => {
+    let dataID = ''
+    routeList.forEach(p => { p.slug === document.location.pathname.replace( '/', '' ) ? dataID = p.fileName : null } )
+    document.getElementById('content').innerHTML = htmlData.querySelector(`[data-id='${dataID}']`).innerHTML
+    setTimeout(() => { document.dispatchEvent(pageChange) }, 100 )
+}
+
+/**
  * Router to manage pages
  * @class
  */
@@ -59,19 +70,26 @@ class Router {
 
     constructor(routes) {
         this.routes = routes
-        window.addEventListener('hashchange', this.loadPage.bind(this, 'hashchange'))
-        document.addEventListener('dbReady', this.loadPage.bind(this, 'dbReady'))
+        window.addEventListener('hashchange', this.loadPage.bind(this))
+        document.addEventListener('dbReady', this.loadPage.bind(this))
     }
 
-    async loadPage(e, event) {
+    /**
+     * Load Page before showing
+     * @method
+     * @param {string} [event] Event trigger
+     * @returns {Promise<void>}
+     */
+    async loadPage(event) {
 
+        this.event = event
         route = location.hash || '#'
         this.currentPage = await Object.values(this.routes).find(elt => route === `#${elt.slug}`)
 
         if (this.currentPage === undefined) {
             route = '#404'
             this.currentPage = Object.values(this.routes).find(elt => `#${elt.slug}` === '#404')
-            showPage.bind(this)()
+            await this.showPage()
         } else {
             if (this.currentPage.access === '1') {
                 userData = localStorage.getItem('userLocal')
@@ -84,41 +102,35 @@ class Router {
                         token !== true
                             ? (route = '#401',
                                 this.currentPage = Object.values(this.routes).find(elt => `#${elt.slug}` === '#401'),
-                                showPage.bind(this)(),
+                                await this.showPage,
                                 localStorage.removeItem('userLocal'))
                             : (userData = localStorage.getItem('userLocal'),
-                                showPage.bind(this)())
+                                await this.showPage)
                     })()
                 } else {
                     route = '#401'
                     this.currentPage = Object.values(this.routes).find(elt => `#${elt.slug}` === '#401')
-                    showPage.bind(this)()
+                    await this.showPage()
                 }
             } else
-                showPage.bind(this)()
+                await this.showPage()
         }
 
-        async function showPage() {
+    }
 
-            this.currentHTML = htmlData.querySelector(`[data-id='${this.currentPage.fileName}']`).innerHTML
-            history.replaceState(this.currentHTML, this.currentPage.title, route.replace('#', '/'))
-            document.getElementById('content').innerHTML = this.currentHTML
-            document.querySelector('title').innerHTML = this.currentPage.title
-            if (event.type === 'dbReady')
-                document.dispatchEvent(pageReady)
-
-        }
+    /**
+     * Show page
+     * @method
+     * @returns {Promise<void>}
+     */
+    async showPage() {
+        this.currentHTML = htmlData.querySelector(`[data-id='${this.currentPage.fileName}']`).innerHTML
+        history.replaceState(this.currentHTML, this.currentPage.title, route.replace('#', '/'))
+        document.getElementById('content').innerHTML = this.currentHTML
+        document.querySelector('title').innerHTML = this.currentPage.title
+        if (this.event.type === 'dbReady')
+            document.dispatchEvent(pageReady)
     }
 }
 
 let pagesRoutes = new Router(routes)
-
-/**
- * Manage history and back to prev page
- */
-window.onpopstate = () => {
-    let dataID = ''
-    routeList.forEach(p => { p.slug === document.location.pathname.replace( '/', '' ) ? dataID = p.fileName : null } )
-    document.getElementById('content').innerHTML = htmlData.querySelector(`[data-id='${dataID}']`).innerHTML
-    setTimeout(() => { document.dispatchEvent(pageChange) }, 100 )
-}
