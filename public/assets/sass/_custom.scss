@@ -2,6 +2,9 @@
 $dnone:none ;
 //$mycolor: #3a5282;
 $mycolor: #223A46;
+$bgcolor: #1a2c35;
+$white: #FFFFFF;
+$none:none;
 $btopcolor: 0.05rem solid #223a46;
 .scellement{
   display: $dnone;
@@ -9,8 +12,13 @@ $btopcolor: 0.05rem solid #223a46;
 body{
   color: $mycolor;
 }
-
-
+.bg-dark{
+  background: $bgcolor !important;
+  color: $white;
+}
+.unstyled{
+  list-style: $none;
+}
 .divider{
   border-top: $btopcolor;
 }
@@ -55,5 +63,20 @@ a {
       color: $mycolor;
     }
 
+  }
+}
+.footerlink{
+  color: $white;
+
+  &:focus,
+  &:hover,
+  &:active,
+  &.active {
+    color: $white;
+    text-decoration: underline;
+  }
+
+  &:visited {
+    color: $white;
   }
 }
