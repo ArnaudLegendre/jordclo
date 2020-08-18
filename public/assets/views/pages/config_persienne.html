@@ -1,19 +1,20 @@
 <div class="columns p-centered mb-2 pb-2">
     <div class="column col-10 col-md-12 p-centered">
         <div class="columns">
-            <div class="column col-4 col-sm-12">
-                <img class="w-75 d-block m-auto pt-2 mt-2" id="" src="assets/images/persienne.png" alt="">
+            <div class="column col-6 col-sm-12">
+                <img class="w-75 d-block m-auto pt-2 mt-2" id=""
+                     src="assets/images/cloture-aluminium-lame-persienne.png" alt="">
             </div>
-            <div class="column col-7 col-sm-12">
+            <div class="column col-6 col-sm-12">
                 <h1 id="name" class="h3 col-12 m-auto">Configurateur pour lame persiennée</h1>
                 <small id="ref"></small>
                 <div class="h3">A partir de <span id="price"></span><small> € TTC </small></div>
                 <form id="configclo">
                     <div>
-                        <input type="text" id="embout" data-ref="emb" hidden>
-                        <input type="text" id="entretoise" data-ref="ent01" hidden>
-                        <input type="text" id="lame" data-ref="lam01" hidden>
-                        <input type="text" id="raid" data-ref="raid" hidden>
+                        <input type="text" id="embout" data-ref="CFB" hidden>
+                        <input type="text" id="entretoise" data-ref="CFENDG" hidden>
+                        <input type="text" id="lame" data-ref="CFLAPE" hidden>
+                        <input type="text" id="raid" data-ref="CFR" hidden>
                     </div>
                     <div class="form-group col-6" id="formsection">
                         <label class="form-label">Section</label>
@@ -35,36 +36,43 @@
                         </label>
                     </div>
 
-                        <div class="form-group column col-6">
-                            <label class="form-label">Fixation</label>
-                            <label class="form-radio form-inline">
-                                <input type="radio" name="fixe" id="platine" checked data-ref="pla">
-                                <i class="form-icon"></i> Platine
-                            </label>
-                            <label class="form-radio form-inline">
-                                <input type="radio" name="fixe" id="scelle">
-                                <i class="form-icon"></i> Scellé
-                            </label>
+                    <div class="divider mt-2 mb-2 pt-2 pb-2"></div>
 
-                        </div>
+                    <div class="form-group column col-6">
+                        <label class="form-label">Fixation</label>
+                        <label class="form-radio form-inline">
+                            <input type="radio" name="fixe" id="platine" checked data-ref="CFPLA">
+                            <i class="form-icon"></i> Platine
+                        </label>
+                        <label class="form-radio form-inline">
+                            <input type="radio" name="fixe" id="scelle">
+                            <i class="form-icon"></i> Scellé
+                        </label>
 
-                        <div class="form-group scellement column col-6 ">
-                            <label class="form-radio form-inline">
-                                <input type="radio" name="scelle" id="scelleMur" data-height="0.33" checked>
-                                <i class="form-icon"></i> Scellé dans mur
-                            </label>
-                            <label class="form-radio form-inline">
-                                <input type="radio" name="scelle" id="scelleTerre" data-height="0.55">
-                                <i class="form-icon"></i> Scellé dans terre
-                            </label>
-                        </div>
+                    </div>
+
+                    <div class="form-group scellement column col-6 ">
+                        <label class="form-radio form-inline">
+                            <input type="radio" name="scelle" id="scelleMur" data-height="0.33" checked>
+                            <i class="form-icon"></i> Scellé dans mur
+                        </label>
+                        <label class="form-radio form-inline">
+                            <input type="radio" name="scelle" id="scelleTerre" data-height="0.55">
+                            <i class="form-icon"></i> Scellé dans terre
+                        </label>
+                    </div>
+
+                    <div class="divider mt-2 mb-2 pt-2 pb-2"></div>
 
                     <div class="container">
                         <div id="divparent" class="columns col-12">
 
                         </div>
                     </div>
+
+
                     <div id="dimension" class="column col-6">
+                        <label class="form-label">Dimension</label>
                         <div class="form-group">
                             <label class="form-label" for="longueur">Longueur en mètre</label>
                             <input class="form-input longueur" type="text" id="longueur"
@@ -76,53 +84,55 @@
                             <select id="hauteur" class="form-select hauteur">
                                 <option class="optProduct" value="">Selectionnez une hauteur</option>
 
-                                <option class="optProduct" value="0.11" data-ref="pot06" selected>0.11 metre
+                                <option class="optProduct" value="0.11" data-ref="CFPO06" selected>0.11 metre
                                 </option>
 
-                                <option class="optProduct" value="0.22" data-ref="pot06">0.22 metre</option>
+                                <option class="optProduct" value="0.22" data-ref="CFPO06">0.22 metre</option>
 
-                                <option class="optProduct" value="0.33" data-ref="pot06">0.34 metre</option>
+                                <option class="optProduct" value="0.33" data-ref="CFPO06">0.34 metre</option>
 
-                                <option class="optProduct" value="0.44" data-ref="pot06">0.45 metre</option>
+                                <option class="optProduct" value="0.44" data-ref="CFPO06">0.45 metre</option>
 
-                                <option class="optProduct" value="0.55" data-ref="pot06">0.56 metre</option>
+                                <option class="optProduct" value="0.55" data-ref="CFPO06">0.56 metre</option>
 
-                                <option class="optProduct" value="0.66" data-ref="pot125">0.67 metre</option>
+                                <option class="optProduct" value="0.66" data-ref="CFPO125">0.67 metre</option>
 
-                                <option class="optProduct" value="0.77" data-ref="pot125">0.79 metre</option>
+                                <option class="optProduct" value="0.77" data-ref="CFPO125">0.79 metre</option>
 
-                                <option class="optProduct" value="0.88" data-ref="pot125">0.90 metre</option>
+                                <option class="optProduct" value="0.88" data-ref="CFPO125">0.90 metre</option>
 
-                                <option class="optProduct" value="0.99" data-ref="pot125">1.01 metre</option>
+                                <option class="optProduct" value="0.99" data-ref="CFPO125">1.01 metre</option>
 
-                                <option class="optProduct" value="1.10" data-ref="pot125">1.12 metre</option>
+                                <option class="optProduct" value="1.10" data-ref="CFPO125">1.12 metre</option>
 
-                                <option class="optProduct" value="1.21" data-ref="pot125">1.24 metre</option>
+                                <option class="optProduct" value="1.21" data-ref="CFPO125">1.24 metre</option>
 
-                                <option class="optProduct" value="1.32" data-ref="pot185">1.35 metre</option>
+                                <option class="optProduct" value="1.32" data-ref="CFPO185">1.35 metre</option>
 
-                                <option class="optProduct" value="1.43" data-ref="pot185">1.46 metre</option>
+                                <option class="optProduct" value="1.43" data-ref="CFPO185">1.46 metre</option>
 
-                                <option class="optProduct" value="1.54" data-ref="pot185">1.57 metre</option>
+                                <option class="optProduct" value="1.54" data-ref="CFPO185">1.57 metre</option>
 
-                                <option class="optProduct" value="1.65" data-ref="pot185">1.69 metre</option>
+                                <option class="optProduct" value="1.65" data-ref="CFPO185">1.69 metre</option>
 
-                                <option class="optProduct" value="1.76" data-ref="pot185">1.80 metre</option>
+                                <option class="optProduct" value="1.76" data-ref="CFPO185">1.80 metre</option>
 
-                                <option class="optProduct" value="1.87" data-ref="pot250" hidden></option>
+                                <option class="optProduct" value="1.87" data-ref="CFPO250" hidden></option>
 
-                                <option class="optProduct" value="1.98" data-ref="pot250" hidden></option>
+                                <option class="optProduct" value="1.98" data-ref="CFPO250" hidden></option>
 
-                                <option class="optProduct" value="2.09" data-ref="pot250" hidden></option>
+                                <option class="optProduct" value="2.09" data-ref="CFPO250" hidden></option>
 
-                                <option class="optProduct" value="2.20" data-ref="pot250" hidden></option>
+                                <option class="optProduct" value="2.20" data-ref="CFPO250" hidden></option>
 
-                                <option class="optProduct" value="2.31" data-ref="pot250" hidden></option>
+                                <option class="optProduct" value="2.31" data-ref="CFPO250" hidden></option>
 
                             </select>
                         </div>
 
                     </div>
+
+                    <div class="divider mt-2 mb-2 pt-2 pb-2"></div>
 
                     <div class="columns col-12">
                         <div class="btn btn-primary mt-2 pt-2 column col-5 col-mx-auto" id="btnadd">
@@ -133,7 +143,6 @@
                     </div>
                 </form>
 
-                <div class="divider mt-2 mb-2 pt-2 pb-2"></div>
 
             </div>
         </div>

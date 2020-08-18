@@ -1,5 +1,59 @@
 
 $dnone:none ;
+//$mycolor: #3a5282;
+$mycolor: #223A46;
+$btopcolor: 0.05rem solid #223a46;
 .scellement{
   display: $dnone;
+}
+body{
+  color: $mycolor;
+}
+
+
+.divider{
+  border-top: $btopcolor;
+}
+
+.divider-vert {
+  &::before {
+    border-left: $btopcolor;
+  }
+}
+a {
+  color: $mycolor;
+
+  &:focus,
+  &:hover,
+  &:active,
+  &.active {
+    color: $mycolor;
+    text-decoration: underline;
+  }
+
+  &:visited {
+    color: $mycolor;
+  }
+}
+.btn {
+&.btn-primary {
+    background: $mycolor;
+
+  }
+  &:active,
+  &.active {
+    color: $mycolor;
+  }
+
+  // Button Link
+  &.btn-link {
+    color: $mycolor;
+    &:focus,
+    &:hover,
+    &:active,
+    &.active {
+      color: $mycolor;
+    }
+
+  }
 }

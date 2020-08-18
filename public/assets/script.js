@@ -109,8 +109,8 @@ function calcConfig(tempLength, height) {
 function classic() {
     resArray = calcConfig(document.getElementById('longueur').value, +document.getElementById('hauteur').options[document.getElementById('hauteur').selectedIndex].value)
     for (let [key] of Object.entries(resArray)) {
-        let poteau = new RegExp("pot")
-        if (poteau.test(key) || key === 'pla' || key === 'raid' || key === 'emb') resArray[key] += 1
+        let poteau = new RegExp("CFPO")
+        if (poteau.test(key) || key === 'CFPLA' || key === 'CFR' || key === 'CFB') resArray[key] += 1
     }
     calcDOM(resArray)
 }
@@ -119,7 +119,7 @@ function dacClick() {
     if (!document.getElementById('redan').checked) {
         document.getElementById("dimension").style.display = "block"
         document.getElementById('divparent').style.display = "none"
-        document.getElementById('addredan').style.display = "none"
+        document.getElementById('addredan') ? document.getElementById('addredan').style.display = "none": null
         classic()
     }
 }
@@ -129,10 +129,8 @@ function calcDOM(totalArray) {
     for (let [key, value] of Object.entries(totalArray)) {
         prodList.forEach(prod => {
             if (prod.ref === key) totalPrice += +prod.price * value
-
         })
     }
-
     document.getElementById('price').innerHTML = totalPrice.toFixed(2)
 }
 
@@ -144,7 +142,7 @@ function redanClick() {
 
         addRedan()
 
-        document.getElementById('divparent').insertAdjacentHTML('afterend', '<div class="btn btn-primary" id="addredan">' +
+        document.getElementById('divparent').insertAdjacentHTML('afterend', '<div class="btn btn-primary mt-2" id="addredan">' +
             '<svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#plus"/></svg><span class="ml-2 mr-2">Ajouter une section</span></div>')
 
         document.getElementById('addredan').style.display = "inline-block"
@@ -152,7 +150,6 @@ function redanClick() {
         document.getElementById('addredan').addEventListener('click', () => {
             addRedan()
         })
-
         document.getElementById("addredan").click()
     }
 
@@ -182,7 +179,7 @@ function addRedan() {
 
 //ajout boutton suppr
     if (nbredan > 2) {
-        divredan.insertAdjacentHTML('beforeend', '<div class="btn btn-primary btnsup float-right" id="suppRedan' + `${nbredan}` + '">' +
+        divredan.insertAdjacentHTML('beforeend', '<div class="btn btn-primary btnsup float-right mb-2" id="suppRedan' + `${nbredan}` + '">' +
             '<span class="ml-2 mr-2">Supprimer</span><svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#x"/></svg></div>')
 
         document.getElementById('suppRedan' + `${nbredan}`).addEventListener('click', e => {
@@ -198,28 +195,24 @@ function addRedan() {
             i !== btns ? document.querySelectorAll('.btnsup')[i].style.display = "none" : document.querySelectorAll('.btnsup')[i].style.display = "inline-block"
         }
     }
-
     calcRedan()
     document.getElementById('divparent').addEventListener('input', () => {
         calcRedan()
     })
-
 }
 
 function calcRedan() {
     let nbRedan = document.getElementById('divparent').childElementCount
-    // console.log(document.getElementById('divparent').childElementCount)
     redanArray = {}
     let count = nbRedan
     while (count > 0) {
-        // console.log(count)
         let divRedan = document.getElementById(`dimredan${count}`)
         resArray = calcConfig(divRedan.querySelector('.longueur').value, +divRedan.querySelector('.hauteur').value)
 
         //gestion du nombre de poteau
         if (nbRedan !== count && count !== 1) {
             for (let [key] of Object.entries(resArray)) {
-                let poteau = new RegExp("pot")
+                let poteau = new RegExp("CFPO")
                 if (poteau.test(key)) {
                     resArray[key] -= 1
                     resArray[key] === 0 ? delete resArray[key] : null
@@ -236,16 +229,16 @@ function calcRedan() {
         }
         count--
     }
-    let entre = new RegExp("ent")
-    let lame = new RegExp("lam")
+    let entre = new RegExp("CFE")
+    let lame = new RegExp("CFLA")
     let ttblade
     for (let [key] of Object.entries(redanArray)) {
         if (lame.test(key)) ttblade = redanArray[key]
         if (entre.test(key)) redanArray[key] = Math.ceil(ttblade / 8)
     }
 
-    redanArray["pot250"] = +document.getElementById('divparent').childElementCount - 1
-    for (let [key] of Object.entries(redanArray)) if (key === 'pla' || key === 'raid' || key === 'emb') redanArray[key] += 1
+    redanArray["CFPO250"] = +document.getElementById('divparent').childElementCount - 1
+    for (let [key] of Object.entries(redanArray)) if (key === 'CFPLA' || key === 'CFR' || key === 'CFB') redanArray[key] += 1
 
     calcDOM(redanArray)
 }
