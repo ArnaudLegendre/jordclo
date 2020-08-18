@@ -6,6 +6,7 @@ import fs from 'fs'
 import path from 'path'
 import logSys from './server/msgSystem.js'
 import Token from './server/token.js'
+import Prod from './server/products.js'
 
 let token = new Token
 import User from './server/user.js'
@@ -68,7 +69,12 @@ async function prepareResponse(res, resp) {
 async function handleRequest(req, res) {
     if (req.url.pathname.startsWith('/api')) {
         if (req.param.action === 'get' && enableCollection.some(elt => elt === req.param.name)) {
-            await prepareResponse(res, await db.getCollection(req.param.name))
+            if(req.param.name === 'products'){
+                let prod = new Prod
+                await prepareResponse(res, prod.calc(await db.getCollection(req.param.name)))
+            } else {
+                await prepareResponse(res, await db.getCollection(req.param.name))
+            }
         } else if (req.param.action === 'token') {
             if (req.param.state === 'verify')
                 await prepareResponse(res, await token.check(req.param.token))
