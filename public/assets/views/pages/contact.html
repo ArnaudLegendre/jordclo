@@ -1,34 +1,30 @@
 <div class="container">
-    <div class="h3 text-center pb-2">Laissez nous un message</div>
+    <div class="h3 text-center pb-2">Pour toute demande de renseignements, veuillez remplir le formulaire ci-dessous.
+    </div>
     </br></br></br>
-    <div class="col-8 col-md-12 p-centered">
+    <div class="col-10 col-md-12 p-centered">
         <form id="contact">
-            <div class="columns col-12 m-auto">
-                <div class="column form-group col-3 form-inline">
-                    <label class="form-label " for="objet">Objet</label>
-                    <select id="objet" class="form-select ">
-                        <option class="optProduct" value="">Objet de votre demande</option>
-                    </select>
-                    <label class="form-label" for="mail">Adresse e-mail</label>
-                    <input class="form-input" type="email" id="mail">
+            <div class="col-12 m-auto">
+                <div class=" col-10 m-auto ">
+                    <div class="pb-2 pt-2 "><input class="form-input col-12" type="email" id="mail"
+                                                   placeholder="Votre adresse Email"></div>
+                    <div class="pb-2 pt-2 "><input class="form-input pb-2 pt-2 col-12" type="text" id="nom"
+                                                   placeholder="Votre nom"></div>
+                    <div class="pb-2 pt-2 "><input class="form-input pb-2 pt-2 col-12" type="telephone" id="telephone"
+                                                   placeholder="Votre n° de téléphone"></div>
+                    <div class="pb-2 pt-2 "><textarea class="form-input textarea col-12 pb-2 pt-2 " id="message"
+                                                      placeholder="Ecrivez votre message ici" rows="8"></textarea>
+                    </div>
                 </div>
-
-                <div class="divider-vert"></div>
-
-                <div class=" column form-group col-8 form-inline">
-                    <label class="form-label" for="message">Message</label>
-                    <textarea class="form-input" id="message" placeholder="Votre message" rows="8"></textarea>
-                </div>
-
             </div>
-            <div class="divider mt-2 mb-2 pt-2 pb-2"></div>
+            <div class="divider mt-2 mb-2 pt-2 "></div>
 
             <div class="columns col-12">
-                <div class="btn btn-primary mt-2 pt-2 mb-2 pb-2 column col-2 col-ml-auto" id="btnadd">
+                <button class="btn btn-primary mb-2 pb-2 column col-2 col-ml-auto" id="btnadd">
                     <svg class="feather ml-2 mr-1">
                         <use xlink:href="assets/svg/feather-sprite.svg#send"/>
                     </svg>
-                    <span class="ml-2 mr-2">Envoyer</span></div>
+                    <span class="ml-2 mr-2">Envoyer</span></button>
             </div>
         </form>
     </div>

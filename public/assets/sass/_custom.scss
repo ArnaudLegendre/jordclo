@@ -1,56 +1,92 @@
-
-$dnone:none ;
-//$mycolor: #3a5282;
-$mycolor: #223A46;
-$bgcolor: #1a2c35;
+$dnone: none;
+$mycolor: #162B47;
+$red: #9E0716;
+$bgcolor: #C0C0C0;
 $white: #FFFFFF;
-$none:none;
+$none: none;
 $btopcolor: 0.05rem solid #223a46;
-.scellement{
-  display: $dnone;
-}
-body{
-  color: $mycolor;
-}
-.bg-dark{
-  background: $bgcolor !important;
-  color: $white;
-}
-.unstyled{
-  list-style: $none;
-}
-.divider{
-  border-top: $btopcolor;
-}
+$bxshadow: 1px 1px 1px 1px rgba(51, 51, 51, 0.1);
 
-.divider-vert {
-  &::before {
-    border-left: $btopcolor;
-  }
-}
+
+//style des liens
 a {
   color: $mycolor;
+  position: relative;
 
   &:focus,
-  &:hover,
   &:active,
+  &:visited,
   &.active {
     color: $mycolor;
     text-decoration: underline;
   }
 
-  &:visited {
-    color: $mycolor;
+}
+a:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  height: 2px;
+  width: 0;
+  background: transparent;
+}
+
+.link:after {
+  transition: width .5s ease, background-color .5s ease, left .5s ease;
+}
+
+.link:hover:after {
+  width: 100%;
+  left: 0;
+  background: $red;
+}
+//style radio scellement
+.scellement {
+  display: $dnone;
+}
+//style textarea
+.textarea {
+  resize: $none;
+}
+//style footer
+.footer {
+  background: $bgcolor !important;
+}
+//style menu
+.box-shadow {
+  box-shadow: $bxshadow;
+}
+//style divers
+body {
+  color: $mycolor;
+}
+.unstyled {
+  list-style: $none;
+}
+.divider {
+  border-top: $btopcolor;
+}
+.divider-vert {
+  &::before {
+    border-left: $btopcolor;
   }
 }
+
+//style bouton ajout et en savoir plus
 .btn {
-&.btn-primary {
+  &.btn-primary {
     background: $mycolor;
 
-  }
-  &:active,
-  &.active {
-    color: $mycolor;
+    &:focus,
+    &:hover,
+    &:active,
+    &.active {
+      background: $red;
+      color:$white;
+      text-decoration: underline $red;
+      border: 1px solid $mycolor ;
+    }
   }
 
   // Button Link
@@ -60,23 +96,16 @@ a {
     &:hover,
     &:active,
     &.active {
-      color: $mycolor;
+      color: $red;
+
     }
-
   }
 }
-.footerlink{
-  color: $white;
 
-  &:focus,
-  &:hover,
-  &:active,
-  &.active {
-    color: $white;
-    text-decoration: underline;
-  }
-
-  &:visited {
-    color: $white;
+.form-input{
+  padding: 0 0.4rem;
+  &::placeholder {
+    color: $mycolor !important;
   }
 }
+
