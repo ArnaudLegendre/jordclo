@@ -1,13 +1,13 @@
 $dnone: none;
 $mycolor: #162B47;
 $red: #9E0716;
-$bgcolor: #C0C0C0;
+$bgcolor: #eeeeee;
 $white: #FFFFFF;
 $none: none;
 $btopcolor: 0.05rem solid #223a46;
 $bxshadow: 1px 1px 1px 1px rgba(51, 51, 51, 0.1);
 
-
+@font-face { 	font-family: "questrial"; 	src: url('assets/font/Questrial-Regular.ttf'); }
 //style des liens
 a {
   color: $mycolor;
@@ -15,6 +15,7 @@ a {
 
   &:focus,
   &:active,
+  &:hover,
   &:visited,
   &.active {
     color: $mycolor;
@@ -22,6 +23,7 @@ a {
   }
 
 }
+
 a:after {
   content: '';
   position: absolute;
@@ -41,32 +43,51 @@ a:after {
   left: 0;
   background: $red;
 }
+
 //style radio scellement
 .scellement {
   display: $dnone;
 }
+
 //style textarea
 .textarea {
   resize: $none;
 }
+
 //style footer
 .footer {
   background: $bgcolor !important;
 }
-//style menu
-.box-shadow {
-  box-shadow: $bxshadow;
+.bandeau{
+  background: white;
+  color: $bgcolor
+
 }
+#mapid { height: 382px; }
+//style menu
+.mymenu {
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  font-size: 20px;
+}
+.box-shadow{
+   box-shadow: $bxshadow;
+ }
+
 //style divers
 body {
   color: $mycolor;
+  font-family: "questrial";
 }
+
 .unstyled {
   list-style: $none;
 }
+
 .divider {
   border-top: $btopcolor;
 }
+
 .divider-vert {
   &::before {
     border-left: $btopcolor;
@@ -83,15 +104,16 @@ body {
     &:active,
     &.active {
       background: $red;
-      color:$white;
+      color: $white;
       text-decoration: underline $red;
-      border: 1px solid $mycolor ;
+      border: 1px solid $mycolor;
     }
   }
 
   // Button Link
   &.btn-link {
     color: $mycolor;
+
     &:focus,
     &:hover,
     &:active,
@@ -102,10 +124,8 @@ body {
   }
 }
 
-.form-input{
+.form-input {
   padding: 0 0.4rem;
-  &::placeholder {
-    color: $mycolor !important;
-  }
+
 }
 

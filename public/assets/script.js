@@ -3,6 +3,19 @@ let nbredan = 0
 document.addEventListener('pageReady', () => {
     prodList = JSON.parse(localStorage.getItem('products'))
     nbredan = 0
+    if(document.getElementById('mapid')){
+        let mymap = L.map('mapid').setView([44.4302027, 0.6568098], 17);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 20,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoiYXpoYXEiLCJhIjoiY2tlMnRlZXZyMGNuZzJ6bzQyOGg3ZGQzNCJ9.N8RwmZZt6NKIMFoDtrqBgQ'
+        }).addTo(mymap);
+        let marker = L.marker([44.4302027, 0.6568098]).addTo(mymap);
+        marker.bindPopup("<b>Coprometal SA</b><br>Lieu dit Mau </b><br> 47 300 Le Lédat ").openPopup();
+    }
     if (document.getElementById('configclo')) {
         classic()
         document.getElementById("btnadd").addEventListener('click', () => {
@@ -23,6 +36,19 @@ document.addEventListener('pageReady', () => {
 })
 document.addEventListener('pageChange', () => {
     nbredan = 0
+    if(document.getElementById('mapid')){
+        let mymap = L.map('mapid').setView([44.4302027, 0.6568098], 17);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 20,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoiYXpoYXEiLCJhIjoiY2tlMnRlZXZyMGNuZzJ6bzQyOGg3ZGQzNCJ9.N8RwmZZt6NKIMFoDtrqBgQ'
+        }).addTo(mymap);
+        let marker = L.marker([44.4302027, 0.6568098]).addTo(mymap);
+        marker.bindPopup("<b>Coprometal SA</b><br>Lieu dit Mau </b><br> 47 300 Le Lédat ").openPopup();
+    }
     if (document.getElementById('configclo')) {
         classic()
         document.getElementById("btnadd").addEventListener('click', () => {
