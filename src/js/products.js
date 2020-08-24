@@ -16,65 +16,38 @@ window.addEventListener('pageChange', () => {
 
 let optionsList = {}
 let productPrice
-let productList
 
 function buildProduct() {
 
     document.getElementById('qtyInput') ? document.getElementById('qtyInput').addEventListener('input', () => calcProductPrice()) : null
 
     let target = location.pathname.split('/').pop()
-    productList = JSON.parse(localStorage.getItem('products'))
 
-
-    productList.forEach(elt => {
+    productsData.forEach(elt => {
 
         if (elt.slug === target) {
             document.querySelector('h1').innerHTML = elt.name
             document.getElementById('ref').innerHTML = elt.ref
+            document.getElementById('price').innerHTML = productPrice = elt.price
 
             let prodImg
             elt.images[0] ? prodImg = elt.images[0] : prodImg = 'assets/images/aucune-image.png'
             document.getElementById('productImg').src = prodImg
 
-            // Calc price & write technical
-            let totalVarPrice = 0
-            let prodPrice = 0
             let tableTech = document.getElementById('productTech').querySelector('tbody')
             elt.tech !== undefined ? tableTech.innerHTML = tableTech.innerHTML.concat(`<tr><td>${elt.tech}</td></tr>`) : null
 
-            if (elt.priceRules) {
-                elt.priceRules.forEach(rule => {
-                    prodPrice = prodPrice === 0 ? parseFloat(elt.price) : prodPrice
-                    prodPrice = eval(rule.replace(new RegExp(/\$p/g), prodPrice))
-                })
-                prodPrice = prodPrice.toFixed(2)
-            }
-
             if (elt.variables) {
-                for (const [key, value] of Object.entries(elt.variables)) {
-                    let varPrice
-                    productList.forEach(prod => {
+                for (const [key] of Object.entries(elt.variables)) {
+                    productsData.forEach(prod => {
                         if (prod.ref === key) {
-                            let calcVarPrice = 0
-                            if (prod.priceRules) {
-                                prod.priceRules.forEach(rule => {
-                                    calcVarPrice = calcVarPrice === 0 ? parseFloat(prod.price) : calcVarPrice
-                                    calcVarPrice = eval(rule.replace(new RegExp(/\$p/g), calcVarPrice))
-                                })
-                                calcVarPrice = calcVarPrice.toFixed(2)
-                            } else {
-                                calcVarPrice = prod.price
-                            }
-                            varPrice = calcVarPrice * value
-                            totalVarPrice = totalVarPrice + varPrice
                             let rowHTML = `<tr><td>${prod.name} | ${prod.tech}</td></tr>`
                             tableTech.innerHTML = tableTech.innerHTML.concat(rowHTML)
                         }
                     })
                 }
             }
-            let totalProdPrice = (parseFloat(prodPrice) + totalVarPrice).toFixed(2)
-            document.getElementById('price').innerHTML = productPrice = totalProdPrice
+
 
             // Write desc
             let prodDesc = document.getElementById('productDesc')
@@ -109,7 +82,7 @@ function buildProduct() {
                         groupValues.forEach(e => {
 
                             let optPrice = e.price
-                            productList.forEach(prod => {
+                            productsData.forEach(prod => {
                                 prod.ref === e.ref ? optPrice = prod.price : null
                             })
 
@@ -228,11 +201,9 @@ function productsPage(cat = 'all', count = -1) {
     let productsPage = document.getElementById('productsPage')
     if (productsPage) {
 
-        let productsList = JSON.parse(localStorage.getItem('products'))
-
         let counter = 1
 
-        productsList.forEach(prod => {
+        productsData.forEach(prod => {
 
             let thisProd
 
@@ -255,18 +226,15 @@ function productsPage(cat = 'all', count = -1) {
 }
 
 function getProductsByCat() {
-
     let cats = document.querySelectorAll('[data-cat]')
 
     cats.forEach(catNode => {
-
-        let productsList = JSON.parse(localStorage.getItem('products'))
 
         let counter = 1
         let count = parseInt(catNode.dataset.count)
         let cat = catNode.dataset.cat
 
-        productsList.forEach(prod => {
+        productsData.forEach(prod => {
 
             let thisProd
 
@@ -274,49 +242,15 @@ function getProductsByCat() {
 
             if (thisProd && (counter <= count || count === -1)) {
                 counter++
+                let prodImg
                 let prodCardHTML = document.createElement('span')
                 prodCardHTML.innerHTML = productCardHTML
                 prodCardHTML.querySelector('.productCard').href = `#${thisProd.slug}`
                 prodCardHTML.querySelector('.productCard').dataset.filters = `[${JSON.stringify(thisProd.filters)}]`
                 prodCardHTML.querySelector('.productName').innerHTML = thisProd.name
-
-                let prodImg
                 thisProd.images[0] ? prodImg = thisProd.images[0] : prodImg = '/assets/images/aucune-image.png'
                 prodCardHTML.querySelector('.productImg').src = prodImg
-                let prodPrice = 0
-                if (thisProd.priceRules) {
-                    thisProd.priceRules.forEach(rule => {
-                        prodPrice = prodPrice === 0 ? parseFloat(thisProd.price) : prodPrice
-                        prodPrice = eval(rule.replace(new RegExp(/\$p/g), prodPrice))
-                    })
-                    prodPrice = prodPrice.toFixed(2)
-                }
-
-                let totalVarPrice = 0
-                if (thisProd.variables) {
-                    for (const [key, value] of Object.entries(thisProd.variables)) {
-                        let varPrice
-                        productsList.forEach(p => {
-                            let calcVarPrice = 0
-                            if (p.ref === key) {
-                                if (p.priceRules) {
-                                    p.priceRules.forEach(rule => {
-                                        calcVarPrice = calcVarPrice === 0 ? parseFloat(p.price) : calcVarPrice
-                                        calcVarPrice = eval(rule.replace(new RegExp(/\$p/g), calcVarPrice))
-                                    })
-                                    calcVarPrice = calcVarPrice.toFixed(2)
-                                } else {
-                                    calcVarPrice = p.price
-                                }
-                                varPrice = calcVarPrice * value
-                                totalVarPrice = totalVarPrice + varPrice
-                            }
-                        })
-                    }
-
-                }
-                let totalProdPrice = (parseFloat(thisProd.price) + totalVarPrice).toFixed(2)
-                prodCardHTML.querySelector('.productPrice').innerHTML = `${totalProdPrice}€ TTC`
+                prodCardHTML.querySelector('.productPrice').innerHTML = `${thisProd.price}€ TTC`
                 catNode.insertAdjacentHTML('beforeend', prodCardHTML.innerHTML)
             }
         })

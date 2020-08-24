@@ -46,6 +46,7 @@ function refreshCart() {
         buttonCart.classList.remove('buttonModal')
         buttonCart.removeAttribute('data-modaltarget')
 
+
         if (cartLocal != null) {
 
             buttonCart.classList.remove('tooltip')
@@ -55,6 +56,7 @@ function refreshCart() {
             JSON.parse(cartLocal).forEach(e => {
 
                 tbody.innerHTML += cartRowHTML
+                console.log(tbody)
 
                 let optsName = ''
                 if (e.optName != undefined)
@@ -111,7 +113,7 @@ async function addCartFromProductPage(e) {
     }
 
     let prodVar = new Promise(resolve => {
-        productList.forEach(prod => {
+        productsData.forEach(prod => {
             prod.ref === productElem.querySelector('#ref').innerHTML ? resolve(prod.variables) : null
         })
     })
@@ -155,7 +157,7 @@ async function addCart(ref, qty) {
     let data = []
 
     let prod = new Promise(resolve => {
-        productList.forEach(prod => {
+        productsData.forEach(prod => {
             prod.ref === ref ? resolve(prod) : null
         })
     })

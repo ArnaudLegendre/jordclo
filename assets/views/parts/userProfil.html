@@ -1,0 +1,86 @@
+<div class="panel mb-2">
+    <div class="panel-header">
+        <div class="h4">Mes informations <svg class="feather editProfil"><use xlink:href="assets/images/feather-sprite.svg#edit"/></svg></div>
+    </div>
+    <div class="panel-body">
+        <div class="columns">
+            <div class="col mr-2 mb-2 text-bold">Email :</div>
+            <div class="col"><span id="emailField"></span></div>
+        </div>
+        <div class="columns">
+            <div class="col mr-2 mb-2 text-bold">Prénom :</div>
+            <div class="col"><span class="labelSpan" id="firstnameField"></span> <input class="w-100" type="text" name="firstnameField" value="" hidden></div>
+        </div>
+        <div class="columns">
+            <div class="col mr-2 mb-2 text-bold">Nom :</div>
+            <div class="col"><span class="labelSpan" id="lastnameField"></span> <input class="w-100" type="text" name="lastnameField" value="" hidden></div>
+        </div>
+        <div class="columns">
+            <div class="col mr-2 mb-2 text-bold">Téléphone :</div>
+            <div class="col"><span class="labelSpan" id="phoneField"></span> <input class="w-100" type="text" name="phoneField" value="" hidden></div>
+        </div>
+        <div class="panel-footer">
+            <div class="txt-right buttonSection" hidden><span class="cancelSave mr-2">Annuler</span> <button class="saveProfil btn"><svg class="feather"><use xlink:href="assets/images/feather-sprite.svg#save"/></svg> Enregistrer</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="panel mt-2 mb-2">
+    <div class="panel-header">
+        <div class="h4">Adresse de facturation <svg class="feather editProfil"><use xlink:href="assets/images/feather-sprite.svg#edit"/></svg></div>
+    </div>
+    <div class="panel-body">
+        <div class="columns">
+            <div class="col mr-2 mb-2 text-bold">Adresse :</div>
+            <div class="col"><span class="labelSpan" id="addressField"></span> <input class="w-100" type="text" name="addressField" value="" hidden></div>
+        </div>
+        <div class="columns">
+            <div class="col mr-2 mb-2 text-bold">Code Postale :</div>
+            <div class="col"><span class="labelSpan" id="postalcodeField"></span> <input class="w-100" type="text" name="postalcodeField" value="" hidden></div>
+        </div>
+        <div class="columns">
+            <div class="col mr-2 mb-2 text-bold">Ville :</div>
+            <div class="col"><span class="labelSpan" id="townField"></span> <input class="w-100" type="text" name="townField" value="" hidden></div>
+        </div>
+        <div class="panel-footer">
+            <div class="txt-right buttonSection" hidden><span class="cancelSave mr-2">Annuler</span> <button class="saveProfil btn"><svg class="feather"><use xlink:href="assets/images/feather-sprite.svg#save"/></svg> Enregistrer</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="panel mt-2 mb-2">
+    <div class="panel-header">
+        <div class="h4">Adresse de livraison <svg class="feather editProfil"><use xlink:href="assets/images/feather-sprite.svg#edit"/></svg></div>
+    </div>
+    <div class="panel-body">
+        <div class="columns">
+            <div class="col mr-2 mb-2 text-bold">Adresse:</div>
+            <div class="col"><span class="labelSpan" id="addressShippingField"></span> <input class="w-100" type="text" name="addressShippingField" value="" hidden></div>
+        </div>
+        <div class="columns">
+            <div class="col mr-2 mb-2 text-bold">Code Postale:</div>
+            <div class="col"><span class="labelSpan" id="postalcodeShippingField"></span> <input class="w-100" type="text" name="postalcodeShippingField" value="" hidden></div>
+        </div>
+        <div class="columns">
+            <div class="col mr-2 mb-2 text-bold">Ville:</div>
+            <div class="col"><span class="labelSpan" id="townShippingField"></span> <input class="w-100" type="text" name="townShippingField" value="" hidden></div>
+        </div>
+        <div class="panel-footer">
+            <div class="txt-right buttonSection" hidden><span class="cancelSave mr-2">Annuler</span><button class="saveProfil btn"><svg class="feather"><use xlink:href="assets/images/feather-sprite.svg#save"/></svg> Enregistrer</button></div>
+        </div>
+    </div>
+</div>
+
+<div class="panel editPassword mt-2 mb-2">
+    <div class="panel-header">
+        <div class="h4">Modifier mon mot de passe <svg class="feather editProfil"><use xlink:href="assets/images/feather-sprite.svg#edit"/></svg></div>
+    </div>
+    <div class="panel-body">
+        <div class="col-3 mb-2"><input name="oldPassword" id="oldPassword" type="password" placeholder="Mon mot de passe actuel" hidden></div>
+        <div class="col-3 mb-2"><input name="newPassword" id="newPassword" type="password" placeholder="Mon nouveau mot de passe" hidden></div>
+        <div class="col-3 mb-2 pb-2"><input name="confirmPassword" id="confirmPassword" type="password" placeholder="Confirmation du mot de passe" hidden></div>
+        <div class="txt-right buttonSection mt-2 pt-2 mb-2 pb-2" hidden><span class="cancelSave mr-2">Annuler</span><button class="editPassword btn"><svg class="feather saveProfil"><use xlink:href="assets/images/feather-sprite.svg#save"/></svg> Enregistrer</button></div>
+    </div>
+</div>
+
+<a class="purchaseButton" href="#commander" hidden><button class="btn">Finaliser ma commande</button></a>

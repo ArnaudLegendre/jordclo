@@ -11,3 +11,8 @@
 [hidden] {
   display:none!important;
 }
+
+[type="number"] {
+  max-width:50px;
+  text-align: center;
+}

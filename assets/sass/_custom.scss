@@ -1,0 +1,241 @@
+//$mycolor: #162B47;
+//$mycolor: #01579b;
+//$mycolor: #476996;
+//$red: #9E0716;
+//$bxshadow: 1px 1px 1px 1px rgba(66, 165, 245, 0.1);
+$mycolor: #333333;
+$red: #EE0000;
+$flashy: #42a5f5;
+$bgcolor: #ffffff;
+$white: #FFFFFF;
+$none: none;
+$btopcolor: 0.05rem solid $mycolor;
+
+@font-face {
+  font-family: "questrial";
+  src: url('assets/font/Questrial-Regular.ttf');
+}
+
+//style des liens du menu
+a {
+  position: relative;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+a:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  height: 2px;
+  width: 0;
+  background: transparent;
+  color: $red;
+}
+
+.link {
+  font-weight: 200;
+  text-decoration: none !important;
+  border: 0.05rem solid transparent;
+  margin-left: 0.4rem !important;
+  margin-right: 0.4rem !important;
+
+}
+
+.link:hover {
+  color: $red;
+}
+
+.link:after {
+  transition: width 0.4s ease, background-color 0.4s ease, left 0.4s ease;
+}
+
+.link:hover:after {
+  width: 100%;
+  left: 0;
+  background: $red;
+}
+
+//style radio scellement
+.scellement {
+  display: none;
+}
+
+//style textarea
+.textarea {
+  resize: $none;
+}
+
+//style footer
+.footer {
+  background: white !important;
+  box-shadow: 0 0 22px rgba(0, 0, 0, .1);
+}
+
+.footerbottom {
+  background: #ffffff;
+  color: #333333;
+}
+
+
+//style menu
+.mymenu {
+  letter-spacing: 0.5px;
+  font-size: 20px;
+}
+
+.navbar {
+  background: white;
+}
+
+//style divers
+body {
+  color: $mycolor;
+}
+
+html {
+  background: #E9E9E9;
+}
+
+.mygreybox {
+  box-shadow: 0 0 22px rgba(0, 0, 0, .1);
+  background: white;
+  border-radius: 0.1rem;
+}
+
+#mapid {
+  height: 382px;
+}
+
+.unstyled {
+  list-style: $none;
+}
+
+.divider {
+  border-top: $btopcolor;
+}
+
+.divider-vert {
+  &::before {
+    border-left: $btopcolor;
+  }
+}
+
+//style bouton en savoir plus
+.btn-moreinfo {
+  background: #EE0000;
+  color: $white;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 0.1rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  height: 1.8rem;
+  line-height: 1.2rem;
+  outline: none;
+  padding: 0.25rem 0.4rem;
+  text-align: center;
+  transition: background 0.2s, border 0.2s, box-shadow 0.2s, color 0.2s;
+  user-select: none;
+  white-space: nowrap;
+
+  &:focus,
+  &:hover,
+  &:active,
+  &:visited,
+  &.active {
+    background: #bb0000;
+    color: $white;
+    border: 1px solid #bb0000;
+  }
+}
+
+//Card
+.my-card {
+  padding: 20px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, .2);
+  border-top: 1px solid rgba(0, 0, 0, .05);
+  border-left: 1px solid rgba(0, 0, 0, .05);
+}
+
+//lien cloture
+.linkclot {
+  &:hover {
+    div:not(.btn-moreinfo) {
+      text-decoration: underline;
+    }
+  }
+}
+
+//lien produit
+.link-prod {
+  color: $mycolor;
+
+  &:focus,
+  &:active,
+  &:visited,
+  &.active {
+    color: $mycolor;
+  }
+  &:hover {
+    text-decoration: underline;
+    color: $mycolor;
+  }
+}
+
+//formulaire
+.form-input {
+  padding: 0 0.4rem;
+
+  &:placeholder-shown,
+  &::placeholder {
+    color: #333333;
+  }
+}
+
+
+//.btn {
+//  &.btn-primary {
+//    background: $flashy;
+//    text-decoration: none;
+//
+//    &:focus,
+//    &:hover,
+//    &:active,
+//    &.active {
+//      background: $red;
+//      color: $white;
+//      text-decoration: underline $red;
+//      border: 1px solid $flashy;
+//    }
+//  }
+//
+//  // Button Link
+//  &.btn-link {
+//    color: $mycolor;
+//
+//    &:focus,
+//    &:hover,
+//    &:active,
+//    &.active {
+//      color: $red;
+//
+//    }
+//  }
+//}
+//.navtop {
+//  height: 1.875em;
+//  background: $flashy;
+//  color: white;
+//  display: flex;
+//  align-items: center;
+//}
+
+//.box-shadow {
+//  box-shadow: $bxshadow;
+//}
+
