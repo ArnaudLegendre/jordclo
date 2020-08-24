@@ -1,13 +1,5 @@
-//$mycolor: #162B47;
-//$mycolor: #01579b;
-//$mycolor: #476996;
-//$red: #9E0716;
-//$bxshadow: 1px 1px 1px 1px rgba(66, 165, 245, 0.1);
 $mycolor: #333333;
 $red: #EE0000;
-$flashy: #42a5f5;
-$bgcolor: #ffffff;
-$white: #FFFFFF;
 $none: none;
 $btopcolor: 0.05rem solid $mycolor;
 
@@ -95,6 +87,7 @@ a:after {
 //style divers
 body {
   color: $mycolor;
+  font-family: "questrial";
 }
 
 html {
@@ -125,10 +118,10 @@ html {
   }
 }
 
-//style bouton en savoir plus
+//style bouton en savoir plus et ajout au panier
 .btn-moreinfo {
   background: #EE0000;
-  color: $white;
+  color: white;
   text-decoration: none;
   border: 1px solid transparent;
   border-radius: 0.1rem;
@@ -149,7 +142,7 @@ html {
   &:visited,
   &.active {
     background: #bb0000;
-    color: $white;
+    color: white;
     border: 1px solid #bb0000;
   }
 }
@@ -196,46 +189,3 @@ html {
     color: #333333;
   }
 }
-
-
-//.btn {
-//  &.btn-primary {
-//    background: $flashy;
-//    text-decoration: none;
-//
-//    &:focus,
-//    &:hover,
-//    &:active,
-//    &.active {
-//      background: $red;
-//      color: $white;
-//      text-decoration: underline $red;
-//      border: 1px solid $flashy;
-//    }
-//  }
-//
-//  // Button Link
-//  &.btn-link {
-//    color: $mycolor;
-//
-//    &:focus,
-//    &:hover,
-//    &:active,
-//    &.active {
-//      color: $red;
-//
-//    }
-//  }
-//}
-//.navtop {
-//  height: 1.875em;
-//  background: $flashy;
-//  color: white;
-//  display: flex;
-//  align-items: center;
-//}
-
-//.box-shadow {
-//  box-shadow: $bxshadow;
-//}
-

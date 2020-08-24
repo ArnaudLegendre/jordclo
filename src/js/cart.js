@@ -56,7 +56,6 @@ function refreshCart() {
             JSON.parse(cartLocal).forEach(e => {
 
                 tbody.innerHTML += cartRowHTML
-                console.log(tbody)
 
                 let optsName = ''
                 if (e.optName != undefined)

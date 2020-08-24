@@ -157,7 +157,6 @@ function calcDOM(totalArray) {
         })
     }
     document.getElementById('price').innerHTML = totalPrice.toFixed(2)
-    console.log(totalArray)
 }
 
 function redanClick() {
