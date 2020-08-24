@@ -7,17 +7,23 @@ $btopcolor: 0.05rem solid $mycolor;
   font-family: "questrial";
   src: url('assets/font/Questrial-Regular.ttf');
 }
+//style menu
+.mymenu {
+  letter-spacing: 0.5px;
+  font-size: 20px;
+}
+.navbar {
+  background: white;
+}
 
 //style des liens du menu
 a {
   position: relative;
   text-decoration: none;
-
   &:hover {
     text-decoration: none;
   }
 }
-
 a:after {
   content: '';
   position: absolute;
@@ -28,7 +34,6 @@ a:after {
   background: transparent;
   color: $red;
 }
-
 .link {
   font-weight: 200;
   text-decoration: none !important;
@@ -37,15 +42,12 @@ a:after {
   margin-right: 0.4rem !important;
 
 }
-
 .link:hover {
   color: $red;
 }
-
 .link:after {
   transition: width 0.4s ease, background-color 0.4s ease, left 0.4s ease;
 }
-
 .link:hover:after {
   width: 100%;
   left: 0;
@@ -55,11 +57,6 @@ a:after {
 //style radio scellement
 .scellement {
   display: none;
-}
-
-//style textarea
-.textarea {
-  resize: $none;
 }
 
 //style footer
@@ -73,45 +70,27 @@ a:after {
   color: #333333;
 }
 
-
-//style menu
-.mymenu {
-  letter-spacing: 0.5px;
-  font-size: 20px;
-}
-
-.navbar {
-  background: white;
-}
-
 //style divers
 body {
   color: $mycolor;
   font-family: "questrial";
 }
-
 html {
   background: #E9E9E9;
 }
-
 .mygreybox {
   box-shadow: 0 0 22px rgba(0, 0, 0, .1);
   background: white;
   border-radius: 0.1rem;
 }
-
-#mapid {
-  height: 382px;
-}
-
 .unstyled {
   list-style: $none;
 }
 
+//divider
 .divider {
   border-top: $btopcolor;
 }
-
 .divider-vert {
   &::before {
     border-left: $btopcolor;
@@ -188,4 +167,10 @@ html {
   &::placeholder {
     color: #333333;
   }
+}
+.textarea {
+  resize: $none;
+}
+#mapid {
+  height: 382px;
 }
