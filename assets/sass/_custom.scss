@@ -2,6 +2,14 @@ $mycolor: #333333;
 $red: #EE0000;
 $none: none;
 $btopcolor: 0.05rem solid $mycolor;
+//@media screen and (min-width: 1310px) {
+//  .mobile-menu{
+//    visibility: hidden;
+//  }
+//}
+//@media screen and (min-width: 760px) and (max-width: 760px) {
+//
+//}
 
 @font-face {
   font-family: "questrial";
@@ -125,6 +133,30 @@ html {
     border: 1px solid #bb0000;
   }
 }
+//couleur cloture
+#couleur .form-radio .label-name {
+  width: 45px;
+  height: 45px;
+  display: inline-block;
+  font-size: 0;
+  cursor: pointer;
+  border: solid 1px #000;
+
+}
+#couleur .form-radio{
+padding: 0;
+}
+.form-radio .form-icon {
+display: none;
+  &:checked{
+    #couleur .form-radio .label-name {
+      border: solid 2px #ff2400;
+    }
+  }
+}
+//#couleur .form-radio .label-name .ralSelect {
+//  border: solid 2px #ff2400;
+//}
 
 //Card
 .my-card {
@@ -137,6 +169,7 @@ html {
 //lien cloture
 .linkclot {
   &:hover {
+    box-shadow: 0 2px 2px rgba(0, 0, 0, .5);
     div:not(.btn-moreinfo) {
       text-decoration: underline;
     }
@@ -155,6 +188,7 @@ html {
   }
   &:hover {
     text-decoration: underline;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, .5);
     color: $mycolor;
   }
 }

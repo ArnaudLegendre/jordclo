@@ -1,9 +1,8 @@
 let nbredan = 0
 document.addEventListener('pageReady', () => {
-    console.log(productsData)
     nbredan = 0
     if(document.getElementById('mapid')){
-        let mymap = L.map('mapid').setView([44.4302027, 0.6568098], 17);
+        let mymap = L.map('mapid').setView([44.4302027, 0.6568098], 12);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
             maxZoom: 20,
@@ -36,7 +35,7 @@ document.addEventListener('pageReady', () => {
 document.addEventListener('pageChange', () => {
     nbredan = 0
     if(document.getElementById('mapid')){
-        let mymap = L.map('mapid').setView([44.4302027, 0.6568098], 17);
+        let mymap = L.map('mapid').setView([44.4302027, 0.6568098], 12);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
             maxZoom: 20,

@@ -63,9 +63,9 @@ function refreshCart() {
 
                 tbody.lastElementChild.querySelector('.refLabel > .value').innerHTML = e.ref
                 tbody.lastElementChild.querySelector('.productLabel > .value').innerHTML = `${e.name}. ${optsName}`
-                tbody.lastElementChild.querySelector('.priceLabel > .value').innerHTML = e.price
+                tbody.lastElementChild.querySelector('.priceLabel > .value').innerHTML = Number(Math.round(e.price + 'e2') + 'e-2').toFixed(2)
                 tbody.lastElementChild.querySelector('.qtyLabel > .value').innerHTML = e.qty
-                tbody.lastElementChild.querySelector('.totalLabel > .value').innerHTML = (e.price * e.qty).toFixed(2)
+                tbody.lastElementChild.querySelector('.totalLabel > .value').innerHTML = Number(Math.round((e.price * e.qty) + 'e2') + 'e-2').toFixed(2)
 
                 if (e.options.length > 0) {
 
@@ -80,7 +80,7 @@ function refreshCart() {
 
             })
 
-            document.querySelector('.cartPrice').innerHTML = totalPrice.toFixed(2)
+            document.querySelector('.cartPrice').innerHTML = Number(Math.round(totalPrice + 'e2') + 'e-2').toFixed(2)
 
             document.getElementById('buttonCart').querySelector('svg').setAttribute('data-modaltarget', 'cart')
 
