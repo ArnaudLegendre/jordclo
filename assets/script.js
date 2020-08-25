@@ -1,7 +1,7 @@
 let nbredan = 0
 document.addEventListener('pageReady', () => {
     nbredan = 0
-    if(document.getElementById('mapid')){
+    if (document.getElementById('mapid')) {
         let mymap = L.map('mapid').setView([44.4302027, 0.6568098], 12);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -16,6 +16,7 @@ document.addEventListener('pageReady', () => {
     }
     if (document.getElementById('configclo')) {
         classic()
+        color()
         document.getElementById("btnadd").addEventListener('click', () => {
             addingCart()
         })
@@ -34,7 +35,7 @@ document.addEventListener('pageReady', () => {
 })
 document.addEventListener('pageChange', () => {
     nbredan = 0
-    if(document.getElementById('mapid')){
+    if (document.getElementById('mapid')) {
         let mymap = L.map('mapid').setView([44.4302027, 0.6568098], 12);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -143,19 +144,32 @@ function dacClick() {
     if (!document.getElementById('redan').checked) {
         document.getElementById("dimension").style.display = "block"
         document.getElementById('divparent').style.display = "none"
-        document.getElementById('addredan') ? document.getElementById('addredan').style.display = "none": null
+        document.getElementById('addredan') ? document.getElementById('addredan').style.display = "none" : null
         classic()
     }
 }
-
+let price
 function calcDOM(totalArray) {
+
     let totalPrice = 0
+    price=0
     for (let [key, value] of Object.entries(totalArray)) {
         productsData.forEach(prod => {
             if (prod.ref === key) totalPrice += +prod.price * value
         })
     }
+    if (document.querySelector('input[name="couleur"]:checked').dataset.std !== "std") {
+        console.log('non standard')
+        if (totalPrice <= 1500) {
+            totalPrice += 150
+            console.log(totalPrice)
+        }
+    } else {
+        console.log("standard")
+    }
+
     document.getElementById('price').innerHTML = totalPrice.toFixed(2)
+    price=totalPrice
 }
 
 function redanClick() {
@@ -166,8 +180,8 @@ function redanClick() {
 
         addRedan()
 
-        document.getElementById('divparent').insertAdjacentHTML('afterend', '<div class="btn btn-primary mt-2" id="addredan">' +
-            '<svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#plus"/></svg><span class="ml-2 mr-2">Ajouter une section</span></div>')
+        document.getElementById('divparent').insertAdjacentHTML('afterend', '<div class="btn-moreinfo mt-2" id="addredan">' +
+            '<svg class="feather "><use xlink:href="assets/images/feather-sprite.svg#plus"/></svg><span class="ml-2 mr-2">Ajouter une section</span></div>')
 
         document.getElementById('addredan').style.display = "inline-block"
 
@@ -185,7 +199,7 @@ function addRedan() {
 
     //creation div dimredan
     let divredan = document.createElement('div')
-    divredan.classList.add("form-group", "form-inline", "col-5", "column","m-auto")
+    divredan.classList.add("form-group", "form-inline", "col-5", "column", "m-auto")
     divredan.id = 'dimredan' + `${nbredan}`
     divparent.insertAdjacentElement('beforeend', divredan)
 
@@ -203,8 +217,8 @@ function addRedan() {
 
 //ajout boutton suppr
     if (nbredan > 2) {
-        divredan.insertAdjacentHTML('beforeend', '<div class="btn btn-primary btnsup float-right mb-2" id="suppRedan' + `${nbredan}` + '">' +
-            '<span class="ml-2 mr-2">Supprimer</span><svg class="feather "><use xlink:href="assets/svg/feather-sprite.svg#x"/></svg></div>')
+        divredan.insertAdjacentHTML('beforeend', '<div class="btn-moreinfo btnsup float-right mb-2" id="suppRedan' + `${nbredan}` + '">' +
+            '<span class="ml-2 mr-2">Supprimer</span><svg class="feather "><use xlink:href="assets/images/feather-sprite.svg#x"/></svg></div>')
 
         document.getElementById('suppRedan' + `${nbredan}`).addEventListener('click', e => {
             e.target.closest('.form-group').remove()
@@ -268,13 +282,31 @@ function calcRedan() {
 }
 
 async function addingCart() {
+    if (document.querySelector('input[name="couleur"]:checked').dataset.std !== "std" && price <=1500) {
+        await addCart("CFCNS",1)
+    }else
+        await addCart("CFCS",1)
     if (document.getElementById('redan').checked) {
+
         for (let [key, value] of Object.entries(redanArray)) {
-            if (key != "prix") await addCart(key, value)
+            await addCart(key, value)
+            console.log(key,value)
         }
     } else {
         for (let [key, value] of Object.entries(resArray)) {
-            if (key != "prix") await addCart(key, value)
+            await addCart(key, value)
         }
+    }
+}
+
+function color() {
+    let colorArray = new Map();
+    for (let item of document.querySelectorAll('[data-name]')) {
+        productsData.forEach(prod => {
+            for (let i = 0; i <= 10; i++) {
+                if (prod.options.couleur && prod.options.couleur.values[i].ref === item.dataset.name)
+                    colorArray.set(prod.options.couleur.values[i].ref, prod.options.couleur.values[i].price)
+            }
+        })
     }
 }
