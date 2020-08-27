@@ -1,37 +1,39 @@
-.ral-7016{
+.ral-7016, input[value=ral-7016] ~ .label-name{
   background: #383E42;
 }
-.ral-7006{
+.ral-7006, input[value=ral-7006] ~ .label-name{
   background: #766A5E;
 }
-.ral-9010{
+.ral-9010, input[value=ral-9010] ~ .label-name{
   background: #F1ECE1;
 }
-
-.ral-3004{
+.ral-3004, input[value=ral-3004] ~ .label-name{
   background: #6B1C23;
 }
-.ral-6005{
+.ral-6005, input[value=ral-6005] ~ .label-name{
   background:#114232;
 }
-.ral-7039{
+.ral-7039, input[value=ral-7039] ~ .label-name{
   background: #6b665e;
 }
-.ral-8011{
+.ral-8011, input[value=ral-8011] ~ .label-name{
   background: #5a3826;
 }
-.ral-9005{
+.ral-9005, input[value=ral-9005] ~ .label-name{
   background: 	#0e0e10;
 }
-.ral-9006{
+.ral-9006, input[value=ral-9006] ~ .label-name{
   background: #A1A1A0;
 }
-
-
-
-.ral-5003{
-  background: #1f3855;
+//.ral-5003, input[value=ral-5003] ~ .label-name{
+//  background: #1f3855;
+//}
+//.ral-7004, input[value=ral-7004] ~ .label-name{
+//  background: #9B9B9B;
+//}
+.ral-2900, input[value=ral-2900] ~ .label-name{
+  background: #949294;
 }
-.ral-7004{
-  background: #9B9B9B;
+.ral-2100, input[value=ral-2100] ~ .label-name{
+  background: #464644;
 }

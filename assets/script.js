@@ -1,6 +1,11 @@
 let nbredan = 0
 document.addEventListener('pageReady', () => {
     nbredan = 0
+    winWidth()
+    window.addEventListener("resize", function () {
+        winWidth()
+    });
+
     if (document.getElementById('mapid')) {
         let mymap = L.map('mapid').setView([44.4302027, 0.6568098], 12);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -35,6 +40,10 @@ document.addEventListener('pageReady', () => {
 })
 document.addEventListener('pageChange', () => {
     nbredan = 0
+    winWidth()
+    window.addEventListener("resize", function () {
+        winWidth()
+    });
     if (document.getElementById('mapid')) {
         let mymap = L.map('mapid').setView([44.4302027, 0.6568098], 12);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -50,6 +59,7 @@ document.addEventListener('pageChange', () => {
     }
     if (document.getElementById('configclo')) {
         classic()
+        color()
         document.getElementById("btnadd").addEventListener('click', () => {
             addingCart()
         })
@@ -144,36 +154,35 @@ function dacClick() {
     if (!document.getElementById('redan').checked) {
         document.getElementById("dimension").style.display = "block"
         document.getElementById('divparent').style.display = "none"
+        document.getElementById('labelredan').style.display = "none"
         document.getElementById('addredan') ? document.getElementById('addredan').style.display = "none" : null
         classic()
     }
 }
+
 let price
+
 function calcDOM(totalArray) {
 
     let totalPrice = 0
-    price=0
+    price = 0
     for (let [key, value] of Object.entries(totalArray)) {
         productsData.forEach(prod => {
             if (prod.ref === key) totalPrice += +prod.price * value
         })
     }
     if (document.querySelector('input[name="couleur"]:checked').dataset.std !== "std") {
-        console.log('non standard')
-        if (totalPrice <= 1500) {
-            totalPrice += 150
-            console.log(totalPrice)
-        }
-    } else {
-        console.log("standard")
+        totalPrice <= 1500 ? totalPrice += 150 : totalPrice
+
     }
 
     document.getElementById('price').innerHTML = totalPrice.toFixed(2)
-    price=totalPrice
+    price = totalPrice
 }
 
 function redanClick() {
     document.getElementById("divparent").style.display = "block"
+    document.getElementById('labelredan').style.display = "block"
     if (document.getElementById('addredan')) document.getElementById('addredan').style.display = "inline-block"
     document.getElementById("dimension").style.display = "none"
     if (document.getElementById('divparent').childElementCount === 0) {
@@ -196,10 +205,9 @@ function redanClick() {
 function addRedan() {
     nbredan++
     let divparent = document.getElementById('divparent')
-
     //creation div dimredan
     let divredan = document.createElement('div')
-    divredan.classList.add("form-group", "form-inline", "col-5", "column", "m-auto")
+    divredan.classList.add("form-group", "form-inline", "col-5", "m-auto", "text-left")
     divredan.id = 'dimredan' + `${nbredan}`
     divparent.insertAdjacentElement('beforeend', divredan)
 
@@ -282,31 +290,52 @@ function calcRedan() {
 }
 
 async function addingCart() {
-    if (document.querySelector('input[name="couleur"]:checked').dataset.std !== "std" && price <=1500) {
-        await addCart("CFCNS",1)
-    }else
-        await addCart("CFCS",1)
-    if (document.getElementById('redan').checked) {
+    let optdesc = document.querySelector('input[name="couleur"]:checked').offsetParent.firstElementChild.lastElementChild.innerText.replace('\n', ', ')
 
+    if (document.querySelector('input[name="couleur"]:checked').dataset.std !== "std" && price <= 1500) {
+        await addCart("CFCNS", 1,optdesc)
+    } else
+        await addCart("CFCS", 1,optdesc)
+    if (document.getElementById('redan').checked) {
         for (let [key, value] of Object.entries(redanArray)) {
-            await addCart(key, value)
-            console.log(key,value)
+            await addCart(key, value, optdesc)
         }
     } else {
         for (let [key, value] of Object.entries(resArray)) {
-            await addCart(key, value)
+            key !=="CFR" ? await addCart(key, value, optdesc) : await addCart(key, value)
         }
     }
+    console.log(cartLocal)
 }
 
 function color() {
+    let colorPrice = new Map();
     let colorArray = new Map();
     for (let item of document.querySelectorAll('[data-name]')) {
         productsData.forEach(prod => {
             for (let i = 0; i <= 10; i++) {
-                if (prod.options.couleur && prod.options.couleur.values[i].ref === item.dataset.name)
-                    colorArray.set(prod.options.couleur.values[i].ref, prod.options.couleur.values[i].price)
+                if (prod.options.couleur && prod.options.couleur.values[i].ref === item.dataset.name) {
+                    colorPrice.set(prod.options.couleur.values[i].ref, prod.options.couleur.values[i].price)
+                    colorArray.set(prod.options.couleur.values[i].ref, prod.options.couleur.values[i].name)
+                }
             }
         })
+    }
+}
+
+function winWidth() {
+    if (window.innerWidth > 1000) {
+        document.querySelector('.mymenu').classList.add("col-8")
+        document.querySelector('.mobile-menu').classList.remove("popover", "popover-bottom")
+        document.querySelector('.mobile-menu').hidden = true
+        document.querySelector('.menu-content').classList.remove("popover-container")
+        document.querySelector('.menu-content').firstElementChild.classList.remove("card")
+    } else {
+        mobile = true
+        document.querySelector('.mobile-menu').classList.add("popover", "popover-bottom")
+        document.querySelector('.mymenu').classList.remove("col-8")
+        document.querySelector('.mobile-menu').hidden = false
+        document.querySelector('.menu-content').classList.add("popover-container")
+        document.querySelector('.menu-content').firstElementChild.classList.add("card")
     }
 }

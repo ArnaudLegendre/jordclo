@@ -1,5 +1,5 @@
-<div class="columns p-centered mb-2 pb-2">
-    <div class="column col-10 col-md-12 p-centered">
+<div class="columns p-centered my-2 py-2">
+    <div class="column col-10 col-md-11 p-centered col-sm-12">
         <div class="columns">
             <div class="column col-6 col-sm-12">
                 <img class="w-75 d-block m-auto pt-2 mt-2" id="" src="assets/images/cloture-aluminium-lame-large.png"
@@ -16,7 +16,7 @@
                         <input type="text" id="raid" data-ref="CFR" hidden>
 
                     </div>
-                    <div class="form-group col-6" id="formsection">
+                    <div class="form-group col-12" id="formsection">
                         <label class="form-label">Section</label>
                         <label class="form-radio form-inline">
                             <input type="radio" name="section" checked>
@@ -36,9 +36,9 @@
                         </label>
                     </div>
 
-                    <div class="divider mt-2 mb-2 pt-2 pb-2"></div>
+                    <div class="divider my-2 py-2"></div>
 
-                    <div class="form-group column col-6">
+                    <div class="form-group col-12 ">
                         <label class="form-label">Fixation</label>
                         <label class="form-radio form-inline">
                             <input type="radio" name="fixe" id="platine" checked data-ref="CFPLA">
@@ -50,7 +50,7 @@
                         </label>
                     </div>
 
-                    <div class="form-group scellement column col-6">
+                    <div class="form-group scellement col-12">
                         <label class="form-radio">
                             <input type="radio" name="scelle" id="scelleMur" data-height="0.40" checked>
                             <i class="form-icon"></i> Scellé dans mur
@@ -61,62 +61,219 @@
                         </label>
                     </div>
 
-                    <div class="divider mt-2 mb-2 pt-2 pb-2"></div>
+                    <div class="divider my-2 py-2"></div>
 
-                    <div class="container">
-                        <div id="divparent" class="columns col-12">
+                    <div>
+                        <label id="labelredan" class="form-label">Dimension</label>
+                        <div id="divparent" class="col-12 text-center">
 
                         </div>
                     </div>
-                    <div id="dimension" class="column col-6">
-                        <label class="form-label">Dimension</label>
-                        <div class="form-group">
-                            <label class="form-label" for="longueur">Longueur en mètre</label>
-                            <input class="form-input longueur" type="text" id="longueur"
-                                   placeholder="Longueur de la cloture"
-                                   value="1" min="1">
+
+                    <div id="dimension" class="col-12">
+                        <label class="form-label text-left">Dimension</label>
+                        <div class="columns justify-start">
+                            <div class="form-group form-inline column col-6 col-md-12 text-left">
+                                <label class="form-label" for="longueur">Longueur en mètre</label>
+                                <input class="form-input longueur" type="text" id="longueur"
+                                       placeholder="Longueur de la cloture"
+                                       value="1" min="1">
+                            </div>
+                            <div class="form-group form-inline column col-6 col-md-12 text-left">
+                                <label class="form-label" for="hauteur">Hauteur en mètre</label>
+                                <div class="inputselect">
+                                    <select id="hauteur" class="form-select hauteur">
+                                        <option class="optProduct" value="">Selectionnez une hauteur</option>
+
+                                        <option class="optProduct" value="0.20" data-ref="CFPO06" selected>0.20 metre</option>
+
+                                        <option class="optProduct" value="0.40" data-ref="CFPO06">0.40 metre</option>
+
+                                        <option class="optProduct" value="0.60" data-ref="CFPO06">0.60 metre</option>
+
+                                        <option class="optProduct" value="0.80" data-ref="CFPO125">0.80 metre</option>
+
+                                        <option class="optProduct" value="1.00" data-ref="CFPO125">1.00 metre</option>
+
+                                        <option class="optProduct" value="1.20" data-ref="CFPO125">1.20 metre</option>
+
+                                        <option class="optProduct" value="1.40" data-ref="CFPO185">1.40 metre</option>
+
+                                        <option class="optProduct" value="1.60" data-ref="CFPO185">1.60 metre</option>
+
+                                        <option class="optProduct" value="1.80" data-ref="CFPO185">1.80 metre</option>
+
+                                        <option class="optProduct" value="2.00" data-ref="CFPO250" hidden></option>
+
+                                        <option class="optProduct" value="2.20" data-ref="CFPO250" hidden></option>
+
+                                        <option class="optProduct" value="2.40" data-ref="CFPO250" hidden></option>
+
+                                    </select>
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" for="hauteur">Hauteur en mètre</label>
-                            <select id="hauteur" class="form-select hauteur">
-                                <option class="optProduct" value="">Selectionnez une hauteur</option>
 
-                                <option class="optProduct" value="0.20" data-ref="CFPO06" selected>0.20 metre</option>
-
-                                <option class="optProduct" value="0.40" data-ref="CFPO06">0.40 metre</option>
-
-                                <option class="optProduct" value="0.60" data-ref="CFPO06">0.60 metre</option>
-
-                                <option class="optProduct" value="0.80" data-ref="CFPO125">0.80 metre</option>
-
-                                <option class="optProduct" value="1.00" data-ref="CFPO125">1.00 metre</option>
-
-                                <option class="optProduct" value="1.20" data-ref="CFPO125">1.20 metre</option>
-
-                                <option class="optProduct" value="1.40" data-ref="CFPO185">1.40 metre</option>
-
-                                <option class="optProduct" value="1.60" data-ref="CFPO185">1.60 metre</option>
-
-                                <option class="optProduct" value="1.80" data-ref="CFPO185">1.80 metre</option>
-
-                                <option class="optProduct" value="2.00" data-ref="CFPO250" hidden></option>
-
-                                <option class="optProduct" value="2.20" data-ref="CFPO250" hidden></option>
-
-                                <option class="optProduct" value="2.40" data-ref="CFPO250" hidden></option>
-
-                            </select>
-                        </div>
                     </div>
 
-                    <div class="divider mt-2 mb-2 pt-2 pb-2"></div>
+                    <div class="divider my-2 py-2"></div>
 
+                    <div id="couleur" class="form-group col-12">
+
+                        <label class="form-label">Couleur </label>
+                        <label class="form-label">Standard</label>
+
+                        <div class="radioGroup form-group col-12 columns">
+                            <label class="form-radio form-inline column col-6 ">
+                                <div class="columns">
+                                    <div class="column col-auto">
+                                        <input type="radio" data-name="ral-7016" data-ref="CFCS" name="couleur"
+                                               value="ral-7016"
+                                               data-std="std" checked="checked">
+                                        <div class="label-name ral-7016">ral-7016</div>
+                                    </div>
+
+                                    <!--                                    <i class="form-icon"></i>-->
+
+                                    <div class="col-auto">Ral-7016</br>Gris anthracite</div>
+                                </div>
+                            </label>
+
+                            <label class="form-radio form-inline column col-6 ">
+                                <div class="columns">
+                                    <div class="column col-auto">
+                                        <input type="radio" data-name="ral-9010" data-ref="CFCS" name="couleur"
+                                               value="ral-9010"
+                                               data-std="std">
+                                        <div class="label-name ral-9010">ral-9010</div>
+                                    </div>
+                                    <!--                                <i class="form-icon"></i>-->
+                                    <div class="col-auto">Ral-9010</br>Blanc pur</div>
+                                </div>
+                            </label>
+
+                            <label class="form-radio form-inline column col-6">
+                                <div class="columns">
+                                    <div class="column col-auto">
+                                        <input type="radio" data-name="ral-7006" data-ref="CFCS" name="couleur"
+                                               value="ral-7006"
+                                               data-std="std">
+                                        <div class="label-name ral-7006">ral-7006</div>
+                                    </div>
+                                    <div class="col-auto">Ral-7006</br>Gris beige</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <label class="form-label">Non standard</label>
+
+                        <div class="radioGroup form-group col-12 columns">
+                            <label class="form-radio form-inline column col-6">
+                                <div class="columns">
+                                    <div class="column col-auto">
+                                        <input type="radio" data-name="ral-3004" data-ref="CFCNS" name="couleur"
+                                               value="ral-3004"
+                                               data-std="nstd">
+                                        <div class="label-name ral-3004">ral-3004</div>
+                                    </div>
+                                    <div class="col-auto">Ral-3004</br>Rouge pourpre</div>
+                                </div>
+                            </label>
+
+                            <label class="form-radio form-inline column col-6">
+                                <div class="columns">
+                                    <div class="column col-auto">
+                                        <input type="radio" data-name="ral-6005" data-ref="CFCNS" name="couleur"
+                                               value="ral-6005"
+                                               data-std="nstd">
+                                        <div class="label-name ral-6005">ral-6005</div>
+                                    </div>
+                                    <div class="col-auto">Ral-6005</br>Vert mousse</div>
+                                </div>
+                            </label>
+
+                            <label class="form-radio form-inline column col-6">
+                                <div class="columns">
+                                    <div class="column col-auto">
+                                        <input type="radio" data-name="ral-7039" data-ref="CFCNS" name="couleur"
+                                               value="ral-7039"
+                                               data-std="nstd">
+                                        <div class="label-name ral-7039">ral-7039</div>
+                                    </div>
+                                    <div class="col-auto">Ral-7039</br>Gris quartz</div>
+                                </div>
+                            </label>
+
+                            <label class="form-radio form-inline column col-6">
+                                <div class="columns">
+                                    <div class="column col-auto">
+                                        <input type="radio" data-name="ral-8011" data-ref="CFCNS" name="couleur"
+                                               value="ral-8011"
+                                               data-std="nstd">
+                                        <div class="label-name ral-8011">ral-8011</div>
+                                    </div>
+                                    <div class="col-auto">Ral-8011</br>Brun noisette</div>
+                                </div>
+                            </label>
+
+                            <label class="form-radio form-inline column col-6">
+                                <div class="columns">
+                                    <div class="column col-auto">
+                                        <input type="radio" data-name="ral-9005" data-ref="CFCNS" name="couleur"
+                                               value="ral-9005"
+                                               data-std="nstd">
+                                        <div class="label-name ral-9005">ral-9005</div>
+                                    </div>
+                                    <div class="col-auto">Ral-9005</br>Noir foncé</div>
+                                </div>
+                            </label>
+
+                            <label class="form-radio form-inline column col-6">
+                                <div class="columns">
+                                    <div class="column col-auto">
+                                        <input type="radio" data-name="ral-9006" data-ref="CFCNS" name="couleur"
+                                               value="ral-9006"
+                                               data-std="nstd">
+                                        <div class="label-name ral-9006">ral-9006</div>
+                                    </div>
+                                    <div class="col-auto">Ral-9006</br>Aluminium blanc</div>
+                                </div>
+                            </label>
+
+                            <label class="form-radio form-inline column col-6">
+                                <div class="columns">
+                                    <div class="column col-auto">
+                                        <input type="radio" data-name="ral-2900" data-ref="CFCNS" name="couleur"
+                                               value="ral-2900"
+                                               data-std="nstd">
+                                        <div class="label-name ral-2900">ral-2900</div>
+                                    </div>
+                                    <div class="col-auto">Ral-2900</br>Gris 2900 sablé</div>
+                                </div>
+                            </label>
+
+                            <label class="form-radio form-inline column col-6">
+                                <div class="columns">
+                                    <div class="column col-auto">
+                                        <input type="radio" data-name="ral-2100" data-ref="CFCNS" name="couleur"
+                                               value="ral-2100"
+                                               data-std="nstd">
+                                        <div class="label-name ral-2100">ral-2100</div>
+                                    </div>
+                                    <div class="col-auto">Ral-2100</br>Noir 2100 sablé</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="divider my-4"></div>
                     <div class="columns col-12">
-                        <div class="btn-moreinfo mt-2 pt-2 column col-5 col-mx-auto" id="btnadd">
+                        <div class="btn-moreinfo mt-2 pt-2 column col-auto col-sm-8 m-auto" id="btnadd">
                             <svg class="feather">
                                 <use xlink:href="assets/images/feather-sprite.svg#shopping-cart"/>
                             </svg>
-                            <span class="ml-2 mr-2">Ajouter au panier</span></div>
+                            <span class="mx-2">Ajouter au panier</span>
+                        </div>
                     </div>
                 </form>
 
@@ -126,3 +283,22 @@
     </div>
 </div>
 
+
+<div class="col-10 col-md-11 col-sm-12 col-mx-auto my-4 py-4">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ullamcorper leo venenatis diam volutpat tempus.
+    Nullam feugiat, leo at sagittis auctor, leo est dapibus risus, vitae ultricies sapien mauris ut turpis.
+    Vestibulum
+    eu metus ornare, suscipit leo eget, sodales augue. Praesent rutrum accumsan pulvinar. Ut mattis nec ante sit
+    amet
+    consequat. Curabitur quis rhoncus magna, in venenatis ipsum. Morbi efficitur velit non rutrum rhoncus. Nunc quis
+    ante ligula. Praesent eget tempor lorem.
+
+    Sed accumsan nulla at sem iaculis, ac auctor mi vehicula. Curabitur urna turpis, posuere non purus non, finibus
+    tristique quam. Aenean eu risus eget tortor consectetur molestie vitae eget est. In hac habitasse platea
+    dictumst.
+    Maecenas cursus sapien ac ex egestas vehicula. In a augue orci. Duis a nibh dui. Class aptent taciti sociosqu ad
+    litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse quis justo sit amet erat sodales mattis.
+    Fusce in porttitor erat, nec pulvinar nisl. Duis sed eros augue. Fusce eget auctor dui, quis pulvinar nibh.
+    Mauris
+    ut quam massa. Vivamus posuere pulvinar lacus, at placerat turpis pretium vitae.
+</div>

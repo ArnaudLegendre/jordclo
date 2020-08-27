@@ -69,7 +69,7 @@ function refreshCart() {
 
                 if (e.options.length > 0) {
 
-                    let optionDiv = document.createElement('div')
+                    let optionDiv = document.createElement('small')
                     optionDiv.innerHTML = e.options
                     optionDiv.classList.add('optionsList')
                     tbody.lastElementChild.querySelector('.refLabel > .value').after(optionDiv)
@@ -151,7 +151,7 @@ async function addCartFromProductPage(e) {
 
 }
 
-async function addCart(ref, qty) {
+async function addCart(ref, qty, opt = '') {
     let productAdd = {}
     let data = []
 
@@ -168,7 +168,7 @@ async function addCart(ref, qty) {
         "qty": qty,
         "name": product.name,
         "price": product.price,
-        "options": ''
+        "options": opt
     }
 
     if (!cartLocal) {

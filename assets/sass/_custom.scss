@@ -2,24 +2,94 @@ $mycolor: #000000;
 $red: #EE0000;
 $none: none;
 $btopcolor: 0.05rem solid $mycolor;
-//@media screen and (min-width: 1310px) {
-//  .mobile-menu{
-//    visibility: hidden;
-//  }
-//}
-//@media screen and (min-width: 760px) and (max-width: 760px) {
-//
-//}
 
 @font-face {
   font-family: "questrial";
   src: url('assets/font/Questrial-Regular.ttf');
 }
 
+//affichage du menu
+@media (max-width: 1000px) {
+  .mymenu {
+    letter-spacing: 0.5px;
+    font-size: 20px;
+  }
+  .link {
+    margin-left: 0rem !important;
+  }
+}
+
+@media (min-width: 1001px) and (max-width: 1127px) {
+  .mymenu {
+    letter-spacing: 0px;
+    font-size: 12px;
+  }
+  .link {
+    margin-left: 0.1rem !important;
+  }
+}
+
+@media (min-width: 1127px) and (max-width: 1330px) {
+  .mymenu {
+    letter-spacing: 0px;
+    font-size: 14px;
+  }
+  .link {
+    margin-left: 0.2rem !important;
+  }
+}
+
+@media (min-width: 1330px) and(max-width: 1379px) {
+  .mymenu {
+    letter-spacing: 0px;
+    font-size: 16px;
+  }
+  .my-card {
+    padding: 0.625em !important;
+  }
+}
+
+@media (min-width: 1380px) and (max-width: 1546px) {
+  .mymenu {
+    letter-spacing: 0.3px;
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1546px) and (max-width: 1711px) {
+  .mymenu {
+    letter-spacing: 0.4px;
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1712px) {
+  .mymenu {
+    letter-spacing: 0.5px;
+    font-size: 20px;
+  }
+}
+
+//affichage des couleurs des clotures
+@media (min-width: 840px) and (max-width: 1252px) {
+  #couleur .radioGroup .form-radio {
+    width: 100%;
+  }
+}
+
+//gestion padding produit
+@media (max-width: 1379px) {
+
+  .my-card {
+    padding: 0.625em !important;
+  }
+}
+
 //style menu
-.mymenu {
-  letter-spacing: 0.5px;
-  font-size: 20px;
+
+.navbar .columns {
+  justify-content: space-between;
+  align-items: center;
 }
 
 .navbar {
@@ -30,7 +100,6 @@ $btopcolor: 0.05rem solid $mycolor;
 a {
   position: relative;
   text-decoration: none;
-
 
   &:hover {
     text-decoration: none;
@@ -52,14 +121,15 @@ a:after {
   font-weight: 200;
   text-decoration: none !important;
   border: 0.05rem solid transparent;
-  margin-left: 0.4rem !important;
-  margin-right: 0.4rem !important;
-  color:$mycolor;
+  margin-left: 0.4rem;
+  //margin-right: 0.4rem !important;
+  color: $mycolor;
+
   &:focus,
   &:active,
   &:visited,
   &.active {
-  color: $mycolor;
+    color: $mycolor;
   }
 
 }
@@ -78,20 +148,113 @@ a:after {
   background: $red;
 }
 
-//style radio scellement
+//style radio
+/* desactivation du background noir*/
+.form-radio input:checked ~ .form-icon{
+  background: transparent;
+  border-color: $red;
+}
+
+/* positionnement du radio*/
+.form-radio .form-icon {
+  //position: absolute;
+  width: 1rem;
+  height: 1rem;
+  z-index: 0;
+  border-radius: 50%;
+  -webkit-transition: border-color .28s ease;
+  transition: border-color .28s ease;
+}
+/* positionnement du long trait*/
+.form-radio input:checked ~ .form-icon::before {
+  background:red;
+  height:4px;
+  left: 32%;
+  position: absolute;
+  top: 55%;
+  transform: rotate(-45deg);
+  width: 20px;
+  -webkit-transition: width .5s ease;
+  transition: width .5s ease;
+  transition-delay: 0s;
+}
+/* style du radio coché*/
+.form-radio input:checked ~ .form-icon::after, .form-radio input:checked ~ .form-icon::before {
+  opacity: 1;
+  border-radius: .25rem;
+}
+
+/* style du petit trait*/
+.form-radio input:checked ~ .form-icon::after {
+  height: .5rem;
+  -webkit-transition: height .28s ease;
+  transition: height .28s ease;
+  transition-delay: 0s;
+}
+/* style lorsque le bouton est decoché*/
+.form-radio .form-icon::before {
+  top: 55%;
+  left: 32%;
+  -webkit-transform: rotate(-135deg);
+  transform: rotate(-135deg);
+}
+.form-radio .form-icon::after {
+  top: 33%;
+  left: 5%;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+.form-radio .form-icon::after, .form-radio .form-icon::before {
+  position: absolute;
+  height: 0.1rem;
+  width: .2rem;
+  background-color: red;
+  border-radius: .25rem;
+  display: block;
+  -webkit-transform-origin: left top;
+  transform-origin: left top;
+  content: "";
+  -webkit-transition: opacity .28s ease,height 0s linear .28s;
+  transition: opacity .28s ease,height 0s linear .28s;
+  opacity: 0;
+}
+
+// scellement
 .scellement {
   display: none;
 }
 
 //style footer
 .footer {
-  background: white !important;
+  background: #6C6C6C !important;
   box-shadow: 0 0 22px rgba(0, 0, 0, .1);
+  color: white !important;
 }
 
 .footerbottom {
-  background: #ffffff;
-  color: #333333;
+  background: #6C6C6C;
+  color: white;
+}
+
+.unstyled li .link {
+  font-weight: 200;
+  text-decoration: none !important;
+  border: 0.05rem solid transparent;
+  margin-left: 0.4rem;
+  //margin-right: 0.4rem !important;
+  color: white;
+
+  &:focus,
+  &:active,
+  &:visited,
+  &.active {
+    color: white;
+  }
+
+  &:hover {
+    color: red;
+  }
+
 }
 
 //style divers
@@ -125,6 +288,10 @@ html {
   }
 }
 
+.w-100 {
+  width: 100%;
+}
+
 //style bouton en savoir plus et ajout au panier
 .btn-moreinfo {
   background: #EE0000;
@@ -155,31 +322,45 @@ html {
 }
 
 //couleur cloture
-#couleur .form-radio {
-  padding: 0;
-  .label-name {
-    width: 45px;
-    height: 45px;
-    display: inline-block;
-    font-size: 0;
-    cursor: pointer;
-    border: solid 1px $mycolor;
-  }
-  .form-icon {
-    display: none;
-  }
-}
-.form-radio input:checked + .label-name{
-  border: solid 2px #ff2400;
+
+.optGrp #couleur {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-#couleur .form-radio .label-name.ralselect {
-  border: solid 2px #ff2400;
+#couleur {
+  .form-radio {
+    padding: 0;
+
+    .label-name {
+      width: 45px;
+      height: 45px;
+      display: inline-block;
+      margin: 1px;
+      font-size: 0;
+      cursor: pointer;
+      border: solid 1px $mycolor;
+    }
+
+    .form-icon {
+      display: none;
+    }
+  }
+}
+
+#labelredan {
+  display: none;
+}
+
+#couleur .form-radio input:checked ~ .label-name {
+  border: solid 2px $red;
+  width: 46px;
+  height: 46px;
 }
 
 //Card
 .my-card {
-  padding: 20px;
+  padding: 40px;
   box-shadow: 0 2px 2px rgba(0, 0, 0, .2);
   border-top: 1px solid rgba(0, 0, 0, .05);
   border-left: 1px solid rgba(0, 0, 0, .05);
@@ -188,7 +369,8 @@ html {
 //lien cloture
 .linkclot {
   &:hover {
-    box-shadow: 0 2px 2px rgba(0, 0, 0, .5);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+
     div:not(.btn-moreinfo) {
       text-decoration: underline;
     }
@@ -208,7 +390,7 @@ html {
 
   &:hover {
     text-decoration: underline;
-    box-shadow: 0 2px 2px rgba(0, 0, 0, .5);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .5);
     color: $mycolor;
   }
 }
@@ -219,7 +401,7 @@ html {
 
   &:placeholder-shown,
   &::placeholder {
-    color: #333333;
+    color: #000000;
   }
 }
 
@@ -229,4 +411,47 @@ html {
 
 #mapid {
   height: 382px;
+}
+
+//select
+/* Remove IE arrow */
+select::-ms-expand {
+  display: none;
+}
+
+/* Custom Select */
+select {
+  flex: 1;
+  padding: 0 .5em;
+  color: #fff;
+  cursor: pointer;
+  background: transparent;
+}
+
+.inputselect {
+  position: relative;
+
+}
+/* desactivation de la flech de base */
+.form-select:not([multiple]):not([size]) {
+  background: #f8fafc;
+}
+/* Arrow */
+.inputselect::after {
+  content: '\25BC';
+  position: absolute;
+  font-size: 27px;
+  top: -1px;
+  right: 3px;
+  color: $red;
+  cursor: pointer;
+  pointer-events: none;
+  -webkit-transition: .25s all ease;
+  -o-transition: .25s all ease;
+  transition: .25s all ease;
+}
+
+/* Transition */
+.inputselect:hover::after {
+  color: #bb0000;
 }
