@@ -21,7 +21,7 @@ document.addEventListener('pageReady', () => {
     }
     if (document.getElementById('configclo')) {
         classic()
-        color()
+        // color()
         document.getElementById("btnadd").addEventListener('click', () => {
             addingCart()
         })
@@ -59,7 +59,7 @@ document.addEventListener('pageChange', () => {
     }
     if (document.getElementById('configclo')) {
         classic()
-        color()
+        // color()
         document.getElementById("btnadd").addEventListener('click', () => {
             addingCart()
         })
@@ -160,12 +160,12 @@ function dacClick() {
     }
 }
 
-let price
 
+let price
 function calcDOM(totalArray) {
 
     let totalPrice = 0
-    price = 0
+    price=0
     for (let [key, value] of Object.entries(totalArray)) {
         productsData.forEach(prod => {
             if (prod.ref === key) totalPrice += +prod.price * value
@@ -173,9 +173,7 @@ function calcDOM(totalArray) {
     }
     if (document.querySelector('input[name="couleur"]:checked').dataset.std !== "std") {
         totalPrice <= 1500 ? totalPrice += 150 : totalPrice
-
     }
-
     document.getElementById('price').innerHTML = totalPrice.toFixed(2)
     price = totalPrice
 }
@@ -290,22 +288,29 @@ function calcRedan() {
 }
 
 async function addingCart() {
-    let optdesc = document.querySelector('input[name="couleur"]:checked').offsetParent.firstElementChild.lastElementChild.innerText.replace('\n', ', ')
+    let optionsList = []
+    let optionsName = []
+        document.getElementById('couleur').querySelectorAll('input').forEach(opt => {
+            if ((opt.selected === true || opt.checked === true) && opt.value !== '') {
+                optionsList.push(opt.value)
+                optionsName.push(opt.dataset.name)
+            }
+        })
 
-    if (document.querySelector('input[name="couleur"]:checked').dataset.std !== "std" && price <= 1500) {
-        await addCart("CFCNS", 1,optdesc)
-    } else
-        await addCart("CFCS", 1,optdesc)
     if (document.getElementById('redan').checked) {
         for (let [key, value] of Object.entries(redanArray)) {
-            await addCart(key, value, optdesc)
+            await addCart(key, value, optionsList[0]+', '+optionsName[0])
         }
     } else {
         for (let [key, value] of Object.entries(resArray)) {
-            key !=="CFR" ? await addCart(key, value, optdesc) : await addCart(key, value)
+            key !=="CFR" ? await addCart(key, value, optionsList[0]+', '+optionsName[0]) : await addCart(key, value)
         }
     }
-    console.log(cartLocal)
+    if (document.querySelector('input[name="couleur"]:checked').dataset.std !== "std" && price <= 1500) {
+        await addCart("CFCNS", 1,optionsList[0]+', '+optionsName[0])
+    } else
+        await addCart("CFCS", 1,optionsList[0]+', '+optionsName[0])
+calcThermo()
 }
 
 function color() {
@@ -338,4 +343,15 @@ function winWidth() {
         document.querySelector('.menu-content').classList.add("popover-container")
         document.querySelector('.menu-content').firstElementChild.classList.add("card")
     }
+}
+
+function calcThermo(){
+    let mycolor = {}
+    JSON.parse(cartLocal).forEach(prod =>{
+        if(prod.ref !=="CFCNS"){
+            mycolor[prod.options] = prod.qty * prod.price
+            // !Object.keys(mycolor).length ? mycolor[prod.options] = prod.qty * prod.price : mycolor[prod.options] += prod.qty * prod.price
+        }
+    })
+    console.log(mycolor)
 }

@@ -148,7 +148,6 @@ async function addCartFromProductPage(e) {
         refreshCart()
 
     }
-
 }
 
 async function addCart(ref, qty, opt = '') {

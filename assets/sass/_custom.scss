@@ -226,13 +226,13 @@ a:after {
 
 //style footer
 .footer {
-  background: #6C6C6C !important;
+  background: #292929 !important;
   box-shadow: 0 0 22px rgba(0, 0, 0, .1);
   color: white !important;
 }
 
 .footerbottom {
-  background: #6C6C6C;
+  background: #292929;
   color: white;
 }
 
@@ -370,12 +370,15 @@ html {
 .linkclot {
   &:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-
-    div:not(.btn-moreinfo) {
+    div + div:not(.btn-moreinfo) {
+      text-decoration: underline;
+    }
+    .productName{
       text-decoration: underline;
     }
   }
 }
+
 
 //lien produit
 .link-prod {
