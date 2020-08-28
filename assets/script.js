@@ -349,8 +349,15 @@ function calcThermo(){
     let mycolor = {}
     JSON.parse(cartLocal).forEach(prod =>{
         if(prod.ref !=="CFCNS"){
-            mycolor[prod.options] = prod.qty * prod.price
+            // mycolor[prod.options] = prod.qty * prod.price
             // !Object.keys(mycolor).length ? mycolor[prod.options] = prod.qty * prod.price : mycolor[prod.options] += prod.qty * prod.price
+            if(!Object.keys(mycolor).length){
+                mycolor[prod.options] = prod.qty * prod.price
+            } else{
+                for (let [key] of Object.entries(mycolor)){
+                    mycolor.hasOwnProperty(key) ? mycolor[key] += prod.qty * prod.price : mycolor[key] = prod.qty * prod.price
+            }
+            }
         }
     })
     console.log(mycolor)

@@ -1,10 +1,7 @@
 /node_modules/
 /.idea/
-/public/assets/
 /public/app.js
-/public/spectre/
+
 package-lock.json
-/public/app.css
-/public/app.css.map
-/public/script.js
+
 .DS_Store
