@@ -24,7 +24,6 @@ document.addEventListener('initWebsite', function () {
 
     })
 
-    console.log(productsData)
 
 })
 

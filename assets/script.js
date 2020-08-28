@@ -21,7 +21,6 @@ document.addEventListener('pageReady', () => {
     }
     if (document.getElementById('configclo')) {
         classic()
-        // color()
         document.getElementById("btnadd").addEventListener('click', () => {
             addingCart()
         })
@@ -76,7 +75,7 @@ document.addEventListener('pageChange', () => {
     }
 })
 
-let resArray, redanArray
+let resArray, redanArray, price
 
 function calcConfig(tempLength, height) {
     let refStake, refBlade, refCover, refPlate, refSpacer, refStringer, nbStake, nbPlate, nbSpacer, nbCover,
@@ -160,12 +159,10 @@ function dacClick() {
     }
 }
 
-
-let price
 function calcDOM(totalArray) {
 
     let totalPrice = 0
-    price=0
+    price = 0
     for (let [key, value] of Object.entries(totalArray)) {
         productsData.forEach(prod => {
             if (prod.ref === key) totalPrice += +prod.price * value
@@ -290,43 +287,43 @@ function calcRedan() {
 async function addingCart() {
     let optionsList = []
     let optionsName = []
-        document.getElementById('couleur').querySelectorAll('input').forEach(opt => {
-            if ((opt.selected === true || opt.checked === true) && opt.value !== '') {
-                optionsList.push(opt.value)
-                optionsName.push(opt.dataset.name)
-            }
-        })
-
+    document.getElementById('couleur').querySelectorAll('input').forEach(opt => {
+        if ((opt.selected === true || opt.checked === true) && opt.value !== '') {
+            optionsList.push(opt.value)
+            optionsName.push(opt.dataset.name)
+        }
+    })
     if (document.getElementById('redan').checked) {
         for (let [key, value] of Object.entries(redanArray)) {
-            await addCart(key, value, optionsList[0]+', '+optionsName[0])
+            await addCart(key, value, optionsList[0] + ', ' + optionsName[0])
         }
     } else {
         for (let [key, value] of Object.entries(resArray)) {
-            key !=="CFR" ? await addCart(key, value, optionsList[0]+', '+optionsName[0]) : await addCart(key, value)
+            key !== "CFR" ? await addCart(key, value, optionsList[0] + ', ' + optionsName[0]) : await addCart(key, value)
         }
     }
-    if (document.querySelector('input[name="couleur"]:checked').dataset.std !== "std" && price <= 1500) {
-        await addCart("CFCNS", 1,optionsList[0]+', '+optionsName[0])
+    if (document.querySelector('input[name="couleur"]:checked').dataset.std !== "std") {
+        await addCart("CFCNS", 1, optionsList[0] + ', ' + optionsName[0])
     } else
-        await addCart("CFCS", 1,optionsList[0]+', '+optionsName[0])
-calcThermo()
+        await addCart("CFCS", 1, optionsList[0] + ', ' + optionsName[0])
+    calcThermo()
+
 }
 
-function color() {
-    let colorPrice = new Map();
-    let colorArray = new Map();
-    for (let item of document.querySelectorAll('[data-name]')) {
-        productsData.forEach(prod => {
-            for (let i = 0; i <= 10; i++) {
-                if (prod.options.couleur && prod.options.couleur.values[i].ref === item.dataset.name) {
-                    colorPrice.set(prod.options.couleur.values[i].ref, prod.options.couleur.values[i].price)
-                    colorArray.set(prod.options.couleur.values[i].ref, prod.options.couleur.values[i].name)
-                }
-            }
-        })
-    }
-}
+// function color() {
+//     let colorPrice = new Map();
+//     let colorArray = new Map();
+//     for (let item of document.querySelectorAll('[data-name]')) {
+//         productsData.forEach(prod => {
+//             for (let i = 0; i <= 10; i++) {
+//                 if (prod.options.couleur && prod.options.couleur.values[i].ref === item.dataset.name) {
+//                     colorPrice.set(prod.options.couleur.values[i].ref, prod.options.couleur.values[i].price)
+//                     colorArray.set(prod.options.couleur.values[i].ref, prod.options.couleur.values[i].name)
+//                 }
+//             }
+//         })
+//     }
+// }
 
 function winWidth() {
     if (window.innerWidth > 1000) {
@@ -336,29 +333,32 @@ function winWidth() {
         document.querySelector('.menu-content').classList.remove("popover-container")
         document.querySelector('.menu-content').firstElementChild.classList.remove("card")
     } else {
-        mobile = true
-        document.querySelector('.mobile-menu').classList.add("popover", "popover-bottom")
         document.querySelector('.mymenu').classList.remove("col-8")
+        document.querySelector('.mobile-menu').classList.add("popover", "popover-bottom")
         document.querySelector('.mobile-menu').hidden = false
         document.querySelector('.menu-content').classList.add("popover-container")
         document.querySelector('.menu-content').firstElementChild.classList.add("card")
     }
 }
 
-function calcThermo(){
+function calcThermo() {
     let mycolor = {}
-    JSON.parse(cartLocal).forEach(prod =>{
-        if(prod.ref !=="CFCNS"){
-            // mycolor[prod.options] = prod.qty * prod.price
-            // !Object.keys(mycolor).length ? mycolor[prod.options] = prod.qty * prod.price : mycolor[prod.options] += prod.qty * prod.price
-            if(!Object.keys(mycolor).length){
-                mycolor[prod.options] = prod.qty * prod.price
-            } else{
-                for (let [key] of Object.entries(mycolor)){
-                    mycolor.hasOwnProperty(key) ? mycolor[key] += prod.qty * prod.price : mycolor[key] = prod.qty * prod.price
-            }
-            }
+    JSON.parse(cartLocal).forEach(prod => {
+        if (prod.ref !== "CFCNS") {
+            !Object.keys(mycolor).length ? mycolor[prod.options] = prod.qty * prod.price :
+                mycolor.hasOwnProperty(prod.options) ? mycolor[prod.options] += prod.qty * prod.price : mycolor[prod.options] = prod.qty * prod.price
         }
     })
-    console.log(mycolor)
+    Object.entries(mycolor).forEach(ralcolor => {
+        if (ralcolor[1] >= 1500) {
+            JSON.parse(cartLocal).forEach(prodincart => {
+                prodincart.ref === "CFCNS" ? prodincart[price] = 0 : null
+                console.log(prodincart)
+                console.log(JSON.parse(cartLocal))
+            })
+        }
+    })
+    refreshCart()
 }
+
+

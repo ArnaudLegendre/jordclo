@@ -3712,6 +3712,7 @@ a:after {
 
 /* positionnement du radio*/
 .form-radio .form-icon {
+  top: 0.25rem;
   width: 1rem;
   height: 1rem;
   z-index: 0;
@@ -3724,9 +3725,9 @@ a:after {
 .form-radio input:checked ~ .form-icon::before {
   background: red;
   height: 4px;
-  left: 32%;
+  left: 34%;
   position: absolute;
-  top: 55%;
+  top: 56%;
   transform: rotate(-45deg);
   width: 20px;
   -webkit-transition: width 0.5s ease;
@@ -3751,14 +3752,14 @@ a:after {
 /* style lorsque le bouton est decoché*/
 .form-radio .form-icon::before {
   top: 55%;
-  left: 32%;
+  left: 33%;
   -webkit-transform: rotate(-135deg);
   transform: rotate(-135deg);
 }
 
 .form-radio .form-icon::after {
   top: 33%;
-  left: 5%;
+  left: 9%;
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
