@@ -5,7 +5,12 @@ document.addEventListener('pageReady', () => {
     window.addEventListener("resize", function () {
         winWidth()
     });
-
+    if(document.getElementsByClassName('cart')) {
+        document.querySelector('.cart').addEventListener( 'click', e =>{
+            console.log(e.target)
+            calcThermo()
+        })
+    }
     if (document.getElementById('mapid')) {
         let mymap = L.map('mapid').setView([44.4302027, 0.6568098], 12);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -58,7 +63,6 @@ document.addEventListener('pageChange', () => {
     }
     if (document.getElementById('configclo')) {
         classic()
-        // color()
         document.getElementById("btnadd").addEventListener('click', () => {
             addingCart()
         })
@@ -310,21 +314,6 @@ async function addingCart() {
 
 }
 
-// function color() {
-//     let colorPrice = new Map();
-//     let colorArray = new Map();
-//     for (let item of document.querySelectorAll('[data-name]')) {
-//         productsData.forEach(prod => {
-//             for (let i = 0; i <= 10; i++) {
-//                 if (prod.options.couleur && prod.options.couleur.values[i].ref === item.dataset.name) {
-//                     colorPrice.set(prod.options.couleur.values[i].ref, prod.options.couleur.values[i].price)
-//                     colorArray.set(prod.options.couleur.values[i].ref, prod.options.couleur.values[i].name)
-//                 }
-//             }
-//         })
-//     }
-// }
-
 function winWidth() {
     if (window.innerWidth > 1000) {
         document.querySelector('.mymenu').classList.add("col-8")
@@ -344,26 +333,21 @@ function winWidth() {
 function calcThermo() {
     let mycolor = {}
     JSON.parse(cartLocal).forEach(prod => {
-        if (prod.ref !== "CFCNS") {
+        if (prod.ref !== "CFCNS" || prod.ref !== "CFR") {
             !Object.keys(mycolor).length ? mycolor[prod.options] = prod.qty * prod.price :
                 mycolor.hasOwnProperty(prod.options) ? mycolor[prod.options] += prod.qty * prod.price : mycolor[prod.options] = prod.qty * prod.price
         }
     })
     Object.entries(mycolor).forEach(ralcolor => {
-        if (ralcolor[1] >= 1500) {
             let cart = JSON.parse(cartLocal)
             cart.forEach(prodincart => {
                 for (let [key, value] of Object.entries(prodincart)) {
-                    value === "CFCNS" ? (prodincart.price = '0', console.log(prodincart)) : null
+                    value === "CFCNS" ?  ralcolor[1] >= 1500 ? prodincart.price = '0' : prodincart.price = '150' : null
+                    console.log(mycolor)
+
                 }
             })
-            localStorage.setItem('cartLocal', cart)
-            cartLocal = JSON.stringify(cart)
-        }
+            localStorage.setItem('cartLocal', JSON.stringify(cart))
     })
-
     refreshCart()
-
 }
-
-
