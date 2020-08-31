@@ -351,14 +351,19 @@ function calcThermo() {
     })
     Object.entries(mycolor).forEach(ralcolor => {
         if (ralcolor[1] >= 1500) {
-            JSON.parse(cartLocal).forEach(prodincart => {
-                prodincart.ref === "CFCNS" ? prodincart[price] = 0 : null
-                console.log(prodincart)
-                console.log(JSON.parse(cartLocal))
+            let cart = JSON.parse(cartLocal)
+            cart.forEach(prodincart => {
+                for (let [key, value] of Object.entries(prodincart)) {
+                    value === "CFCNS" ? (prodincart.price = '0', console.log(prodincart)) : null
+                }
             })
+            localStorage.setItem('cartLocal', cart)
+            cartLocal = JSON.stringify(cart)
         }
     })
+
     refreshCart()
+
 }
 
 
